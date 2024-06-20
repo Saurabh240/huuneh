@@ -2223,3 +2223,7 @@ $("#calculate_invoice").css({ opacity: 0, height: 0, width: 0, padding: 0 });
 $("#calculate_invoice").on("click", getTariffs);
 
 $("#deliveryType").on('change', getTariffs);
+
+$(document).ready(function(){
+  getTariffs();
+})

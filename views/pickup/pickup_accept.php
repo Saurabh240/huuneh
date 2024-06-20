@@ -1027,7 +1027,7 @@ $address_order = $db->cdp_registro();
     <script src="assets/template/assets/libs/select2/dist/js/select2.min.js"></script>
     <script src="assets/template/assets/libs/sweetalert2/sweetalert2.min.js"></script>
     <script src="assets/template/assets/libs/intlTelInput/intlTelInput.js"></script>
-    <script src="dataJs/pickup_accept.js"></script>
+    <script src="dataJs/pickup_accept.js?v=2"></script>
 
 
 

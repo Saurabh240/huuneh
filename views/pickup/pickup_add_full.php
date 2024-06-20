@@ -1132,7 +1132,7 @@ $order_prefix = $settings->prefix;
     <script src="assets/template/assets/libs/intlTelInput/intlTelInput.js"></script>
     <script src="assets/template/dist/js/app-style-switcher.js"></script>
     <script src="assets/template/assets/libs/bootstrap-switch/dist/js/bootstrap-switch.min.js"></script>
-    <script src="dataJs/pickup_add_full.js"></script>
+    <script src="dataJs/pickup_add_full.js?v=2"></script>
 <script
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCAP41rsfjKCKORsVRuSM_4ff6f7YGV7kQ&callback=initAutocomplete&libraries=places&v=weekly"
       defer

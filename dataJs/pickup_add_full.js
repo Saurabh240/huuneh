@@ -766,10 +766,13 @@ $("#invoice_form").on("submit", function (event) {
   var order_no = $("#order_no").val();
   var agency = $("#agency").val();
   var origin_off = $("#origin_off").val();
-  var sender_id = $("#sender_id").val();
-  var sender_address_id = $("#sender_address_id").val();
-  var recipient_id = $("#recipient_id").val();
-  var recipient_address_id = $("#recipient_address_id").val();
+  // var sender_id = $("#sender_id").val();
+  var sender_id = $("#sender_id option:selected").val();
+  var sender_address_id = $("#sender_address_id option:selected").val();
+  var recipient_id = $("#recipient_id option:selected").val();
+  var recipient_address_id = $("#recipient_address_id option:selected").val();
+  // console.log(sender_id, sender_address_id, recipient_id, recipient_address_id);
+  
   var order_item_category = $("#order_item_category").val();
   var order_courier = $("#order_courier").val();
   var order_service_options = $("#order_service_options").val();
