@@ -47,6 +47,8 @@ if ($_POST['total_pay'] > $_POST['balance'])
 
 
 if (empty($errors)) {
+  
+  $core = new Core;
 
   $data = array(
     'total' => cdp_sanitize($_POST['total_pay']),
@@ -58,6 +60,33 @@ if (empty($errors)) {
 
 
   $insert = cdp_insertCharges($data);
+
+  $payrow = $core->cdp_getPayment();
+
+  $gateway = "CASH";
+  foreach ($payrow as $row) {
+    if ( $row->id == cdp_sanitize($_POST['mode_pay']) ) {
+      $gateway = $row->name_pay;
+    }
+  }
+
+  $data = array(
+
+      'amount' => cdp_sanitize($_POST['total_pay']),
+      'currency_code' => $core->currency,
+      'status' => "COMPLETED",
+      'gateway' => $gateway,
+      'payment_id' => cdp_sanitize($_POST["tracking"]),
+      'type_transaccition_courier' => "",
+      'date' => date("Y-m-d H:i:s"),
+      'order_track' => cdp_sanitize($_POST['order_id_alone']),
+      'order_track_customer_id' =>$_SESSION['userid'],
+
+    );
+
+
+    $insert = cdp_insertPaymentGateway($data);
+
 
   if ($insert) {
     $messages[] = $lang['message_ajax_success_add'];

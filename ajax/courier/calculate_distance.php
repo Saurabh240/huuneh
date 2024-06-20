@@ -2,10 +2,18 @@
 require_once("../../loader.php");
 session_start();
 $db = new Conexion;
-$db->cdp_query('SELECT * FROM cdb_users WHERE username=:user OR email=:user');
-$db->bind(':user', $_SESSION['username']);
+if ( isset( $_POST['sender_id'] ) )  {
+    $db->cdp_query('SELECT * FROM cdb_users WHERE id=:id');
+    $db->bind(':id', $_POST['sender_id']);
+} else {
+    $db->cdp_query('SELECT * FROM cdb_users WHERE username=:user OR email=:user');
+    $db->bind(':user', $_SESSION['username']);
+}
 $db->cdp_execute();
 $user = $db->cdp_registro();
+// echo "<pre>";
+// var_dump($user);
+// echo "</pre>";
 $business_type = $user->business_type;
 
 // Replace 'YOUR_GOOGLE_API_KEY' with your actual Google Maps API key
@@ -99,6 +107,17 @@ function getRatesByDeliveryTypeAndBusinessType($deliveryType, $businessType) {
             'NEXT DAY (BEFORE 11:30AM)' => ['baseRate' => 10.00, 'additionalRatePerKm' => 0.75, 'baseKm' => 15],
             'NEXT DAY (BEFORE 10:30AM)' => ['baseRate' => 15.00, 'additionalRatePerKm' => 0.75, 'baseKm' => 15]
         ],
+        'special' => [
+            'SAME DAY (BEFORE 5PM)' => ['baseRate' => 4.00, 'additionalRatePerKm' => 0.00, 'baseKm' => 15],
+            'RUSH (4 HOURS)' => ['baseRate' => 10.00, 'additionalRatePerKm' => 0.55, 'baseKm' => 15],
+            'RUSH (3 HOURS)' => ['baseRate' => 15.00, 'additionalRatePerKm' => 0.70, 'baseKm' => 15],
+            'RUSH (2 HOURS)' => ['baseRate' => 20.00, 'additionalRatePerKm' => 0.75, 'baseKm' => 15],
+            'URGENT (90 MINUTES)' => ['baseRate' => 25.00, 'additionalRatePerKm' => 0.75, 'baseKm' => 15],
+            'NEXT DAY (BEFORE 5PM)' => ['baseRate' => 4.00, 'additionalRatePerKm' => 0.00, 'baseKm' => 15],
+            'NEXT DAY (BEFORE 2PM)' => ['baseRate' => 7.00, 'additionalRatePerKm' => 0.55, 'baseKm' => 15],
+            'NEXT DAY (BEFORE 11:30AM)' => ['baseRate' => 10.00, 'additionalRatePerKm' => 0.75, 'baseKm' => 15],
+            'NEXT DAY (BEFORE 10:30AM)' => ['baseRate' => 15.00, 'additionalRatePerKm' => 0.75, 'baseKm' => 15]
+        ],
         'flower_shop' => [
             'SAME DAY (BEFORE 5PM)' => ['baseRate' => 5.00, 'additionalRatePerKm' => 0.33, 'baseKm' => 15],
             'NEXT DAY (BEFORE 5PM)' => ['baseRate' => 5.00, 'additionalRatePerKm' => 0.33, 'baseKm' => 15],
@@ -112,8 +131,10 @@ function getRatesByDeliveryTypeAndBusinessType($deliveryType, $businessType) {
         ]
     ];
 
-    if ($businessType == 'law_firm' || $businessType == 'pharmacy') {
+    if ($businessType == 'flower_shop' || $businessType == 'pharmacy') {
         return $rates[$businessType][$deliveryType] ?? null;
+    } else if ($businessType == 'special') {
+        return $rates['special'][$deliveryType] ?? null;
     } else {
         return $rates['default'][$deliveryType] ?? null;
     }

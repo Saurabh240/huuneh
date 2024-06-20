@@ -989,11 +989,11 @@
 					<!-- User Profile-->
 
 
-					<li class="sidebar-item">
-						<a class="sidebar-link waves-effect waves-dark" href="index.php" aria-expanded="false"><i class="mdi mdi-view-dashboard"></i>
-							<span class="hide-menu"> <?php echo $lang['left-menu-sidebar-2'] ?> </span>
-						</a>
-					</li>
+					<!--<li class="sidebar-item">-->
+					<!--	<a class="sidebar-link waves-effect waves-dark" href="index.php" aria-expanded="false"><i class="mdi mdi-view-dashboard"></i>-->
+					<!--		<span class="hide-menu"> <?php echo $lang['left-menu-sidebar-2'] ?> </span>-->
+					<!--	</a>-->
+					<!--</li>-->
 
 					<li class="sidebar-item">
 						<a class="sidebar-link waves-effect waves-dark" href="recipients_list.php" aria-expanded="false"><i class="fas fa-users"></i>

@@ -1890,11 +1890,11 @@ $('#deliveryType').on('change', function () {
 
   console.log("Selected delivery value:", deliveryType);
 
-  calculateAndDisplayDistance(senderadd, receiveradd, deliveryType);
+  calculateAndDisplayDistance(senderadd, receiveradd, deliveryType, () => { $("#calculate_invoice").click(); });
 })
 
 //Function to calculate distance between two coordinates and update distance input
-function calculateAndDisplayDistance(origin, destination, deliveryType, callback = () => { }) {
+function calculateAndDisplayDistance(origin, destination, deliveryType, callback = () => { }, sender_id = null) {
   if (!origin) {
     origin = $('#sender_address_id option:selected').text();
   }
@@ -1904,11 +1904,14 @@ function calculateAndDisplayDistance(origin, destination, deliveryType, callback
   if (!deliveryType) {
     deliveryType = document.getElementById('deliveryType').value;
   }
+  if (!sender_id) {
+    sender_id = $("#sender_id").val()
+  }
   // AJAX request to calculate distance
   $.ajax({
     type: 'POST',
     url: 'ajax/courier/calculate_distance.php', // Replace with your PHP script for calculating distance
-    data: { 'origin': origin, 'destination': destination, 'deliveryType': deliveryType },
+    data: { 'origin': origin, 'destination': destination, 'deliveryType': deliveryType, 'sender_id': sender_id },
     dataType: 'json',
     success: function (data) {
       console.log("All", data);
@@ -2500,7 +2503,3 @@ function cdp_showSuccess(messages, shipment_id) {
   event.preventDefault();
 });*/
 
-$("#deliveryType").on('change', function () {
-  calculateAndDisplayDistance(null, null, null, () => { $("#calculate_invoice").click(); });
-
-})

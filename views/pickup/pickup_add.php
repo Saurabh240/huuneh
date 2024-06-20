@@ -219,7 +219,7 @@ echo 'Fixed Time ->'.strtotime("2:00 PM");exit;*/
 				                      <hr>
                                       <div class="row">
                                             <div class="col-md-12">
-                                                <label for="inputcontact" class="control-label col-form-label"><?php echo $lang['recipient_search_title'] ?></label>
+                                                <label for="inputcontact" class="control-label col-form-label"><?php echo $lang['recipient_search_title'] . ' (To add a new recipient click the + sign)' ?></label>
 
                                                 <div class="row">
                                                     <div class="col-md-10">
