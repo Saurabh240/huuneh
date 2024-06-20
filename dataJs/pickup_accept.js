@@ -2145,7 +2145,6 @@ function getTariffs() {
 
   // $("#price_lb").val(data.data.price);
   // $("#price_lb_label").html(data.data.price);
-  calculateFinalTotal();
   if (!deliveryType) {
     $("#total_before_tax").text("0.0");
     $("#total_after_tax").text("0.0");
@@ -2167,6 +2166,7 @@ function getTariffs() {
   $("#create_invoice").attr("disabled", true);
   var origin = "";
   var destination = "";
+  var sender_id = "";
   $('#sender_address_id').on('select2:select', function (e) {
     var selectedData = e.params.data;
     origin = selectedData.text;
