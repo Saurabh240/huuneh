@@ -1907,9 +1907,15 @@ function calculateAndDisplayDistance(origin, destination, deliveryType, callback
   if (!deliveryType) {
     deliveryType = document.getElementById('deliveryType').value;
   }
+  
   if (!sender_id) {
-    sender_id = $("#sender_id").val()
+    sender_id = $("#sender_id option:selected").val();
   }
+
+  if(!origin || !destination || !deliveryType || !sender_id){
+    return;
+  }
+
   // AJAX request to calculate distance
   $.ajax({
     type: 'POST',
