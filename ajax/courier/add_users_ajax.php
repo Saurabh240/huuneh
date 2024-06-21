@@ -32,8 +32,8 @@ if (empty($_POST['fname']))
     $errors['fname'] = $lang['validate_field_ajax122'];
 if (empty($_POST['lname']))
     $errors['lname'] = $lang['validate_field_ajax123'];
-if (empty($_POST['phone_custom']))
-    $errors['phone_custom'] = $lang['validate_field_ajax128'];
+// if (empty($_POST['phone_custom']))
+//     $errors['phone_custom'] = $lang['validate_field_ajax128'];
 if (empty($_POST['address_modal_user']))
     $errors['address_modal_user'] = $lang['validate_field_ajax134'];
 
@@ -63,7 +63,7 @@ if (isset($_POST['register_customer_to_user']) && $_POST['register_customer_to_u
 
 
 // Verificar si el correo electrónico ya está en uso y si es válido
-if ($user->cdp_emailExists($_POST['email'])) {
+if (!empty($_POST['email']) && $user->cdp_emailExists($_POST['email'])) {
     $response['status'] = 'error';
     $response['message'] = $lang['messagesform47'];
 }

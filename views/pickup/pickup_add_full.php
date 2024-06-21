@@ -424,7 +424,7 @@ $order_prefix = $settings->prefix;
 
                                                 <div class="col-md-2">
                                                     <div class="input-group-append input-sm">
-                                                        <button disabled id="add_recipient" type="button" data-type_user="user_recipient" data-toggle="modal" data-target="#myModalAddUser" class="btn btn-default"><i class="fa fa-plus"></i></button>
+                                                        <button disabled id="add_recipient" type="button" data-type_user="user_recipient" data-toggle="modal" data-target="#myModalAddRecipient" class="btn btn-default"><i class="fa fa-plus"></i></button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -443,7 +443,7 @@ $order_prefix = $settings->prefix;
                                                 </div>
                                                 <div class="col-md-2">
                                                     <div class="input-group-append input-sm">
-                                                        <button disabled id="add_address_recipient" type="button" data-type_user="user_recipient" data-toggle="modal" data-target="#myModalAddRecipient" class="btn btn-default"><i class="fa fa-plus"></i></button>
+                                                        <button disabled id="add_address_recipient" type="button" data-type_user="user_recipient" data-toggle="modal" data-target="#myModalAddRecipientAddresses" class="btn btn-default"><i class="fa fa-plus"></i></button>
                                                     </div>
                                                 </div>
                                             </div>

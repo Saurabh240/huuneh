@@ -1316,18 +1316,19 @@ $("#add_user_from_modal_shipments").on("submit", function (event) {
   }
 
   // Validación del correo electrónico en el lado del cliente
-  var email = $.trim($("#email").val());
-  if (email.length == 0) {
-    Swal.fire({
-      type: 'error',
-      title: 'Oops...',
-      text: message_error_form83,
-      icon: 'error',
-      confirmButtonColor: '#336aea'
-    });
-    $("#email").focus();
-    return false;
-  } else if (!isValidEmailAddress(email)) { // Función para validar el formato del correo electrónico
+  // var email = $.trim($("#email").val());
+  // if (email.length == 0) {
+  //   Swal.fire({
+  //     type: 'error',
+  //     title: 'Oops...',
+  //     text: message_error_form83,
+  //     icon: 'error',
+  //     confirmButtonColor: '#336aea'
+  //   });
+  //   $("#email").focus();
+  //   return false;
+  // } else 
+  if (email && !isValidEmailAddress(email)) { // Función para validar el formato del correo electrónico
     Swal.fire({
       type: 'warning',
       title: 'Oops...',
@@ -1407,7 +1408,7 @@ $("#add_user_from_modal_shipments").on("submit", function (event) {
     return false;
   }
 
-  if (iti.isValidNumber()) {
+  // if (iti.isValidNumber()) {
     var sender_id = $("#sender_address_id option:selected").val();
     $("#save_data_user").attr("disabled", true);
     var parametros = $(this).serialize();
@@ -1484,12 +1485,13 @@ $("#add_user_from_modal_shipments").on("submit", function (event) {
         $("#save_data_user").attr("disabled", false);
       }
     });
-  } else {
-    input.classList.add("error");
-    var errorCode = iti.getValidationError();
-    errorMsgSender.innerHTML = errorMap[errorCode];
-    errorMsgSender.classList.remove("hide");
-  }
+  // } 
+  // else {
+  //   input.classList.add("error");
+  //   var errorCode = iti.getValidationError();
+  //   errorMsgSender.innerHTML = errorMap[errorCode];
+  //   errorMsgSender.classList.remove("hide");
+  // }
 });
 
 
@@ -1529,18 +1531,19 @@ $("#add_recipient_from_modal_shipments").on("submit", function (event) {
   }
 
   // Validación del correo electrónico en el lado del cliente
-  var email = $.trim($("#email_recipient").val());
-  if (email.length == 0) {
-    Swal.fire({
-      type: 'error',
-      title: 'Oops...',
-      text: translate_label_email,
-      icon: 'error',
-      confirmButtonColor: '#336aea'
-    });
-    $("#email_recipient").focus();
-    return false;
-  } else if (!isValidEmailAddress(email)) { // Función para validar el formato del correo electrónico
+  // var email = $.trim($("#email_recipient").val());
+  // if (email.length == 0) {
+  //   Swal.fire({
+  //     type: 'error',
+  //     title: 'Oops...',
+  //     text: translate_label_email,
+  //     icon: 'error',
+  //     confirmButtonColor: '#336aea'
+  //   });
+  //   $("#email_recipient").focus();
+  //   return false;
+  // } else 
+  if (email && !isValidEmailAddress(email)) { // Función para validar el formato del correo electrónico
     Swal.fire({
       type: 'warning',
       title: 'Oops...',
@@ -1620,7 +1623,7 @@ $("#add_recipient_from_modal_shipments").on("submit", function (event) {
     return false;
   }
 
-  if (iti_recipient.isValidNumber()) {
+  // if (iti_recipient.isValidNumber()) {
     var sender_id = $("#sender_address_id option:selected").val();
     $("#save_data_recipient").attr("disabled", true);
     var parametros = $(this).serialize();
@@ -1697,12 +1700,12 @@ $("#add_recipient_from_modal_shipments").on("submit", function (event) {
       }
     });
 
-  } else {
-    input_recipient.classList.add("error");
-    var errorCode = iti_recipient.getValidationError();
-    errorMsgRecipient.innerHTML = errorMap[errorCode];
-    errorMsgRecipient.classList.remove("hide");
-  }
+  // } else {
+  //   input_recipient.classList.add("error");
+  //   var errorCode = iti_recipient.getValidationError();
+  //   errorMsgRecipient.innerHTML = errorMap[errorCode];
+  //   errorMsgRecipient.classList.remove("hide");
+  // }
 });
 
 

@@ -32,8 +32,8 @@ if (empty($_POST['fname_recipient']))
     $errors['fname'] = $lang['validate_field_ajax122'];
 if (empty($_POST['lname_recipient']))
     $errors['lname'] = $lang['validate_field_ajax123'];
-if (empty($_POST['phone_custom_recipient']))
-    $errors['phone_custom'] = $lang['validate_field_ajax128'];
+// if (empty($_POST['phone_custom_recipient']))
+//     $errors['phone_custom'] = $lang['validate_field_ajax128'];
 
 
 
