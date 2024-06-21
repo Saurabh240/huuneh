@@ -118,6 +118,14 @@
 									<input type="text" class="form-control" name="address_modal_user" id="address_modal_user" placeholder="<?php echo $lang['user_manage10'] ?>">
 								</div>
 							</div>
+
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="phoneNumber1"><?php echo $lang['user_manage58'] ?></label>
+									<input type="text" class="form-control" name="modal_user_address2" id="modal_user_address2" placeholder="<?php echo $lang['user_manage59'] ?>">
+								</div>
+							</div>
+
 						</div>
 
 						<input type="hidden" name="total_address" id="total_address" value="1" />
