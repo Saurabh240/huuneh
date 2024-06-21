@@ -1313,7 +1313,7 @@ function cdp_select2_init_recipient() {
 
 function cdp_select2_init_recipient_address() {
   var recipient_id = $("#recipient_id").val();
-
+  
   $("#recipient_address_id")
     .select2({
       ajax: {
@@ -2387,7 +2387,7 @@ $(document).ready(function () {
           // Automatically select the first (and only) option
           // $('#select2-recipient_address_id-container').text(data[0].text);
           // $("#recipient_address_id").val(data[0].id)
-          $('#recipient_address_id').empty().append('<option value="' + data[0].id + '">' + data[0].text + '</option>').trigger('change');
+          $('#recipient_address_id').empty().append('<option value="' + data[0].id + '">' + data[0].text + '</option>');
 
         }
         //  console.log('sender detail:',data);        
@@ -2401,7 +2401,8 @@ $(document).ready(function () {
   });
 
   $(document).on('change', '#recipient_address_id', function () {
-    var recipient_id = $(this).val();
+    // var recipient_id = $(this).val();
+    var recipient_id = $("#recipient_id option:selected").val();
     // alert(recipient_id);
     $.ajax({
       type: 'POST',
@@ -2421,7 +2422,7 @@ $(document).ready(function () {
           // Automatically select the first (and only) option
           // $('#select2-recipient_address_id-container').text(data[0].text);
           // $("#recipient_address_id").val(data[0].id)
-          $('#recipient_address_id').empty().append('<option value="' + data[0].id + '">' + data[0].text + '</option>').trigger('change');
+          $('#recipient_address_id').empty().append('<option value="' + data[0].id + '">' + data[0].text + '</option>');
 
         }
         //  console.log('sender detail:',data);        
