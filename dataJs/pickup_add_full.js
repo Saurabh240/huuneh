@@ -1651,34 +1651,34 @@ $("#add_user_from_modal_shipments").on("submit", function (event) {
 
 $("#add_recipient_from_modal_shipments").on("submit", function (event) {
   event.preventDefault(); // Evitar el envío del formulario por defecto
-
-  if ($.trim($("#fname_recipient").val()).length == 0) {
+  debugger;
+  if ($.trim($("#fullname_recipient").val()).length == 0) {
     Swal.fire({
 
       type: 'Error!',
       title: 'Oops...',
-      text: translate_label_firstname,
+      text: "Full Name is required",
       icon: 'error',
       confirmButtonColor: '#336aea'
 
     });
-    $("#fname_recipient").focus();
+    $("#fullname_recipient").focus();
     return false;
   }
 
-  if ($.trim($("#lname_recipient").val()).length == 0) {
-    Swal.fire({
+  // if ($.trim($("#lname_recipient").val()).length == 0) {
+  //   Swal.fire({
 
-      type: 'Error!',
-      title: 'Oops...',
-      text: translate_label_lastname,
-      icon: 'error',
-      confirmButtonColor: '#336aea'
+  //     type: 'Error!',
+  //     title: 'Oops...',
+  //     text: translate_label_lastname,
+  //     icon: 'error',
+  //     confirmButtonColor: '#336aea'
 
-    });
-    $("#lname_recipient").focus();
-    return false;
-  }
+  //   });
+  //   $("#lname_recipient").focus();
+  //   return false;
+  // }
 
   // Validación del correo electrónico en el lado del cliente
   var email = $.trim($("#email_recipient").val());
