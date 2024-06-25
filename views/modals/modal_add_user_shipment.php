@@ -12,7 +12,7 @@
 						<input type="hidden" id="type_user" name="type_user"> 
 
 						<div class="row">
-							<div class="col-md-6">
+							<!-- <div class="col-md-6">
 								<div class="form-group">
 									<label for="emailAddress1"><?php echo $lang['user_manage6'] ?></label>
 									<input type="text" class="form-control" name="fname" id="fname" placeholder="<?php echo $lang['user_manage6'] ?>">
@@ -22,6 +22,15 @@
 								<div class="form-group">
 									<label for="phoneNumber1"><?php echo $lang['user_manage7'] ?></label>
 									<input type="text" class="form-control" name="lname" id="lname" placeholder="<?php echo $lang['user_manage7'] ?>">
+								</div>
+							</div> -->
+							<input type="hidden" class="form-control" name="fname" id="fname" placeholder="<?php echo $lang['user_manage6'] ?>">
+							<input type="hidden" class="form-control" name="lname" id="lname" placeholder="<?php echo $lang['user_manage7'] ?>">
+																
+							<div class="col-md-12">
+								<div class="form-group">
+									<label for="phoneNumber1">Full Name</label>
+									<input type="text" class="form-control" name="full_name" id="full_name" placeholder="Full Name">
 								</div>
 							</div>
 						</div>

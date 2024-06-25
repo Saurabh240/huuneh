@@ -117,7 +117,7 @@
                                                 </div>
                                             </div>
 
-                                                    <div class="col-md-6">
+                                                    <!-- <div class="col-md-6">
                                                         <div class="mb-3">
                                                             <label class="form-label"><?php echo $lang['left138'] ?> <span class="text-danger">*</span></label>
                                                             <div class="form-icon position-relative">
@@ -125,10 +125,10 @@
                                                                 <input type="text" class="form-control ps-5" placeholder="<?php echo $lang['left139'] ?>" name="fname" id="fname">
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> -->
                                                     <!--end col-->
 
-                                                    <div class="col-md-6">
+                                                    <!-- <div class="col-md-6">
                                                         <div class="mb-3">
                                                             <label class="form-label"><?php echo $lang['left140'] ?> <span class="text-danger">*</span></label>
                                                             <div class="form-icon position-relative">
@@ -136,7 +136,21 @@
                                                                 <input type="text" class="form-control ps-5" placeholder="<?php echo $lang['left141'] ?>" name="lname" id="lname">
                                                             </div>
                                                         </div>
+                                                    </div> -->
+
+                                                    <input type="hidden" class="form-control ps-5" placeholder="<?php echo $lang['left139'] ?>" name="fname" id="fname">
+                                                    <input type="hidden" class="form-control ps-5" placeholder="<?php echo $lang['left141'] ?>" name="lname" id="lname">
+                                                                
+                                                    <div class="col-md-12">
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Full Name <span class="text-danger">*</span></label>
+                                                            <div class="form-icon position-relative">
+                                                                <i data-feather="user" class="fea icon-sm icons"></i>
+                                                                <input type="text" class="form-control ps-5" placeholder="Enter Full Name" name="full_name" id="full_name">
+                                                            </div>
+                                                        </div>
                                                     </div>
+
                                                 </div>
                                                     <!--end col-->
                                                  <div class="row">

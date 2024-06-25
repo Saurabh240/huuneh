@@ -6476,3 +6476,13 @@ function updateCustomerPackagesStatusDelivered($data)
 
     return $db->cdp_execute();
 }
+
+
+function cdp_recipientAddressExists($recipient_address) {
+    $db = new Conexion;
+    $db->cdp_query("SELECT `country`, `state`, `city`, `zip_code`, `address` FROM `cdb_recipients_addresses` WHERE `address` = :address");
+    $db->bind(':address', $recipient_address);
+    $db->cdp_execute();
+
+    return  $db->cdp_registro();
+}

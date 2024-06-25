@@ -28,18 +28,22 @@ $core = new Core;
 $errors = array();
 
 
-if (empty($_POST['fname_recipient']))
-    $errors['fname'] = $lang['validate_field_ajax122'];
-if (empty($_POST['lname_recipient']))
-    $errors['lname'] = $lang['validate_field_ajax123'];
+// if (empty($_POST['fname_recipient']))
+//     $errors['fname'] = $lang['validate_field_ajax122'];
+// if (empty($_POST['lname_recipient']))
+//     $errors['lname'] = $lang['validate_field_ajax123'];
 // if (empty($_POST['phone_custom_recipient']))
 //     $errors['phone_custom'] = $lang['validate_field_ajax128'];
 
-
+if(empty($_POST['fullname_recipient']))
+    $errors['fullname_recipient'] = "Full Name is required";
 
 $response = array();
 
- 
+$fullname_recipient = cdp_sanitize($_POST['fullname_recipient']);
+$_POST['lname_recipient'] = get_last_name($fullname_recipient);
+$_POST['fname_recipient'] = get_first_name($fullname_recipient);
+
 if (!isset($response['status'])) {
 
     $data = array(

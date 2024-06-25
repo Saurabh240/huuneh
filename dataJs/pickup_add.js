@@ -1351,33 +1351,33 @@ function cdp_select2_init_recipient_address() {
 $("#add_user_from_modal_shipments").on("submit", function (event) {
   event.preventDefault(); // Evitar el envío del formulario por defecto
 
-  if ($.trim($("#fname").val()).length == 0) {
+  if ($.trim($("#full_name").val()).length == 0) {
     Swal.fire({
 
       type: 'Error!',
       title: 'Oops...',
-      text: message_error_form81,
+      text: "Full Name is required",
       icon: 'error',
       confirmButtonColor: '#336aea'
 
     });
-    $("#fname").focus();
+    $("#full_name").focus();
     return false;
   }
 
-  if ($.trim($("#lname").val()).length == 0) {
-    Swal.fire({
+  // if ($.trim($("#lname").val()).length == 0) {
+  //   Swal.fire({
 
-      type: 'Error!',
-      title: 'Oops...',
-      text: message_error_form82,
-      icon: 'error',
-      confirmButtonColor: '#336aea'
+  //     type: 'Error!',
+  //     title: 'Oops...',
+  //     text: message_error_form82,
+  //     icon: 'error',
+  //     confirmButtonColor: '#336aea'
 
-    });
-    $("#lname").focus();
-    return false;
-  }
+  //   });
+  //   $("#lname").focus();
+  //   return false;
+  // }
 
   // Validación del correo electrónico en el lado del cliente
   var email = $.trim($("#email").val());
@@ -1565,33 +1565,33 @@ $("#add_user_from_modal_shipments").on("submit", function (event) {
 $("#add_recipient_from_modal_shipments").on("submit", function (event) {
   event.preventDefault(); // Evitar el envío del formulario por defecto
 
-  if ($.trim($("#fname_recipient").val()).length == 0) {
+  if ($.trim($("#fullname_recipient").val()).length == 0) {
     Swal.fire({
 
       type: 'Error!',
       title: 'Oops...',
-      text: translate_label_firstname,
+      text: "Recipient Full Name is required",
       icon: 'error',
       confirmButtonColor: '#336aea'
 
     });
-    $("#fname_recipient").focus();
+    $("#fullname_recipient").focus();
     return false;
   }
 
-  if ($.trim($("#lname_recipient").val()).length == 0) {
-    Swal.fire({
+  // if ($.trim($("#lname_recipient").val()).length == 0) {
+  //   Swal.fire({
 
-      type: 'Error!',
-      title: 'Oops...',
-      text: translate_label_lastname,
-      icon: 'error',
-      confirmButtonColor: '#336aea'
+  //     type: 'Error!',
+  //     title: 'Oops...',
+  //     text: translate_label_lastname,
+  //     icon: 'error',
+  //     confirmButtonColor: '#336aea'
 
-    });
-    $("#lname_recipient").focus();
-    return false;
-  }
+  //   });
+  //   $("#lname_recipient").focus();
+  //   return false;
+  // }
 
   // Validación del correo electrónico en el lado del cliente
   var email = $.trim($("#email_recipient").val());
@@ -2508,4 +2508,155 @@ $(document).ready(function () {
       $('#add_address_sender').attr('disabled', 'disabled');
     }
   });
+});
+
+function loadStates(selectedCountryId, selectedStateId, selectedCityId)
+{
+      // Select state
+      if (selectedStateId) {
+        var $stateSelect = $("#state_modal_recipient");
+        $.ajax({
+          url: "ajax/select2_states.php?id=" + selectedCountryId, // Your data source URL for states
+          dataType: "json",
+          data: {
+            country_id: selectedCountryId
+          },
+          success: function (statesData) {
+            // Find the selected state's text
+            var selectedState = statesData.find(function (state) {
+              return state.id == selectedStateId;
+            });
+    
+            // Create a new option element
+            var newStateOption = new Option(selectedState.text, selectedState.id, true, true);
+    
+            // Append it to the select
+            $stateSelect.append(newStateOption).trigger('change');
+    
+            // Manually trigger the change event to update Select2
+            $stateSelect.trigger({
+              type: 'select2:select',
+              params: {
+                data: selectedState
+              }
+            });
+    
+            // After state is selected, load cities
+            loadCities(selectedState.id, selectedCityId); // Assuming cdp_load_cities(modal) function exists
+          }
+        });
+      }
+    
+}
+
+function loadCities(selectedStateId, selectedCityId)
+{
+      // Select city
+      if (selectedCityId) {
+        var $citySelect = $("#city_modal_recipient");
+        $.ajax({
+          url: "ajax/select2_cities.php?id=" + selectedStateId, // Your data source URL for cities
+          dataType: "json",
+          data: {
+            state_id: selectedStateId
+          },
+          success: function (citiesData) {
+            // Find the selected city's text
+            var selectedCity = citiesData.find(function (city) {
+              return city.id == selectedCityId;
+            });
+    
+            // Create a new option element
+            var newCityOption = new Option(selectedCity.text, selectedCity.id, true, true);
+    
+            // Append it to the select
+            $citySelect.append(newCityOption).trigger('change');
+    
+            // Manually trigger the change event to update Select2
+            $citySelect.trigger({
+              type: 'select2:select',
+              params: {
+                data: selectedCity
+              }
+            });
+          }
+        });
+      }
+}
+
+function autoCompleteAddress(fullAddress, modal=null)
+{
+
+  if (fullAddress) {
+    var selectedCountryId = fullAddress.country;
+    var selectedStateId = fullAddress.state;
+    var selectedCityId = fullAddress.city;
+    var selectedZip = fullAddress.zip_code;
+    $("#postal_modal_recipient").val(selectedZip);
+    // Select country
+    if (selectedCountryId) {
+      var $countrySelect = $("#country_modal_recipient");
+      $.ajax({
+        url: "ajax/select2_countries.php", // Your data source URL for countries
+        dataType: "json",
+        success: function (countriesData) {
+          // Find the selected country's text
+          var selectedCountry = countriesData.find(function (country) {
+            return country.id == selectedCountryId;
+          });
+  
+          // Create a new option element
+          var newCountryOption = new Option(selectedCountry.text, selectedCountry.id, true, true);
+  
+          // Append it to the select
+          $countrySelect.append(newCountryOption).trigger('change');
+  
+          // Manually trigger the change event to update Select2
+          $countrySelect.trigger({
+            type: 'select2:select',
+            params: {
+              data: selectedCountry
+            }
+          });
+
+          // After country is selected, load states
+          loadStates(selectedCountry.id, selectedStateId, selectedCityId); 
+        }
+      });
+    }
+    
+  }
+  
+
+}
+
+function getRecipientFullAddress()
+{
+  var recipientAddress = $("#address_modal_recipient").val();
+  console.log(recipientAddress);
+
+  $.ajax({
+    type: 'POST',
+    url: 'ajax/recipients/get_recipient_full_address.php',
+    data: { 'address_modal_recipient': recipientAddress },
+    dataType: 'json',
+    success: function (response) {
+      if(response.status){
+        var fullAddress = response.fullAddress;
+        autoCompleteAddress(fullAddress);
+      }else{
+        alert(response.message);
+      }
+
+    },
+    error: function () {
+      // Handle error
+      alert('Error: Something Went Wrong!.');
+    }
+  });
+  
+}
+
+$("#address_modal_recipient").on("change", function(){
+  getRecipientFullAddress();
 });

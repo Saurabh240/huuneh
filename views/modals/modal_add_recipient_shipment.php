@@ -10,7 +10,7 @@
 					<form class="form-horizontal" method="post" id="add_recipient_from_modal_shipments" name="add_recipient_from_modal_shipments">
 
 						<div class="row">
-							<div class="col-md-6">
+							<!-- <div class="col-md-6">
 								<div class="form-group">
 									<label for="emailAddress1"><?php echo $lang['user_manage6'] ?></label>
 									<input type="text" class="form-control" name="fname_recipient" id="fname_recipient" placeholder="<?php echo $lang['user_manage6'] ?>">
@@ -21,7 +21,18 @@
 									<label for="phoneNumber1"><?php echo $lang['user_manage7'] ?></label>
 									<input type="text" class="form-control" name="lname_recipient" id="lname_recipient" placeholder="<?php echo $lang['user_manage7'] ?>">
 								</div>
+							</div> -->
+
+							<input type="hidden" class="form-control" name="fname_recipient" id="fname_recipient" placeholder="<?php echo $lang['user_manage6'] ?>">
+							<input type="hidden" class="form-control" name="lname_recipient" id="lname_recipient" placeholder="<?php echo $lang['user_manage7'] ?>">
+								
+							<div class="col-md-12">
+								<div class="form-group">
+									<label for="phoneNumber1">Full Name</label>
+									<input type="text" class="form-control" name="fullname_recipient" id="fullname_recipient" placeholder="Full Name">
+								</div>
 							</div>
+
 						</div>
 
 						<div class="row">

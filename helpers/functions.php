@@ -179,3 +179,26 @@ function cdp_round_outx($valor)
   $float_redondeado = round($valor * 100) / 100;
   return $float_redondeado;
 }
+
+function get_first_name($full_name)
+{
+    $parts = explode(' ', $full_name);
+    
+    return $parts[0];
+}
+
+function get_last_name($full_name)
+{
+    $parts = explode(' ', $full_name);
+    
+    $num_parts = count($parts);
+    
+    return $parts[$num_parts - 1];
+}
+
+function get_fullname($first_name, $last_name)
+{
+    $full_name = $first_name . ' ' . $last_name;
+    
+    return $full_name;
+}

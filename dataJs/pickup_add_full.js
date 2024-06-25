@@ -1437,33 +1437,33 @@ function cdp_select2_init_recipient_address() {
 $("#add_user_from_modal_shipments").on("submit", function (event) {
   event.preventDefault(); // Evitar el envío del formulario por defecto
 
-  if ($.trim($("#fname").val()).length == 0) {
+  if ($.trim($("#full_name").val()).length == 0) {
     Swal.fire({
 
       type: 'Error!',
       title: 'Oops...',
-      text: message_error_form81,
+      text: "Full Name is required",
       icon: 'error',
       confirmButtonColor: '#336aea'
 
     });
-    $("#fname").focus();
+    $("#full_name").focus();
     return false;
   }
 
-  if ($.trim($("#lname").val()).length == 0) {
-    Swal.fire({
+  // if ($.trim($("#lname").val()).length == 0) {
+  //   Swal.fire({
 
-      type: 'Error!',
-      title: 'Oops...',
-      text: message_error_form82,
-      icon: 'error',
-      confirmButtonColor: '#336aea'
+  //     type: 'Error!',
+  //     title: 'Oops...',
+  //     text: message_error_form82,
+  //     icon: 'error',
+  //     confirmButtonColor: '#336aea'
 
-    });
-    $("#lname").focus();
-    return false;
-  }
+  //   });
+  //   $("#lname").focus();
+  //   return false;
+  // }
 
   // Validación del correo electrónico en el lado del cliente
   var email = $.trim($("#email").val());
