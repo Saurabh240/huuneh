@@ -4898,6 +4898,7 @@ function cdp_updateCustomersprofile($datos)
         fname =:fname,
         lname =:lname,
         notes =:notes,
+        email_subscription =:email_subscription,
         phone =:phone,
         gender =:gender
 
@@ -4909,6 +4910,7 @@ function cdp_updateCustomersprofile($datos)
     $db->bind(':fname', $datos['fname']);
     $db->bind(':lname', $datos['lname']);
     $db->bind(':notes', $datos['notes']);
+    $db->bind(':email_subscription', $datos['email_subscription']);
     $db->bind(':phone', $datos['phone']);
     $db->bind(':gender', $datos['gender']);
     $db->bind(':document_type', $datos['document_type']);

@@ -2510,11 +2510,11 @@ $(document).ready(function () {
   });
 });
 
-function loadStates(selectedCountryId, selectedStateId, selectedCityId)
+function loadStates(selectedCountryId, selectedStateId, selectedCityId, modelId)
 {
       // Select state
       if (selectedStateId) {
-        var $stateSelect = $("#state_modal_recipient");
+        var $stateSelect = modelId ? $("#state_modal_recipient" + modelId) : $("#state_modal_recipient");
         $.ajax({
           url: "ajax/select2_states.php?id=" + selectedCountryId, // Your data source URL for states
           dataType: "json",
@@ -2542,18 +2542,19 @@ function loadStates(selectedCountryId, selectedStateId, selectedCityId)
             });
     
             // After state is selected, load cities
-            loadCities(selectedState.id, selectedCityId); // Assuming cdp_load_cities(modal) function exists
+            loadCities(selectedState.id, selectedCityId, modelId); // Assuming cdp_load_cities(modal) function exists
           }
         });
       }
     
 }
 
-function loadCities(selectedStateId, selectedCityId)
+function loadCities(selectedStateId, selectedCityId, modelId)
 {
+
       // Select city
       if (selectedCityId) {
-        var $citySelect = $("#city_modal_recipient");
+        var $citySelect = modelId ? $("#city_modal_recipient" + modelId) : $("#city_modal_recipient");
         $.ajax({
           url: "ajax/select2_cities.php?id=" + selectedStateId, // Your data source URL for cities
           dataType: "json",
@@ -2584,18 +2585,19 @@ function loadCities(selectedStateId, selectedCityId)
       }
 }
 
-function autoCompleteAddress(fullAddress, modal=null)
+function loadCountries(fullAddress, modelId)
 {
+  if (!fullAddress) return;
 
-  if (fullAddress) {
     var selectedCountryId = fullAddress.country;
     var selectedStateId = fullAddress.state;
     var selectedCityId = fullAddress.city;
     var selectedZip = fullAddress.zip_code;
-    $("#postal_modal_recipient").val(selectedZip);
+    var $countrySelect;
+    modelId ? $("#postal_modal_recipient" + modelId).val(selectedZip) : $("#postal_modal_recipient").val(selectedZip);
     // Select country
     if (selectedCountryId) {
-      var $countrySelect = $("#country_modal_recipient");
+      $countrySelect = modelId ? $countrySelect = $("#country_modal_recipient" + modelId) : $("#country_modal_recipient");
       $.ajax({
         url: "ajax/select2_countries.php", // Your data source URL for countries
         dataType: "json",
@@ -2620,19 +2622,17 @@ function autoCompleteAddress(fullAddress, modal=null)
           });
 
           // After country is selected, load states
-          loadStates(selectedCountry.id, selectedStateId, selectedCityId); 
+          loadStates(selectedCountry.id, selectedStateId, selectedCityId, modelId); 
         }
       });
     }
     
-  }
-  
 
 }
 
-function getRecipientFullAddress()
+function getRecipientFullAddress(inputAddress, modelId)
 {
-  var recipientAddress = $("#address_modal_recipient").val();
+  var recipientAddress = $("#" + inputAddress).val();
   console.log(recipientAddress);
 
   $.ajax({
@@ -2643,9 +2643,9 @@ function getRecipientFullAddress()
     success: function (response) {
       if(response.status){
         var fullAddress = response.fullAddress;
-        autoCompleteAddress(fullAddress);
+        loadCountries(fullAddress, modelId);
       }else{
-        alert(response.message);
+        // alert(response.message);
       }
 
     },
@@ -2658,5 +2658,10 @@ function getRecipientFullAddress()
 }
 
 $("#address_modal_recipient").on("change", function(){
-  getRecipientFullAddress();
+  getRecipientFullAddress("address_modal_recipient", "");
+});
+
+
+$("#address_modal_recipient_address").on("change", function(){
+  getRecipientFullAddress("address_modal_recipient_address", "_address");
 });

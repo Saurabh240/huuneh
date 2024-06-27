@@ -411,6 +411,14 @@ $("#edit_user").on("submit", function (event) {
 
       var data = new FormData();
 
+      let emailSubcheckbox = document.getElementById('email_subscription');
+      var email_subscription;
+      if (emailSubcheckbox.checked) {
+        email_subscription = 1;
+      } else {
+        email_subscription = 0;
+      }
+
       data.append("username", username);
       data.append("password", password);
       data.append("document_number", document_number);
@@ -423,6 +431,7 @@ $("#edit_user").on("submit", function (event) {
       data.append("notes", notes);
       data.append("total_address", total_address);
       data.append("id", id);
+      data.append("email_subscription", email_subscription);
 
       for (var a of address) {
         data.append("address[]", a.value);

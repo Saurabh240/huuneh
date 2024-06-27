@@ -451,8 +451,23 @@ $user_addreses = $db->cdp_registros();
                                                     </div>
                                                 </div>
 
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group ml-4">
+                                                            <input class="form-check-input" type="checkbox" role="switch" name="email_subscription" id="email_subscription"
+                                                                <?php 
+                                                                    if($row->email_subscription == 1)
+                                                                        echo "checked";
+                                                                ?>
+                                                            >
+                                                                <label class="form-check-label" for="email_subscription">Email Notification Subscription</label>
+                                                                
+                                                        </div>
+                                                    </div>
+                                                </div>
+
                                             </section>
-                                            <div class="form-group">
+                                            <div class="form-group mt-1">
                                                 <div class="col-sm-12">
                                                     <button class="btn btn-outline-primary btn-confirmation" name="save_data" id="save_data" type="submit"><?php echo $lang['user-account20'] ?><span><i class="icon-ok"></i></span></button>
                                                     <a href="customers_list.php" class="btn btn-outline-secondary btn-confirmation"><span><i class="ti-share-alt"></i></span> <?php echo $lang['user_manage30'] ?></a>
@@ -488,7 +503,7 @@ $user_addreses = $db->cdp_registros();
     <script src="assets/template/assets/libs/select2/dist/js/select2.min.js"></script>
     <script src="assets/template/assets/libs/intlTelInput/intlTelInput.js"></script>
 
-    <script src="dataJs/customers_profile_edit.js"></script>
+    <script src="dataJs/customers_profile_edit.js?v=6"></script>
 
 
 </body>
