@@ -149,82 +149,6 @@ if (empty($errors)) {
 
     if ($shipment_id !== null) {
 
-        /*if (isset($_POST["packages"])) {
-
-            $packages = json_decode($_POST['packages']);
-
-            $sumador_total = 0;
-            $sumador_valor_declarado = 0;
-            $max_fixed_charge = 0;
-            $sumador_libras = 0;
-            $sumador_volumetric = 0;
-
-            $precio_total = 0;
-            $total_impuesto = 0;
-            $total_descuento = 0;
-            $total_seguro = 0;
-            $total_peso = 0;
-            $total_impuesto_aduanero = 0;
-            $total_valor_declarado = 0;
-
-            $tariffs_value = $_POST["tariffs_value"];
-            $declared_value_tax = $_POST["declared_value_tax"];
-            $insurance_value = $_POST["insurance_value"];
-            $tax_value = $_POST["tax_value"];
-            $discount_value = $_POST["discount_value"];
-            $reexpedicion_value = $_POST["reexpedicion_value"];
-            $price_lb = $_POST["price_lb"];
-            $insured_value = $_POST["insured_value"];
-
-            foreach ($packages as $package) {
-
-                $dataAddresses = array(
-                    'order_id' =>  $shipment_id,
-                    'qty' =>  $package->qty,
-                    'description' =>  $package->description,
-                    'length' =>  $package->length,
-                    'width' =>  $package->width,
-                    'height' =>  $package->height,
-                    'weight' =>  $package->weight,
-                    'declared_value' =>  $package->declared_value,
-                    'fixed_value' =>  $_POST["fixed_rate"],
-                );
-
-                cdp_insertCourierShipmentPackages($dataAddresses);
-
-                // calculate weight columetric box size
-                $total_metric = $package->length * $package->width * $package->height / $meter;
-                $weight = $package->weight;
-
-                // calculate weight x price
-                if ($weight > $total_metric) {
-                    $calculate_weight = $weight;
-                    $sumador_libras += $weight;
-                } else {
-                    $calculate_weight = $total_metric;
-                    $sumador_volumetric += $total_metric;
-                }
-
-                $sumador_valor_declarado += $package->declared_value;
-                $max_fixed_charge += $package->fixed_value;
-            }
-            // $precio_total = $calculate_weight * $price_lb;
-            $sumador_total += $price_lb;
-
-            if ($sumador_total > $min_cost_tax) {
-                $total_impuesto = $sumador_total * $tax_value / 100;
-            }
-
-            if ($sumador_valor_declarado > $min_cost_declared_tax) {
-                $total_valor_declarado = $sumador_valor_declarado * $declared_value_tax / 100;
-            }
-
-            $total_descuento = $sumador_total * $discount_value / 100;
-            $total_peso = $sumador_libras + $sumador_volumetric;
-            $total_seguro = $insured_value * $insurance_value / 100;
-            $total_impuesto_aduanero = $total_peso * $tariffs_value;
-            $total_envio = $_POST["pickuptotal"];
-        }*/
         $total_envio = $_POST['total_order'];
 
         $dataShipmentUpdateTotals = array(
@@ -308,6 +232,8 @@ if (empty($errors)) {
 
         $email_template = cdp_getEmailTemplatesdg1i4(16);
 
+        $user = $user->cdp_getUserData();
+
         $body = str_replace(
             array(
                 '[NAME]',
@@ -333,69 +259,69 @@ if (empty($errors)) {
         $newbody = cdp_cleanOut($body);
 
         //SENDMAIL PHP
+        if($user->email_subscription){
+            if ($check_mail == 'PHP') {
 
-        if ($check_mail == 'PHP') {
+                $message = $newbody;
+                $to = $sender_data->email;
+                $from = $site_email;
 
-            $message = $newbody;
-            $to = $sender_data->email;
-            $from = $site_email;
+                $header = "MIME-Version: 1.0\r\n";
+                $header .= "Content-type: text/html; charset=UTF-8 \r\n";
+                $header .= "From: " . $from . " \r\n";
+                try {
+                    mail($to, $subject, $message, $header);
+                } catch (Exception $e) {
+                }
+            } elseif ($check_mail == 'SMTP') {
 
-            $header = "MIME-Version: 1.0\r\n";
-            $header .= "Content-type: text/html; charset=UTF-8 \r\n";
-            $header .= "From: " . $from . " \r\n";
-            try {
-                mail($to, $subject, $message, $header);
-            } catch (Exception $e) {
-            }
-        } elseif ($check_mail == 'SMTP') {
+                //PHPMAILER PHP
+                $destinatario = $sender_data->email;
 
-            //PHPMAILER PHP
-            $destinatario = $sender_data->email;
+                $mail = new PHPMailer();
+                $mail->IsSMTP();
+                $mail->SMTPAuth = true;
+                $mail->Port = $smtpport;
+                $mail->IsHTML(true);
+                $mail->CharSet = 'UTF-8';
 
-            $mail = new PHPMailer();
-            $mail->IsSMTP();
-            $mail->SMTPAuth = true;
-            $mail->Port = $smtpport;
-            $mail->IsHTML(true);
-            $mail->CharSet = 'UTF-8';
-
-            // Datos de la cuenta de correo utilizada para enviar vía SMTP
-            $mail->Host = $smtphoste;       // Dominio alternativo brindado en el email de alta
-            $mail->Username = $smtpuser;    // Mi cuenta de correo
-            $mail->Password = $smtppass;    //Mi contraseña
-
-
-            $mail->From = $site_email; // Email desde donde envío el correo.
-            $mail->FromName = $names_info;
-            $mail->AddAddress($destinatario); // Esta es la dirección a donde enviamos los datos del formulario
-            $mail->addCC($site_email);
+                // Datos de la cuenta de correo utilizada para enviar vía SMTP
+                $mail->Host = $smtphoste;       // Dominio alternativo brindado en el email de alta
+                $mail->Username = $smtpuser;    // Mi cuenta de correo
+                $mail->Password = $smtppass;    //Mi contraseña
 
 
-            $mail->Subject = $subject; // Este es el titulo del email.
-            $mail->Body = "
-                    <html> 
-                    <body> 
-                    <p>{$newbody}</p>
-                    </body> 
-                    </html>
-                    <br />"; // Texto del email en formato HTML
+                $mail->From = $site_email; // Email desde donde envío el correo.
+                $mail->FromName = $names_info;
+                $mail->AddAddress($destinatario); // Esta es la dirección a donde enviamos los datos del formulario
+                $mail->addCC($site_email);
 
-            $mail->SMTPOptions = array(
-                'ssl' => array(
-                    'verify_peer' => false,
-                    'verify_peer_name' => false,
-                    'allow_self_signed' => true
-                )
-            );
 
-            try {
-                $estadoEnvio = $mail->Send();
-                // echo "El correo fue enviado correctamente.";
-            } catch (Exception $e) {
-                // echo "Ocurrió un error inesperado.";
+                $mail->Subject = $subject; // Este es el titulo del email.
+                $mail->Body = "
+                        <html> 
+                        <body> 
+                        <p>{$newbody}</p>
+                        </body> 
+                        </html>
+                        <br />"; // Texto del email en formato HTML
+
+                $mail->SMTPOptions = array(
+                    'ssl' => array(
+                        'verify_peer' => false,
+                        'verify_peer_name' => false,
+                        'allow_self_signed' => true
+                    )
+                );
+
+                try {
+                    $estadoEnvio = $mail->Send();
+                    // echo "El correo fue enviado correctamente.";
+                } catch (Exception $e) {
+                    // echo "Ocurrió un error inesperado.";
+                }
             }
         }
-
 
         $dataHistory = array(
             'user_id' =>  $_SESSION['userid'],
