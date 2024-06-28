@@ -387,4 +387,67 @@ class User
 
         return $row;
     }
+
+    public function cdp_getUserInfoViaEmail($email)
+    {
+        $email = trim($email);
+
+        $this->db->cdp_query('SELECT * FROM cdb_users WHERE email=:email');
+
+        $this->db->bind(':email', $email);
+
+        $this->db->cdp_execute();
+        return $user = $this->db->cdp_registro();
+    }
+
+    public function cdp_emailCheck($email)
+    {
+        if (!empty($email)) {
+            $row = $this->cdp_getUserInfoViaEmail($email);
+            return $row;
+        } else {
+            return false;
+        }
+    }
+
+    public function cdp_getUserAddress($address, $sender_id)
+    {
+        $address = trim($address);
+        $sender_id = trim($sender_id);
+
+        $this->db->cdp_query("SELECT * FROM cdb_senders_addresses WHERE `address`=:address AND `user_id`=:user_id");
+
+        $this->db->bind(':address', $address);
+        $this->db->bind(':user_id', $sender_id);
+
+        $this->db->cdp_execute();
+        return $address = $this->db->cdp_registro();
+    }
+
+    public function cdp_getRecipient($recipient_email, $recipient_address)
+    {
+        $address = trim($recipient_address);
+        $recipient_email = trim($recipient_email);
+
+        $this->db->cdp_query("SELECT * FROM cdb_recipients WHERE email=:email");
+
+        $this->db->bind(':email', $recipient_email);
+
+        $this->db->cdp_execute();
+        return $recipient = $this->db->cdp_registro();   
+    }
+
+    public function cdp_getRecipientAddress($recipient_id, $recipient_address)
+    {
+        $address = trim($recipient_address);
+        $recipient_id = trim($recipient_id);
+
+        $this->db->cdp_query("SELECT * FROM cdb_recipients_addresses WHERE address=:address AND recipient_id=:recipient_id");
+
+        $this->db->bind(':address', $address);
+        $this->db->bind(':recipient_id', $recipient_id);
+
+        $this->db->cdp_execute();
+        return $address = $this->db->cdp_registro();
+    }
 }
