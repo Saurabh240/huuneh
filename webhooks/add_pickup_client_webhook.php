@@ -26,14 +26,14 @@ $deliveryTypes = [
 
 try {
   // Validate the token
-  if (empty($_POST['sender_email'])) {
+  if (empty($_POST['sender_full_name'])) {
     throw new Exception('Sender Not found');
   }
-  $sender_email = $_POST['sender_email'];
-  $sender = $user->cdp_emailCheck($sender_email);
+  $sender_name = $_POST['sender_full_name'];
+  $sender = $user->cdp_nameCheck($sender_name);
 
   if (!$sender || empty($sender->id)) {
-    throw new Exception('Invalid sender email or user not found.');
+    throw new Exception('Invalid sender full name or user not found.');
   }
 
   // Validate delivery type
@@ -47,8 +47,8 @@ try {
   }
 
   // Validate recipient email
-  if (empty($_POST['recipient_email'])) {
-    throw new Exception('Recipient email is missing.');
+  if (empty($_POST['recipient_full_name'])) {
+    throw new Exception('Recipient full name is missing.');
   }
 
   // Validate dropoff address
@@ -70,7 +70,7 @@ try {
   $sender_address_id = $sender_address_id->id_addresses;
 
   // Get recipient ID and address ID
-  $recipient_id = $user->cdp_getRecipient($_POST['recipient_email'], $sender_id);
+  $recipient_id = $user->cdp_getRecipient($_POST['recipient_full_name'], $sender_id);
   if (empty($recipient_id)) {
     throw new Exception('Recipient not found.');
   }

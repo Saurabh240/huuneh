@@ -388,22 +388,25 @@ class User
         return $row;
     }
 
-    public function cdp_getUserInfoViaEmail($email)
+    public function cdp_getUserInfoViaName($sender_name)
     {
-        $email = trim($email);
+        $sender_name = trim($sender_name);
+        $first_name = get_first_name($sender_name);
+        $last_name = get_last_name($sender_name);
 
-        $this->db->cdp_query('SELECT * FROM cdb_users WHERE email=:email');
+        $this->db->cdp_query('SELECT * FROM cdb_users WHERE fname=:fname AND lname=:lname');
 
-        $this->db->bind(':email', $email);
+        $this->db->bind(':fname', $first_name);
+        $this->db->bind(':lname', $last_name);
 
         $this->db->cdp_execute();
         return $user = $this->db->cdp_registro();
     }
 
-    public function cdp_emailCheck($email)
+    public function cdp_nameCheck($sender_name)
     {
-        if (!empty($email)) {
-            $row = $this->cdp_getUserInfoViaEmail($email);
+        if (!empty($sender_name)) {
+            $row = $this->cdp_getUserInfoViaName($sender_name);
             return $row;
         } else {
             return false;
@@ -424,14 +427,17 @@ class User
         return $address = $this->db->cdp_registro();
     }
 
-    public function cdp_getRecipient($recipient_email, $recipient_address)
+    public function cdp_getRecipient($recipient_name, $sender_id)
     {
-        $address = trim($recipient_address);
-        $recipient_email = trim($recipient_email);
+        $recipient_name = trim($recipient_name);
+        $first_name = get_first_name($recipient_name);
+        $last_name = get_last_name($recipient_name);
 
-        $this->db->cdp_query("SELECT * FROM cdb_recipients WHERE email=:email");
+        $this->db->cdp_query("SELECT * FROM cdb_recipients WHERE fname=:fname AND lname=:lname AND sender_id=:sender_id");
 
-        $this->db->bind(':email', $recipient_email);
+        $this->db->bind(':fname', $first_name);
+        $this->db->bind(':lname', $last_name);
+        $this->db->bind(':sender_id', $sender_id);
 
         $this->db->cdp_execute();
         return $recipient = $this->db->cdp_registro();   
