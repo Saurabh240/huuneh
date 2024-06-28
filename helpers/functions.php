@@ -204,7 +204,7 @@ function get_fullname($first_name, $last_name)
 }
 
 
-function calculateDistance($origin, $destination) {
+function calculateDistance1($origin, $destination) {
   $apiKey = 'AIzaSyCAP41rsfjKCKORsVRuSM_4ff6f7YGV7kQ';
   $url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=$origin&destinations=$destination&key=$apiKey";
   $response = file_get_contents($url);
@@ -229,7 +229,7 @@ function calculateDistance($origin, $destination) {
 }
 
 // Function to get rates based on delivery type and business type
-function getRatesByDeliveryTypeAndBusinessType($deliveryType, $businessType) {
+function getRatesByDeliveryTypeAndBusinessType1($deliveryType, $businessType) {
   $rates = [
       'default' => [
           'SAME DAY (1PM to 4PM)' => ['baseRate' => 10.00, 'additionalRatePerKm' => 0.55, 'baseKm' => 10],
@@ -300,7 +300,7 @@ function getRatesByDeliveryTypeAndBusinessType($deliveryType, $businessType) {
 }
 
 // Function to calculate shipping price based on distance, base rate, and additional rate per kilometer
-function calculateShippingPrice($distance, $baseRate, $additionalRatePerKm, $baseKm) {
+function calculateShippingPrice1($distance, $baseRate, $additionalRatePerKm, $baseKm) {
   // Calculate additional rate for distance beyond base kilometers
   $additionalDistance = max(0, ($distance - $baseKm));
   $additionalCharge = $additionalDistance * $additionalRatePerKm;

@@ -89,7 +89,7 @@ try {
   $destination = urlencode($_POST["dropoff_address"]);
   
   
-  $distance = calculateDistance($origin, $destination);
+  $distance = calculateDistance1($origin, $destination);
     
   if (empty($distance)) {
     $distance = 0;
@@ -102,12 +102,12 @@ try {
 
   if ($distance) {
       // Calculate shipping price based on distance and delivery type
-      $rates = getRatesByDeliveryTypeAndBusinessType($delivery_type, $business_type);
+      $rates = getRatesByDeliveryTypeAndBusinessType1($delivery_type, $business_type);
       if ($rates) {
           $baseRate = $rates['baseRate'];
           $additionalRatePerKm = $rates['additionalRatePerKm'];
           $baseKm = $rates['baseKm'];
-          $shippingPrice = calculateShippingPrice($distance, $baseRate, $additionalRatePerKm, $baseKm);
+          $shippingPrice = calculateShippingPrice1($distance, $baseRate, $additionalRatePerKm, $baseKm);
       } else {
           echo "<p>Invalid delivery type or business type.</p>";
       }
