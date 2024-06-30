@@ -5335,7 +5335,11 @@ function cdp_insertCourierPickupFromCustomer($datos)
         due_date,
         notes,
         status_invoice,
-        order_incomplete                 
+        order_incomplete,
+        charge,
+        no_of_rx,
+        notes_for_driver,
+        tags              
         )
     VALUES
         (
@@ -5356,8 +5360,11 @@ function cdp_insertCourierPickupFromCustomer($datos)
         :due_date,
         :notes,
         :status_invoice,
-        :order_incomplete         
-
+        :order_incomplete,
+        :charge,
+        :no_of_rx,
+        :notes_for_driver,
+        :tags
         )
 ");
 
@@ -5381,6 +5388,10 @@ function cdp_insertCourierPickupFromCustomer($datos)
     $db->bind(':status_invoice',   $datos["status_invoice"]);
     $db->bind(':volumetric_percentage',   $datos["volumetric_percentage"]);
     $db->bind(':notes',   $datos["notes"]);
+    $db->bind(':charge',   $datos["charge"]);
+    $db->bind(':no_of_rx',   $datos["no_of_rx"]);
+    $db->bind(':notes_for_driver',   $datos["notes_for_driver"]);
+    $db->bind(':tags',   $datos["tags"]);
 
     $db->cdp_execute();
     

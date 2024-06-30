@@ -49,7 +49,7 @@ $datas = $db->cdp_registros();
 
 foreach ($datas as $key) {
 
-	$data[] = array('id' => $key->id, 'text' => $key->fname . " " . $key->lname);
+	$data[] = array('id' => $key->id, 'text' => $key->fname . " " . $key->lname, 'business_type' => $key->business_type);
 }
 
 echo json_encode($data);

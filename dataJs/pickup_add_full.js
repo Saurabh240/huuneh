@@ -667,91 +667,7 @@ $("#invoice_form").on("submit", function (event) {
     alert("error files");
     return false;
   }
-  // sweealert 2, alerta error informacion de paquetes
-
-  /* for (let [i, val] of packagesItems.entries()) {
-      if ($.trim($("#description_" + i).val()).length == 0) {
-          Swal.fire({
-              type: 'Error!',
-              text: validation_description,
-              icon: 'error',
-              confirmButtonText: 'Ok'
-          });
-          $("#description_" + i).focus();
-          return false;
-      }
-      if ($.trim($("#qty_" + i).val()).length == 0) {
-          Swal.fire({
-              type: 'Error!',
-              text: validation_quantity,
-              icon: 'error',
-              confirmButtonText: 'Ok'
-          });
-          $("#qty_" + i).focus();
-          return false;
-      }
-      if ($.trim($("#weight_" + i).val()).length == 0) {
-          Swal.fire({
-              type: 'Error!',
-              text: validation_weight,
-              icon: 'error',
-              confirmButtonText: 'Ok'
-          });
-          $("#weight_" + i).focus();
-          return false;
-      }
-      if ($.trim($("#length_" + i).val()).length == 0) {
-          Swal.fire({
-              type: 'Error!',
-              text: validation_length,
-              icon: 'error',
-              confirmButtonText: 'Ok'
-          });
-          $("#length_" + i).focus();
-          return false;
-      }
-      if ($.trim($("#width_" + i).val()).length == 0) {
-          Swal.fire({
-              type: 'Error!',
-              text: validation_width,
-              icon: 'error',
-              confirmButtonText: 'Ok'
-          });
-          $("#width_" + i).focus();
-          return false;
-      }
-      if ($.trim($("#height_" + i).val()).length == 0) {
-          Swal.fire({
-              type: 'Error!',
-              text: validation_height,
-              icon: 'error',
-              confirmButtonText: 'Ok'
-          });
-          $("#height_" + i).focus();
-          return false;
-      }
-      if ($.trim($("#fixedValue_" + i).val()).length == 0) {
-          Swal.fire({
-              type: 'Error!',
-              text: validation_charge,
-              icon: 'error',
-              confirmButtonText: 'Ok'
-          });
-          $("#fixedValue_" + i).focus();
-          return false;
-      }
-      if ($.trim($("#declaredValue_" + i).val()).length == 0) {
-          Swal.fire({
-              type: 'Error!',
-              text: validation_declared,
-              icon: 'error',
-              confirmButtonText: 'Ok'
-          });
-          $("#declaredValue_" + i).focus();
-          return false;
-      }
-  }*/
-
+  
   var prefix_check = $("#prefix_check").val();
   var code_prefix = $("#code_prefix").val();
   var code_prefix2 = $("#code_prefix2").val();
@@ -799,6 +715,40 @@ $("#invoice_form").on("submit", function (event) {
   var deleted_file_ids = $("#deleted_file_ids").val();
 
   var data = new FormData();
+
+
+  // Initialize variables
+  var tags = [];
+  var charge = "";
+  var no_of_rx = "";
+  var notes_for_driver = "";
+
+  // Get business type
+  var business_type = $("#businessType").val();
+
+  if (business_type && business_type === "pharmacy") {
+    // Collect checked checkbox values
+    $('input[name="tags[]"]:checked').each(function() {
+      tags.push($(this).val());
+    });
+
+    // Collect other form inputs
+    charge = $("#charge").val();
+    no_of_rx = $("#rxNumber").val();
+    notes_for_driver = $("#notesForDriver").val();
+  }
+
+  // Append tags as individual entries
+  tags.forEach(function(tag, index) {
+    data.append("tags[]", tag);
+  });
+
+  // Append other form fields
+  data.append("charge", charge);
+  data.append("no_of_rx", no_of_rx);
+  data.append("notes_for_driver", notes_for_driver);
+
+
 
 
   sender_address_id = $('#sender_address_id').val();
@@ -1039,10 +989,6 @@ function getTariffs() {
   //   });
 }
 
-
-$("#calculate_invoice").css({ opacity: 0, height: 0, width: 0, padding: 0 });
-
-$("#calculate_invoice").on("click", getTariffs);
 function isNumberKey(evt, element) {
   var charCode = evt.which ? evt.which : event.keyCode;
   if (
@@ -1247,6 +1193,19 @@ function cdp_select2_init_sender() {
     })
     .on("change", function (e) {
       var sender_id = $("#sender_id").val();
+
+    var selectedData = $("#sender_id").select2("data");
+    var businessType = null;
+    if (selectedData.length > 0) {
+        businessType = selectedData[0].business_type;
+    }
+    $("#businessType").val(businessType);
+    if (businessType == "pharmacy") {
+        $("#specialBusinessCard").css("display", "flex");
+    } else {
+        $("#specialBusinessCard").css("display", "none");
+    }
+
       $("#sender_address_id").attr("disabled", true);
       $("#recipient_id").attr("disabled", true);
 
@@ -1651,7 +1610,6 @@ $("#add_user_from_modal_shipments").on("submit", function (event) {
 
 $("#add_recipient_from_modal_shipments").on("submit", function (event) {
   event.preventDefault(); // Evitar el envío del formulario por defecto
-  debugger;
   if ($.trim($("#fullname_recipient").val()).length == 0) {
     Swal.fire({
 
@@ -1892,15 +1850,13 @@ $('#recipient_address_id').on('select2:select', function (e) {
 });
 
 $('#deliveryType').on('change', function () {
-  deliveryType = $(this).val();
-
-  console.log("Selected delivery value:", deliveryType);
-
-  calculateAndDisplayDistance(senderadd, receiveradd, deliveryType, () => { $("#calculate_invoice").click(); });
+  var deliveryType = $(this).val();
+  var sender_id = $("#sender_id option:selected").val();
+  calculateAndDisplayDistance(senderadd, receiveradd, deliveryType, sender_id);
 })
 
 //Function to calculate distance between two coordinates and update distance input
-function calculateAndDisplayDistance(origin, destination, deliveryType, callback = () => { }, sender_id = null) {
+function calculateAndDisplayDistance(origin, destination, deliveryType, sender_id = null) {
   if (!origin) {
     origin = $('#sender_address_id option:selected').text();
   }
@@ -1934,8 +1890,7 @@ function calculateAndDisplayDistance(origin, destination, deliveryType, callback
       window.distance = data.distance;
       localStorage.setItem('baseRate', data.baseRate)
       localStorage.setItem('shipmentfee', data.shipmentfee)
-
-      callback();
+      getTariffs();
     },
     error: function () {
       // Handle error
@@ -2449,69 +2404,4 @@ function cdp_showSuccess(messages, shipment_id) {
     }
   });
 }
-
-/*$("#calculate_invoice").on("click", function (event) {
-  var recipient_id = $("#recipient_id").val();
-  var recipient_address_id = $("#recipient_address_id").val();
-  var sender_id = $("#sender_id").val();
-  var sender_address_id = $("#sender_address_id").val();
-  var packages = JSON.stringify(packagesItems);
-
-  var tariffs_value = $("#tariffs_value").val();
-  var declared_value_tax = $("#declared_value_tax").val();
-  var insurance_value = $("#insurance_value").val();
-  var tax_value = $("#tax_value").val();
-  var discount_value = $("#discount_value").val();
-  var reexpedicion_value = $("#reexpedicion_value").val();
-  var price_lb = $("#price_lb").val();
-  var insured_value = $("#insured_value").val();
-
-  reexpedicion_value = parseFloat(reexpedicion_value);
-  insured_value = parseFloat(insured_value);
-  price_lb = parseFloat(price_lb);
-
-  var data = {
-    packages: packages,
-    sender_id: sender_id,
-    sender_address: sender_address_id,
-    recipient_address: recipient_address_id,
-    recipient_id: recipient_id,
-    tariffs_value: tariffs_value,
-    declared_value_tax: declared_value_tax,
-    insurance_value: insurance_value,
-    tax_value: tax_value,
-    discount_value: discount_value,
-    reexpedicion_value: reexpedicion_value,
-    price_lb: price_lb,
-    insured_value: insured_value,
-  };
-
-  $.ajax({
-    type: "POST",
-    data: data,
-    url: "ajax/courier/get_price_range_weight_tariffs_ajax.php",
-    dataType: "json",
-    beforeSend: function (objeto) {
-      $(".resultados_ajax").html("Mensaje: loading...");
-    },
-    success: function (data) {
-      if (data.success) {
-        $("#table-totals").removeClass("d-none");
-        $("#create_invoice").attr("disabled", false);
-        $("#price_lb").val(data.data.price);
-        calculateFinalTotal();
-      } else {
-        $("#table-totals").addClass("d-none");
-        $("#create_invoice").attr("disabled", true);
-        Swal.fire({
-          title: "Error!",
-          text: data.error,
-          icon: "error",
-          confirmButtonText: "Ok",
-        });
-      }
-    },
-  });
-  event.preventDefault();
-});*/
 

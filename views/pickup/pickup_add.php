@@ -23,6 +23,7 @@
 
 $userData = $user->cdp_getUserData();
 
+
 /*echo 'Current Date time=>'.time().'<br>';
 echo 'Fixed Time ->'.strtotime("2:00 PM");exit;*/
 
@@ -270,6 +271,67 @@ echo 'Fixed Time ->'.strtotime("2:00 PM");exit;*/
                             </div>
                         </div>        
                     </div>
+
+
+                    <input type="hidden" id="businessType" value="<?php echo $userData->business_type; ?>" />
+
+                <?php  if( $userData->business_type == "pharmacy" ) { ?>
+                    <div class="card">
+                        <div class="card-body">
+                            <!-- Charge and Rx Number Row -->
+                            <div class="mb-3 row">
+                                <div class="col-md-6">
+                                <label for="charge" class="form-label">Charge</label>
+                                <input type="text" class="form-control" name="charge" id="charge" placeholder="$ amount to be collected">
+                                </div>
+                                <div class="col-md-6">
+                                <label for="rxNumber" class="form-label"># of Rx - <span class="text-muted">For Pharmacy tracking purpose only</span></label>
+                                <input type="text" class="form-control" name="no_of_rx" id="rxNumber" placeholder="# of Rx">
+                                </div>
+                            </div>
+                            
+                            <!-- Tags Section -->
+                            <div class="mb-3">
+                                <label class="form-label">Tags</label>
+                                <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="fridgeItem" name="tags[]" value="Fridge Item (2-4 C)">
+                                <label class="form-check-label" for="fridgeItem">Fridge Item (2-4 C)</label>
+                                </div>
+                                <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="handDeliver" name="tags[]" value="Hand Deliver">
+                                <label class="form-check-label" for="handDeliver">Hand Deliver</label>
+                                </div>
+                                <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="narcotics" name="tags[]" value="Narcotics">
+                                <label class="form-check-label" for="narcotics">Narcotics</label>
+                                </div>
+                                <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="pickupRxPaper" name="tags[]" value="Pickup Rx Paper">
+                                <label class="form-check-label" for="pickupRxPaper">Pickup Rx Paper</label>
+                                </div>
+                                <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="pickUpOldMedication" name="tags[]" value="Pick up Old Medication">
+                                <label class="form-check-label" for="pickUpOldMedication">Pick up Old Medication</label>
+                                </div>
+                            </div>
+
+                            
+                            <!-- Notes Section -->
+                            <div class="mb-3">
+                                <label for="notes" class="form-label">Notes</label>
+                                <textarea class="form-control" id="notesForDriver" name="notes_for_driver" rows="3" placeholder="Please be brief"></textarea>
+                                <div class="form-text">Add any special instruction notes for the driver</div>
+                            </div>
+                            
+                            <!-- Dispatch Button -->
+                            <!-- <div class="text-end">
+                                <button type="submit" class="btn btn-primary">Dispatch</button>
+                            </div> -->
+                        </div>
+                    </div>
+                <?php  } ?>
+
+
                     <!-- Row -->
                     <div class="row">
                     <div class="col-lg-4 h-70"  >
@@ -730,12 +792,7 @@ echo 'Fixed Time ->'.strtotime("2:00 PM");exit;*/
                                                     <div class="text-right">
                                                         <input type="hidden" name="total_item_files" id="total_item_files" value="0" />
                                                         <input type="hidden" name="deleted_file_ids" id="deleted_file_ids" />
-                                                        <button type="button" name="calculate_invoice" id="calculate_invoice" class="btn btn-info">
-                                                            <i class="fas fa-calculator"></i>
-                                                            <span class="ml-1">
-                                                                <?php echo $lang['leftorder17714'] ?>
-                                                            </span>
-                                                        </button>
+                                                        
                                                         &nbsp;
                                                         <button type="submit" name="create_invoice" id="create_invoice" class="btn btn-success" disabled>
                                                             <i class="fas fa-save"></i>
@@ -800,7 +857,7 @@ echo 'Fixed Time ->'.strtotime("2:00 PM");exit;*/
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCAP41rsfjKCKORsVRuSM_4ff6f7YGV7kQ&callback=initAutocomplete&libraries=places&v=weekly"
       defer
     ></script>
-    <script src="dataJs/pickup_add.js?v=6"></script>
+    <script src="dataJs/pickup_add.js?v=8"></script>
 
 </body>
 

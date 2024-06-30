@@ -117,7 +117,11 @@ if (empty($errors)) {
         'status_courier' =>  cdp_sanitize(intval($status)),
         'due_date' =>  $due_date,
         'status_invoice' =>  $status_invoice,
-        'volumetric_percentage' =>  $meter
+        'volumetric_percentage' =>  $meter,
+        'charge' => cdp_sanitize($_POST['charge']),
+        'no_of_rx' => cdp_sanitize($_POST['no_of_rx']),
+        'notes_for_driver' => cdp_sanitize($_POST['notes_for_driver']),
+        'tags' => !empty($_POST['tags']) && is_array($_POST['tags']) ? json_encode($_POST['tags']) : json_encode([])
     );
 
     $shipment_id = cdp_insertCourierPickupFromCustomer($dataShipment);

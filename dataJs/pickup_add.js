@@ -803,99 +803,16 @@ function calculateFinalTotal(element = null) {
   $("#total_fixed").html(max_fixed_charge.toFixed(2));
   //$("#total_declared").html(shipmentfee);
   $("#create_invoice").attr("disabled", false);
-  $("#calculate_invoice").attr("disabled", false);
 }
 
 $("#invoice_form").on("submit", function (event) {
-  if (cdp_validateZiseFiles() == true) {
-    alert("error files");
-    return false;
-  }
-
-  // sweealert 2, alerta error informacion de paquetes
-
-  // for (let [i, val] of packagesItems.entries()) {
-  //     if ($.trim($("#description_" + i).val()).length == 0) {
-  //         Swal.fire({
-  //             type: 'Error!',
-  //             text: validation_description,
-  //             icon: 'error',
-  //             confirmButtonText: 'Ok'
-  //         });
-  //         $("#description_" + i).focus();
-  //         return false;
-  //     }
-  //     if ($.trim($("#qty_" + i).val()).length == 0) {
-  //         Swal.fire({
-  //             type: 'Error!',
-  //             text: validation_quantity,
-  //             icon: 'error',
-  //             confirmButtonText: 'Ok'
-  //         });
-  //         $("#qty_" + i).focus();
-  //         return false;
-  //     }
-  //     if ($.trim($("#weight_" + i).val()).length == 0) {
-  //         Swal.fire({
-  //             type: 'Error!',
-  //             text: validation_weight,
-  //             icon: 'error',
-  //             confirmButtonText: 'Ok'
-  //         });
-  //         $("#weight_" + i).focus();
-  //         return false;
-  //     }
-  //     if ($.trim($("#length_" + i).val()).length == 0) {
-  //         Swal.fire({
-  //             type: 'Error!',
-  //             text: validation_length,
-  //             icon: 'error',
-  //             confirmButtonText: 'Ok'
-  //         });
-  //         $("#length_" + i).focus();
-  //         return false;
-  //     }
-  //     if ($.trim($("#width_" + i).val()).length == 0) {
-  //         Swal.fire({
-  //             type: 'Error!',
-  //             text: validation_width,
-  //             icon: 'error',
-  //             confirmButtonText: 'Ok'
-  //         });
-  //         $("#width_" + i).focus();
-  //         return false;
-  //     }
-  //     if ($.trim($("#height_" + i).val()).length == 0) {
-  //         Swal.fire({
-  //             type: 'Error!',
-  //             text: validation_height,
-  //             icon: 'error',
-  //             confirmButtonText: 'Ok'
-  //         });
-  //         $("#height_" + i).focus();
-  //         return false;
-  //     }
-  //     if ($.trim($("#fixedValue_" + i).val()).length == 0) {
-  //         Swal.fire({
-  //             type: 'Error!',
-  //             text: validation_charge,
-  //             icon: 'error',
-  //             confirmButtonText: 'Ok'
-  //         });
-  //         $("#fixedValue_" + i).focus();
-  //         return false;
-  //     }
-  //     if ($.trim($("#declaredValue_" + i).val()).length == 0) {
-  //         Swal.fire({
-  //             type: 'Error!',
-  //             text: validation_declared,
-  //             icon: 'error',
-  //             confirmButtonText: 'Ok'
-  //         });
-  //         $("#declaredValue_" + i).focus();
-  //         return false;
-  //     }
+  
+  event.preventDefault();
+  // if (cdp_validateZiseFiles() == true) {
+  //   alert("error files");
+  //   return false;
   // }
+
 
   var prefix_check = $("#prefix_check").val();
   var code_prefix = $("#code_prefix").val();
@@ -915,10 +832,6 @@ $("#invoice_form").on("submit", function (event) {
 
   var recipient_id = $("#recipient_id").val();
   var recipient_address_id = $("#recipient_address_id").val();
-  var order_item_category = $("#order_item_category").val();
-  var order_courier = $("#order_courier").val();
-  var order_service_options = $("#order_service_options").val();
-  var order_package = $("#order_package").val();
   var order_date = $("#order_date").val();
   var status_courier = $("#status_courier").val();
 
@@ -935,12 +848,44 @@ $("#invoice_form").on("submit", function (event) {
   var baseRate = localStorage.getItem('baseRate');
   var shipmentfee = localStorage.getItem('shipmentfee');
   var delivery_notes = $("#delivery_notes").val();
-
+  
   var deleted_file_ids = $("#deleted_file_ids").val();
 
+  
   var data = new FormData();
 
-  // data.append("packages", JSON.stringify(packagesItems));
+  // Initialize variables
+  var tags = [];
+  var charge = "";
+  var no_of_rx = "";
+  var notes_for_driver = "";
+
+  // Get business type
+  var business_type = $("#businessType").val();
+
+  if (business_type && business_type === "pharmacy") {
+    // Collect checked checkbox values
+    $('input[name="tags[]"]:checked').each(function() {
+      tags.push($(this).val());
+    });
+
+    // Collect other form inputs
+    charge = $("#charge").val();
+    no_of_rx = $("#rxNumber").val();
+    notes_for_driver = $("#notesForDriver").val();
+  }
+
+  // Append tags as individual entries
+  tags.forEach(function(tag, index) {
+    data.append("tags[]", tag);
+  });
+
+  // Append other form fields
+  data.append("charge", charge);
+  data.append("no_of_rx", no_of_rx);
+  data.append("notes_for_driver", notes_for_driver);
+
+
 
   if (delivery_notes) {
     data.append("notes", delivery_notes);
@@ -984,18 +929,6 @@ $("#invoice_form").on("submit", function (event) {
   if (recipient_address_id) {
     data.append("recipient_address_id", recipient_address_id);
   }
-  /*if (order_item_category) {
-    data.append("order_item_category", order_item_category);
-  }
-  if (order_courier) {
-    data.append("order_courier", order_courier);
-  }
-  if (order_service_options) {
-    data.append("order_service_options", order_service_options);
-  }
-  if (order_package) {
-    data.append("order_package", order_package);
-  }*/
   if (order_date) {
     data.append("order_date", order_date);
   }
@@ -2359,12 +2292,8 @@ $(document).ready(function () {
   });
 
   document.querySelector('#deliveryType').addEventListener("change", function () {
-    $("#calculate_invoice").click();
+    getTariffs();
   });
-
-  $("#calculate_invoice").css({ opacity: 0, height: 0, width: 0, padding: 0 });
-  $("#calculate_invoice").on("click", getTariffs);
-
 
   $(document).on('change', '#recipient_id', function () {
     var recipient_id = $(this).val();
@@ -2477,22 +2406,6 @@ $(document).ready(function () {
     calculateAndDisplayDistance(senderadd, receiveradd, deliveryType);
 
   });
-
-
-  // $('#deliveryType').on('change',function(){
-
-  //   // deliveryType =  $(this).val();
-  //   console.log(senderadd)
-  //   console.log(receiveradd)
-
-  //   console.log("Selected delivery value:", deliveryType);
-  //   $("#calculate_invoice").attr("disabled", true);
-
-  //   calculateAndDisplayDistance(senderadd, receiveradd,deliveryType);
-  //   $("#calculate_invoice").attr("disabled", false);
-  // })
-
-
 
   $('#id_of_your_checkboxreceiver').click(function () {
     if ($(this).is(':checked')) {
