@@ -378,71 +378,73 @@ if (isset($_POST["create_invoice"])) {
 
 
     //SENDMAIL PHP
+    if($userData->email_subscription){
 
-    if ($check_mail == 'PHP') {
+        if ($check_mail == 'PHP') {
 
-        $message = $newbody;
-        $to = $sender_data->email;
-        $from = $site_email;
+            $message = $newbody;
+            $to = $sender_data->email;
+            $from = $site_email;
 
-        $header = "MIME-Version: 1.0\r\n";
-        $header .= "Content-type: text/html; charset=UTF-8 \r\n";
-        $header .= "From: " . $from . " \r\n";
+            $header = "MIME-Version: 1.0\r\n";
+            $header .= "Content-type: text/html; charset=UTF-8 \r\n";
+            $header .= "From: " . $from . " \r\n";
 
-        mail($to, $subject, $message, $header);
-    } elseif ($check_mail == 'SMTP') {
-
-
-        //PHPMAILER PHP   
+            mail($to, $subject, $message, $header);
+        } elseif ($check_mail == 'SMTP') {
 
 
-        $destinatario = $sender_data->email;
+            //PHPMAILER PHP   
 
 
-        $mail = new PHPMailer();
-        $mail->IsSMTP();
-        $mail->SMTPAuth = true;
-        $mail->Port = $smtpport;
-        $mail->IsHTML(true);
-        $mail->CharSet = "utf-8";
-
-        // Datos de la cuenta de correo utilizada para enviar vía SMTP
-        $mail->Host = $smtphoste;       // Dominio alternativo brindado en el email de alta
-        $mail->Username = $smtpuser;    // Mi cuenta de correo
-        $mail->Password = $smtppass;    //Mi contraseña
+            $destinatario = $sender_data->email;
 
 
-        $mail->From = $site_email; // Email desde donde envío el correo.
-        $mail->FromName = $names_info;
-        $mail->AddAddress($destinatario); // Esta es la dirección a donde enviamos los datos del formulario
+            $mail = new PHPMailer();
+            $mail->IsSMTP();
+            $mail->SMTPAuth = true;
+            $mail->Port = $smtpport;
+            $mail->IsHTML(true);
+            $mail->CharSet = "utf-8";
 
-        $mail->Subject = $subject; // Este es el titulo del email.
-        $mail->Body = "
-                <html> 
-                
-                <body> 
-                
-                <p>{$newbody}</p>
-                
-                </body> 
-                
-                </html>
-                
-                <br />"; // Texto del email en formato HTML
+            // Datos de la cuenta de correo utilizada para enviar vía SMTP
+            $mail->Host = $smtphoste;       // Dominio alternativo brindado en el email de alta
+            $mail->Username = $smtpuser;    // Mi cuenta de correo
+            $mail->Password = $smtppass;    //Mi contraseña
 
-        $mail->SMTPOptions = array(
-            'ssl' => array(
-                'verify_peer' => false,
-                'verify_peer_name' => false,
-                'allow_self_signed' => true
-            )
-        );
 
-        $estadoEnvio = $mail->Send();
-        if ($estadoEnvio) {
-            // echo "El correo fue enviado correctamente.";
-        } else {
-            // echo "Ocurrió un error inesperado.";
+            $mail->From = $site_email; // Email desde donde envío el correo.
+            $mail->FromName = $names_info;
+            $mail->AddAddress($destinatario); // Esta es la dirección a donde enviamos los datos del formulario
+
+            $mail->Subject = $subject; // Este es el titulo del email.
+            $mail->Body = "
+                    <html> 
+                    
+                    <body> 
+                    
+                    <p>{$newbody}</p>
+                    
+                    </body> 
+                    
+                    </html>
+                    
+                    <br />"; // Texto del email en formato HTML
+
+            $mail->SMTPOptions = array(
+                'ssl' => array(
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                    'allow_self_signed' => true
+                )
+            );
+
+            $estadoEnvio = $mail->Send();
+            if ($estadoEnvio) {
+                // echo "El correo fue enviado correctamente.";
+            } else {
+                // echo "Ocurrió un error inesperado.";
+            }
         }
     }
 

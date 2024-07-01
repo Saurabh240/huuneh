@@ -326,67 +326,69 @@ if (empty($errors)) {
         $newbody = cdp_cleanOut($body);
 
         //SENDMAIL PHP
+        $userDt = $user->cdp_getUserData();
+        if($userDt->email_subscription){
+            if ($check_mail == 'PHP') {
 
-        if ($check_mail == 'PHP') {
+                $message = $newbody;
+                $to = $sender_data->email;
+                $from = $site_email;
 
-            $message = $newbody;
-            $to = $sender_data->email;
-            $from = $site_email;
+                $header = "MIME-Version: 1.0\r\n";
+                $header .= "Content-type: text/html; charset=UTF-8 \r\n";
+                $header .= "From: " . $from . " \r\n";
+                try {
+                    mail($to, $subject, $message, $header);
+                } catch (Exception $e) {
+                }
+            } elseif ($check_mail == 'SMTP') {
 
-            $header = "MIME-Version: 1.0\r\n";
-            $header .= "Content-type: text/html; charset=UTF-8 \r\n";
-            $header .= "From: " . $from . " \r\n";
-            try {
-                mail($to, $subject, $message, $header);
-            } catch (Exception $e) {
-            }
-        } elseif ($check_mail == 'SMTP') {
+                //PHPMAILER PHP
+                $destinatario = $sender_data->email;
 
-            //PHPMAILER PHP
-            $destinatario = $sender_data->email;
+                $mail = new PHPMailer(true);                              // Passing `true` enables exceptions
 
-            $mail = new PHPMailer(true);                              // Passing `true` enables exceptions
+                //Server settings
 
-            //Server settings
+                $mail->isSMTP();                                      // Set mailer to use SMTP
+                $mail->Host = $smtphoste;                       // Specify main and backup SMTP servers
+                $mail->SMTPAuth = true;                               // Enable SMTP authentication
+                $mail->Username = $smtpuser;                   // SMTP username
+                $mail->Password = $smtppass;               // SMTP password
+                $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
+                $mail->Port = 587;                                    // TCP port to connect to
 
-            $mail->isSMTP();                                      // Set mailer to use SMTP
-            $mail->Host = $smtphoste;                       // Specify main and backup SMTP servers
-            $mail->SMTPAuth = true;                               // Enable SMTP authentication
-            $mail->Username = $smtpuser;                   // SMTP username
-            $mail->Password = $smtppass;               // SMTP password
-            $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
-            $mail->Port = 587;                                    // TCP port to connect to
+                //Recipients
+                $mail->setFrom($site_email, $names_info);
+                $mail->addAddress($destinatario);     // Add a recipient
+                $mail->addCC($site_email, $lang['notification_shipment21']);
 
-            //Recipients
-            $mail->setFrom($site_email, $names_info);
-            $mail->addAddress($destinatario);     // Add a recipient
-            $mail->addCC($site_email, $lang['notification_shipment21']);
+                //Content
+                $mail->isHTML(true);                                  // Set email format to HTML
+                $mail->CharSet = 'UTF-8';
+                $mail->Subject = $subject;
+                $mail->Body = "
+                    <html> 
+                    <body> 
+                    <p>{$newbody}</p>
+                    </body> 
+                    </html>
+                    <br />"; // Texto del email en formato HTML
 
-            //Content
-            $mail->isHTML(true);                                  // Set email format to HTML
-            $mail->CharSet = 'UTF-8';
-            $mail->Subject = $subject;
-            $mail->Body = "
-                <html> 
-                <body> 
-                <p>{$newbody}</p>
-                </body> 
-                </html>
-                <br />"; // Texto del email en formato HTML
+                $mail->SMTPOptions = array(
+                    'ssl' => array(
+                        'verify_peer' => false,
+                        'verify_peer_name' => false,
+                        'allow_self_signed' => true
+                    )
+                );
 
-            $mail->SMTPOptions = array(
-                'ssl' => array(
-                    'verify_peer' => false,
-                    'verify_peer_name' => false,
-                    'allow_self_signed' => true
-                )
-            );
-
-            try {
-                $estadoEnvio = $mail->Send();
-                //echo "El correo fue enviado correctamente.";
-            } catch (Exception $e) {
-                //echo "Ocurrió un error inesperado.";
+                try {
+                    $estadoEnvio = $mail->Send();
+                    //echo "El correo fue enviado correctamente.";
+                } catch (Exception $e) {
+                    //echo "Ocurrió un error inesperado.";
+                }
             }
         }
 

@@ -18,7 +18,7 @@ paths:
               properties:
                 api_token:
                   type: string
-                  example: s09O3QaEU1ngQI2s
+                  example: <api token value>
                 delivery_type:
                   type: string
                   enum:
@@ -38,7 +38,7 @@ paths:
                   example: 80 Hutcherson Square
                 recipient_full_name:
                   type: string
-                  example: Kormans LLP
+                  example: <Recipient Full Name>
                 dropoff_address:
                   type: string
                   example: 46 Village Centre Pl, Suite 200
@@ -58,7 +58,17 @@ paths:
                   type: array
                   items:
                     type: string
-                    example: tag1
+                    example: 
+                      - "SAME DAY (1PM to 4PM)"
+                      - "SAME DAY (BEFORE 5PM)"
+                      - "RUSH (4 HOURS)"
+                      - "RUSH (3 HOURS)"
+                      - "RUSH (2 HOURS)"
+                      - "URGENT (90 MINUTES)"
+                      - "NEXT DAY (BEFORE 5PM)"
+                      - "NEXT DAY (BEFORE 2PM)"
+                      - "NEXT DAY (BEFORE 11:30AM)"
+                      - "NEXT DAY (BEFORE 10:30AM)"
               required:
                 - api_token
                 - delivery_type
