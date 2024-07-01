@@ -495,7 +495,7 @@ if (empty($errors)) {
 
         $email_template = cdp_getEmailTemplatesdg1i4(16);
 
-        $user = $user->cdp_getUserData();
+        $userData = $user->cdp_getUserData();
 
         $body = str_replace(
             array(
@@ -522,7 +522,7 @@ if (empty($errors)) {
         $newbody = cdp_cleanOut($body);
 
         //SENDMAIL PHP
-        if($user->email_subscription){
+        if($userData->email_subscription){
             if ($check_mail == 'PHP') {
 
                 $message = $newbody;
