@@ -75,13 +75,25 @@
  *                     description="Number of prescriptions",
  *                     example=12
  *                 ),
- *                 @OA\Property(
+ *               @OA\Property(
  *                     property="tags",
  *                     type="array",
  *                     description="Array of tags",
  *                     @OA\Items(type="string"),
- *                     example={"tag1", "tag2", "tag3"}
- *                 )
+ *                     example={
+ *                          "SAME DAY (1PM to 4PM)",
+ *                          "SAME DAY (BEFORE 5PM)",
+ *                          "RUSH (4 HOURS)",
+ *                          "RUSH (3 HOURS)",
+ *                          "RUSH (2 HOURS)",
+ *                          "URGENT (90 MINUTES)",
+ *                          "NEXT DAY (BEFORE 5PM)",
+ *                          "NEXT DAY (BEFORE 2PM)",
+ *                          "NEXT DAY (BEFORE 11:30AM)",
+ *                          "NEXT DAY (BEFORE 10:30AM)"
+ *                      }
+ *                )
+
  *             )
  *         )
  *     ),
