@@ -138,7 +138,26 @@ function cdp_updateUserrx0xr($datos)
     return $db->cdp_execute();
 }
 
+function cdp_getUserEditByToken($token)
+{
+    $db = new Conexion;
 
+    $db->cdp_query('SELECT * FROM cdb_users WHERE api_token=:token');
+
+    $db->bind(':token', $token);
+
+    $db->cdp_execute();
+
+    $data = $db->cdp_registro();
+    $rowCount = $db->cdp_rowCount();
+
+    $datos = [
+        'data' => $data,
+        'rowCount' => $rowCount
+    ];
+
+    return $datos;
+}
 
 function cdp_getUserEdit4bozo($id)
 {
@@ -4883,6 +4902,26 @@ function cdp_updateCustomers($datos)
 
     return $db->cdp_execute();
 }
+
+
+
+function cdp_updateCustomersApiToken($datos)
+{
+    $db = new Conexion;
+
+    $db->cdp_query('UPDATE cdb_users SET
+    
+        api_token =:api_token
+
+        where id = :id
+    ');
+
+    $db->bind(':api_token', $datos['api_token']);
+    $db->bind(':id', $datos['id']);
+
+    return $db->cdp_execute();
+}
+
 
 
 function cdp_updateCustomersprofile($datos)

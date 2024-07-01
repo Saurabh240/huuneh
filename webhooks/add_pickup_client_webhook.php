@@ -1,12 +1,130 @@
 <?php
 
-ini_set('display_errors', 1);
+/**
+ * @OA\Info(
+ *     title="Pickup Client Webhook API",
+ *     version="1.0.0",
+ *     description="API for adding a pickup client via webhook."
+ * )
+ */
+
+/**
+ * @OA\Post(
+ *     path="/webhooks/add_pickup_client_webhook.php",
+ *     summary="Add a pickup client",
+ *     description="This endpoint allows you to add a pickup client with specific details.",
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\MediaType(
+ *             mediaType="application/x-www-form-urlencoded",
+ *             @OA\Schema(
+ *                 type="object",
+ *                 required={"api_token", "delivery_type", "pickup_address", "recipient_full_name", "dropoff_address", "no_of_rx"},
+ *                 @OA\Property(
+ *                     property="api_token",
+ *                     type="string",
+ *                     description="API token for authentication",
+ *                     example="s09O3QaEU1ngQI2s"
+ *                 ),
+ *                 @OA\Property(
+ *                     property="delivery_type",
+ *                     type="string",
+ *                     description="Type of delivery",
+ *                     example="RUSH (4 HOURS)"
+ *                 ),
+ *                 @OA\Property(
+ *                     property="pickup_address",
+ *                     type="string",
+ *                     description="Address for pickup",
+ *                     example="80 Hutcherson Square"
+ *                 ),
+ *                 @OA\Property(
+ *                     property="recipient_full_name",
+ *                     type="string",
+ *                     description="Full name of the recipient",
+ *                     example="Kormans LLP"
+ *                 ),
+ *                 @OA\Property(
+ *                     property="dropoff_address",
+ *                     type="string",
+ *                     description="Address for dropoff",
+ *                     example="46 Village Centre Pl, Suite 200"
+ *                 ),
+ *                 @OA\Property(
+ *                     property="notes",
+ *                     type="string",
+ *                     description="Additional notes",
+ *                     example="These are some example notes."
+ *                 ),
+ *                 @OA\Property(
+ *                     property="charge",
+ *                     type="number",
+ *                     format="float",
+ *                     description="Charge for the service",
+ *                     example=120.00
+ *                 ),
+ *                 @OA\Property(
+ *                     property="notes_for_driver",
+ *                     type="string",
+ *                     description="Notes for the driver",
+ *                     example="any thing"
+ *                 ),
+ *                 @OA\Property(
+ *                     property="no_of_rx",
+ *                     type="integer",
+ *                     description="Number of prescriptions",
+ *                     example=12
+ *                 ),
+ *                 @OA\Property(
+ *                     property="tags",
+ *                     type="array",
+ *                     description="Array of tags",
+ *                     @OA\Items(type="string"),
+ *                     example={"tag1", "tag2", "tag3"}
+ *                 )
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Pickup client added successfully",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="string", example="success"),
+ *             @OA\Property(property="message", type="string", example="Pickup client added successfully")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Bad request",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="string", example="error"),
+ *             @OA\Property(property="message", type="string", example="Missing required fields")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=401,
+ *         description="Unauthorized",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="string", example="error"),
+ *             @OA\Property(property="message", type="string", example="Unauthorized")
+ *         )
+ *     )
+ * )
+ */
+
+
+ini_set('display_errors', 0);
 require_once("../loader.php");
 require_once("../helpers/functions.php");
 require_once("../helpers/querys.php");
 require_once("../helpers/phpmailer/class.phpmailer.php");
 require_once("../helpers/phpmailer/class.smtp.php");
 // require_once("../notify_whatsapp/api_whatsapp_service.php");
+
+function processIncomingData($lang, $db) {
 
 $user = new User();
 $core = new Core();
@@ -26,14 +144,14 @@ $deliveryTypes = [
 
 try {
   // Validate the token
-  if (empty($_POST['sender_full_name'])) {
+  if (empty($_POST['api_token'])) {
     throw new Exception('Sender Not found');
   }
-  $sender_name = $_POST['sender_full_name'];
-  $sender = $user->cdp_nameCheck($sender_name);
+  $token = $_POST['api_token'];
+  $sender = $user->cdp_tokenCheck($token);
 
   if (!$sender || empty($sender->id)) {
-    throw new Exception('Invalid sender full name or user not found.');
+    throw new Exception('Invalid API Token.');
   }
 
   // Validate delivery type
@@ -55,6 +173,33 @@ try {
   if (empty($_POST['dropoff_address'])) {
     throw new Exception('Dropoff address is missing.');
   }
+
+  $allowed_tags = [
+    "Fridge Item (2-4 C)",
+    "Hand Deliver",
+    "Narcotics",
+    "Pickup Rx Paper",
+    "Pick up Old Medication"
+];
+  $charge = 0;
+  $no_of_rx = 0;
+  $notes_for_driver = "";
+  $tags = json_encode([]);
+
+  if($sender->business_type == "pharmacy"){
+    if(is_array($_POST['tags']) && !empty($_POST['tags'])){
+        $invalid_tags = array_diff($_POST['tags'], $allowed_tags);
+        if (!empty($invalid_tags)) {
+            throw new Exception('Invalid tag value.');
+        }
+    }
+    $charge = cdp_sanitize($_POST['charge']);
+    $no_of_rx = cdp_sanitize($_POST['no_of_rx']);
+    $notes_for_driver = cdp_sanitize($_POST['notes_for_driver']);
+    $tags = !empty($_POST['tags']) && is_array($_POST['tags']) ? json_encode($_POST['tags']) : $tags;
+  }
+
+  
 
   // Validate notes
   $notes = isset($_POST['notes']) ? $_POST['notes'] : '';
@@ -231,7 +376,11 @@ if (empty($errors)) {
         'status_courier' =>  cdp_sanitize(intval($status)),
         'due_date' =>  $due_date,
         'status_invoice' =>  $status_invoice,
-        'volumetric_percentage' =>  $meter
+        'volumetric_percentage' =>  $meter,
+        'charge' => cdp_sanitize($charge),
+        'no_of_rx' => cdp_sanitize($no_of_rx),
+        'notes_for_driver' => cdp_sanitize($notes_for_driver),
+        'tags' => cdp_sanitize($tags)
     );
 
     $shipment_id = cdp_insertCourierPickupFromCustomer($dataShipment);
@@ -552,4 +701,10 @@ if (!empty($errors)) {
     'message' => $e->getMessage()
   ]);
   exit;
+}
+}
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    processIncomingData($lang, $db);
 }

@@ -326,7 +326,84 @@ $(function () {
 
 });
 
+$("#save_token").on("submit", function(event){
+  event.preventDefault();
+  var user_id = $("#token_user_id").val();
+  var api_token = $("#token").val();
+  if(!user_id || !api_token){
+    Swal.fire({
+      type: 'error',
+      title: "API Token Missing",
+      text: "Please generate a token before saving",
+      confirmButtonColor: '#336aea',
+      showConfirmButton: true,
+    });
+    return;
+  }
+  var data = new FormData();
 
+  data.append("user_id",user_id);
+  data.append("api_token", api_token);
+
+  $.ajax({
+    type: "POST",
+    url: "ajax/customers/customers_profile_api_token_ajax.php",
+    data: data,
+    contentType: false,
+    cache: false,
+    processData: false,
+    beforeSend: function (objeto) {
+
+      Swal.fire({
+        title: message_error_form6,
+        text: message_error_form14,
+        type: 'info',
+        showCancelButton: false,
+        showConfirmButton: false,
+        allowOutsideClick: false,
+        onBeforeOpen: () => {
+          Swal.showLoading();
+        },
+      });
+    },
+
+    success: function (response) {
+      Swal.close();
+      if (response.status === 'success') {
+        Swal.fire({
+          type: 'success',
+          title: message_error_form15,
+          showConfirmButton: false,
+          timer: 1500,
+          timerProgressBar: true,
+        }).then(() => {
+          // Redirigir al mismo sitio
+          window.location.href = window.location.href;
+        });
+      } else {
+        Swal.fire({
+          type: 'error',
+          title: message_error_form15,
+          text: response.message || message_error_form17,
+          confirmButtonColor: '#336aea',
+          showConfirmButton: true,
+        });
+      }
+    },
+    error: function () {
+      Swal.close();
+      Swal.fire({
+        type: 'error',
+        title: message_error_form18,
+        text: message_error_form19,
+        confirmButtonColor: '#336aea',
+        showConfirmButton: true,
+      });
+    },
+
+  });
+
+});
 
 
 $("#edit_user").on("submit", function (event) {
@@ -569,6 +646,72 @@ $(document).ready(function () {
       }
     });
   }
+
+
+    // Event listener for generate token button
+    $("#generateTokenBtn").click(function() {
+        // Generate a unique token
+        var token = generateUniqueToken();
+
+        // Display the generated token in the input field
+        $("#token").val(token);
+
+        // Optionally, you can select the text inside the input field for easy copying
+        $("#token").select();
+    });
+
+    // Event listener for copy token button
+    $("#copyTokenBtn").click(function() {
+        // Select the text inside the token input field
+        $("#token").select();
+
+        // Copy the selected text to clipboard
+        document.execCommand('copy');
+
+        // Show tooltip or provide visual feedback
+        $(this).tooltip('show');
+        
+        // Hide tooltip after a short delay
+        setTimeout(function() {
+            $("#copyTokenBtn").tooltip('hide');
+        }, 1000); // Adjust the delay as needed
+    });
+
+    // Function to generate a unique token
+    function generateUniqueToken() {
+        var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        var tokenLength = 16; // Length of the token
+        var token = "";
+        do {
+            token = "";
+            for (var i = 0; i < tokenLength; i++) {
+                token += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+        } while (!isTokenUnique(token)); // Check if token is unique
+
+        return token;
+    }
+
+    // Function to check if token is unique (example function, replace with your logic)
+    function isTokenUnique(token) {
+        // You should implement your own logic here to check uniqueness
+        // Example: Check if the token exists in your database or list of tokens
+        // For demonstration, assuming tokens are stored in an array
+        var existingTokens = ["token1", "token2", "token3"]; // Example array of existing tokens
+
+        // Check if the token exists in the array
+        return !existingTokens.includes(token);
+    }
+
+
+
+
+
+
+
+
+
+
 });
 
 

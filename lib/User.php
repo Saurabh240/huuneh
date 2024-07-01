@@ -388,25 +388,21 @@ class User
         return $row;
     }
 
-    public function cdp_getUserInfoViaName($sender_name)
+    public function cdp_getUserInfoViaToken($token)
     {
-        $sender_name = trim($sender_name);
-        $first_name = get_first_name($sender_name);
-        $last_name = get_last_name($sender_name);
+        $token = cdp_sanitize(trim($token));
+        $this->db->cdp_query('SELECT * FROM cdb_users WHERE api_token=:api_token');
 
-        $this->db->cdp_query('SELECT * FROM cdb_users WHERE fname=:fname AND lname=:lname');
-
-        $this->db->bind(':fname', $first_name);
-        $this->db->bind(':lname', $last_name);
+        $this->db->bind(':api_token', $token);
 
         $this->db->cdp_execute();
         return $user = $this->db->cdp_registro();
     }
 
-    public function cdp_nameCheck($sender_name)
+    public function cdp_tokenCheck($token)
     {
-        if (!empty($sender_name)) {
-            $row = $this->cdp_getUserInfoViaName($sender_name);
+        if (!empty($token)) {
+            $row = $this->cdp_getUserInfoViaToken($token);
             return $row;
         } else {
             return false;
