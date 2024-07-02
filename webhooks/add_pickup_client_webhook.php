@@ -226,8 +226,38 @@ try {
 
   $recipient_address_id = $user->cdp_getRecipientAddress($recipient_id, $_POST['dropoff_address']);
   if (empty($recipient_address_id)) {
-    throw new Exception('Recipient address not found.');
+    // throw new Exception('Recipient address not found.');
+    $full_address = getAddressDetailsHelper($_POST['dropoff_address']);
+    if(!empty($full_address)){
+        $country_id = @cdp_getCountryByName($full_address.country)->id;
+        $state_id = @cdp_getStateByName($full_address.state)->id;
+        $city_id = @cdp_getCityByName($full_address.city)->id;
+        $zip_code = $full_address.zip_code;
+    }else{
+        throw new Exception('Recipient address not found.');    
+    }
+
+    if(empty($country_id) || empty($state_id) || empty($city_id) || empty($zip_code)){
+        throw new Exception('Recipient address not found.');
+    }
+
+    $saveRecipientAddress = [
+        'address_modal_recipient_address' => $_POST['dropoff_address'],
+        'country_modal_recipient_address' => $country_id,
+        'state_modal_recipient_address' => $state_id,
+        'city_modal_recipient_address' => $city_id,
+        'postal_modal_recipient_address' => $zip_code,
+        'recipient' => $recipient_id
+    ];
+
+    $recipient_address_id = cdp_saveRecipientAddress($saveRecipientAddress);
+
+    if(empty($recipient_address_id->id_address)){
+        throw new Exception('Could not save recipient address');
+    }
+     
   }
+
   $recipient_address_id = $recipient_address_id->id_addresses;
 
   // Calculate distance and shipping price

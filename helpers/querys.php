@@ -6538,3 +6538,74 @@ function cdp_recipientAddressExists($recipient_address) {
 
     return  $db->cdp_registro();
 }
+
+function cdp_getCountryByName($country){
+    $db = new Conexion;
+    $db->cdp_query("SELECT `id`, `name` FROM `cdb_countries` WHERE `name` = :country");
+    $db->bind(':country', $country);
+    $db->cdp_execute();
+
+    return  $db->cdp_registro();
+    
+}
+
+function cdp_getStateByName($state){
+    $db = new Conexion;
+    $db->cdp_query("SELECT `id`, `name` FROM `cdb_states` WHERE `name` = :state");
+    $db->bind(':state', $state);
+    $db->cdp_execute();
+
+    return  $db->cdp_registro();
+    
+}
+
+function cdp_getCityByName($city){
+    $db = new Conexion;
+    $db->cdp_query("SELECT `id`, `name` FROM `cdb_cities` WHERE `name` = :city");
+    $db->bind(':city', $city);
+    $db->cdp_execute();
+
+    return  $db->cdp_registro();
+    
+}
+
+function cdp_saveRecipientAddress($data)
+{
+    $db = new Conexion;
+    $db->cdp_query("
+                  INSERT INTO cdb_recipients_addresses 
+                  (
+                    country,
+                    state,
+                    city,
+                    address,
+                    zip_code,
+                    recipient_id                                
+                  )
+                  VALUES 
+                  (
+                      :country,
+                      :state,
+                      :city, 
+                      :address,
+                      :zip_code,
+                      :recipient_id                            
+                  )
+                ");
+
+    $db->bind(':country',  cdp_sanitize($data["country_modal_recipient_address"]));
+    $db->bind(':state',  cdp_sanitize($data["state_modal_recipient_address"]));
+    $db->bind(':city',  cdp_sanitize($data["city_modal_recipient_address"]));
+    $db->bind(':address',  cdp_sanitize($data["address_modal_recipient_address"]));
+    $db->bind(':zip_code',  cdp_sanitize($data["postal_modal_recipient_address"]));
+    $db->bind(':recipient_id',  $data["recipient"]);
+
+    $insert = $db->cdp_execute();
+
+    $last_address_id = $db->dbh->lastInsertId();
+
+    $db->cdp_query("SELECT * FROM cdb_recipients_addresses where id_addresses= '" . $last_address_id . "'");
+    $customer_address = $db->cdp_registro();
+    
+    return $customer_address;
+}

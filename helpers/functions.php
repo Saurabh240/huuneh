@@ -312,3 +312,44 @@ function calculateShippingPrice1($distance, $baseRate, $additionalRatePerKm, $ba
   $totalPrice = $baseRate + $additionalCharge;
   return $totalPrice;
 }
+
+
+function getAddressDetailsHelper($address) {
+  $apiKey = "AIzaSyCAP41rsfjKCKORsVRuSM_4ff6f7YGV7kQ";
+  $baseUrl = "https://maps.googleapis.com/maps/api/geocode/json";
+  $params = http_build_query([
+      'address' =>  $address,
+      'key' => $apiKey
+  ]);
+  $url = "$baseUrl?$params";
+  
+  $response = file_get_contents($url);
+  if ($response === FALSE) {
+      return NULL;
+  }
+
+  $data = json_decode($response, true);
+  if ($data['status'] != 'OK') {
+      return NULL;
+  }
+
+  $addressComponents = $data['results'][0]['address_components'];
+  $details = [];
+
+  foreach ($addressComponents as $component) {
+      if (in_array('locality', $component['types'])) {
+          $details['city'] = $component['long_name'];
+      }
+      if (in_array('administrative_area_level_1', $component['types'])) {
+          $details['state'] = $component['long_name'];
+      }
+      if (in_array('postal_code', $component['types'])) {
+          $details['zip_code'] = $component['long_name'];
+      }
+      if (in_array('country', $component['types'])) {
+          $details['country'] = $component['long_name'];
+      }
+  }
+
+  return $details;
+}

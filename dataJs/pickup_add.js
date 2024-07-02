@@ -2423,10 +2423,10 @@ $(document).ready(function () {
   });
 });
 
-function loadStates(selectedCountryId, selectedStateId, selectedCityId, modelId)
+function loadStates(selectedCountryId, stateInput, cityInput, modelId)
 {
       // Select state
-      if (selectedStateId) {
+      if (stateInput) {
         var $stateSelect = modelId ? $("#state_modal_recipient" + modelId) : $("#state_modal_recipient");
         $.ajax({
           url: "ajax/select2_states.php?id=" + selectedCountryId, // Your data source URL for states
@@ -2437,7 +2437,7 @@ function loadStates(selectedCountryId, selectedStateId, selectedCityId, modelId)
           success: function (statesData) {
             // Find the selected state's text
             var selectedState = statesData.find(function (state) {
-              return state.id == selectedStateId;
+              return state.text == stateInput;
             });
     
             // Create a new option element
@@ -2455,18 +2455,18 @@ function loadStates(selectedCountryId, selectedStateId, selectedCityId, modelId)
             });
     
             // After state is selected, load cities
-            loadCities(selectedState.id, selectedCityId, modelId); // Assuming cdp_load_cities(modal) function exists
+            loadCities(selectedState.id, cityInput, modelId); // Assuming cdp_load_cities(modal) function exists
           }
         });
       }
     
 }
 
-function loadCities(selectedStateId, selectedCityId, modelId)
+function loadCities(selectedStateId, cityInput, modelId)
 {
 
       // Select city
-      if (selectedCityId) {
+      if (cityInput) {
         var $citySelect = modelId ? $("#city_modal_recipient" + modelId) : $("#city_modal_recipient");
         $.ajax({
           url: "ajax/select2_cities.php?id=" + selectedStateId, // Your data source URL for cities
@@ -2477,7 +2477,7 @@ function loadCities(selectedStateId, selectedCityId, modelId)
           success: function (citiesData) {
             // Find the selected city's text
             var selectedCity = citiesData.find(function (city) {
-              return city.id == selectedCityId;
+              return city.text == cityInput;
             });
     
             // Create a new option element
@@ -2502,22 +2502,21 @@ function loadCountries(fullAddress, modelId)
 {
   if (!fullAddress) return;
 
-    var selectedCountryId = fullAddress.country;
-    var selectedStateId = fullAddress.state;
-    var selectedCityId = fullAddress.city;
+    var countryInput = fullAddress.country;
+    var stateInput = fullAddress.state;
+    var cityInput = fullAddress.city;
     var selectedZip = fullAddress.zip_code;
     var $countrySelect;
     modelId ? $("#postal_modal_recipient" + modelId).val(selectedZip) : $("#postal_modal_recipient").val(selectedZip);
     // Select country
-    if (selectedCountryId) {
+    if (countryInput) {
       $countrySelect = modelId ? $countrySelect = $("#country_modal_recipient" + modelId) : $("#country_modal_recipient");
       $.ajax({
         url: "ajax/select2_countries.php", // Your data source URL for countries
         dataType: "json",
         success: function (countriesData) {
-          // Find the selected country's text
           var selectedCountry = countriesData.find(function (country) {
-            return country.id == selectedCountryId;
+            return country.text == countryInput;
           });
   
           // Create a new option element
@@ -2535,7 +2534,7 @@ function loadCountries(fullAddress, modelId)
           });
 
           // After country is selected, load states
-          loadStates(selectedCountry.id, selectedStateId, selectedCityId, modelId); 
+          loadStates(selectedCountry.id, stateInput, cityInput, modelId); 
         }
       });
     }
@@ -2550,7 +2549,7 @@ function getRecipientFullAddress(inputAddress, modelId)
 
   $.ajax({
     type: 'POST',
-    url: 'ajax/recipients/get_recipient_full_address.php',
+    url: 'ajax/courier/address_details_api.php',
     data: { 'address_modal_recipient': recipientAddress },
     dataType: 'json',
     success: function (response) {
