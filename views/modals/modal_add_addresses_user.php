@@ -24,6 +24,14 @@
                         <form class="form-horizontal" method="post" id="add_address_users_from_modal_shipments" name="add_address_users_from_modal_shipments">
                             <!-- Existing content for adding sender address -->
                             <div class="row">
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="address_modal_user_address"><?php echo $lang['user_manage10'] ?></label>
+                                        <input type="text" class="form-control" name="address_modal_user_address" id="address_modal_user_address" placeholder="<?php echo $lang['user_manage10'] ?>">
+                                    </div>
+                                </div>
+
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label><?php echo $lang['leftorder318'] ?></label>
@@ -55,13 +63,6 @@
                                     <div class="form-group">
                                         <label for="postal_modal_user_address"><?php echo $lang['user_manage14'] ?></label>
                                         <input type="text" class="form-control" name="postal_modal_user_address" id="postal_modal_user_address" placeholder="<?php echo $lang['user_manage14'] ?>">
-                                    </div>
-                                </div>
-
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="address_modal_user_address"><?php echo $lang['user_manage10'] ?></label>
-                                        <input type="text" class="form-control" name="address_modal_user_address" id="address_modal_user_address" placeholder="<?php echo $lang['user_manage10'] ?>">
                                     </div>
                                 </div>
                             </div>

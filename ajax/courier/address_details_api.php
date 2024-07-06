@@ -16,9 +16,9 @@ $business_type = $user->business_type;
 
 $response = ['status' => false, "message" => "Something went wrong"];
 $apiKey = 'AIzaSyCAP41rsfjKCKORsVRuSM_4ff6f7YGV7kQ';
-if (isset($_POST["address_modal_recipient"]) ) {
+if (isset($_POST["address_modal"]) ) {
     // $address = "1600 Amphitheatre Parkway, Mountain View, CA";
-    $address = $_POST["address_modal_recipient"];
+    $address = $_POST["address_modal"];
     $details = getAddressDetails($address, $apiKey);
 
     // echo "City: " . $details['city'] . PHP_EOL;

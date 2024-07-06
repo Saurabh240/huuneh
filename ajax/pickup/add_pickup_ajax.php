@@ -121,8 +121,8 @@ if (empty($errors)) {
         'due_date' =>  $due_date,
         'status_invoice' =>  $status_invoice,
         'volumetric_percentage' =>  $meter,
-        'charge' => cdp_sanitize($_POST['charge']),
-        'no_of_rx' => cdp_sanitize($_POST['no_of_rx']),
+        'charge' => !empty($_POST['charge']) ? cdp_sanitize($_POST['charge']) : 0.00,
+        'no_of_rx' => !empty($_POST['no_of_rx']) ? cdp_sanitize($_POST['no_of_rx']) : 0,
         'notes_for_driver' => cdp_sanitize($_POST['notes_for_driver']),
         'tags' => !empty($_POST['tags']) && is_array($_POST['tags']) ? json_encode($_POST['tags']) : json_encode([])
     );
