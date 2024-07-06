@@ -26,16 +26,16 @@ require_once("../loader.php");
 
 $db = new Conexion; 
 
-$sWhere = '';
+$sWhere = '1';
 if (isset($_REQUEST['q'])) {
     $search = cdp_sanitize($_REQUEST['q']);
-    $sWhere = "and  name LIKE '%" . $search . "%'";
+    $sWhere = " AND name LIKE '%" . $search . "%'";
 }
 $list = array();
 $data = [];
 
 
-$sql = "SELECT * FROM cdb_countries where is_active=1 $sWhere";
+$sql = "SELECT * FROM cdb_countries where $sWhere";
 
 $db->cdp_query($sql);
 $db->cdp_execute();

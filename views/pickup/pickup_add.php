@@ -856,7 +856,7 @@ echo 'Fixed Time ->'.strtotime("2:00 PM");exit;*/
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCAP41rsfjKCKORsVRuSM_4ff6f7YGV7kQ&callback=initAutocomplete&libraries=places&v=weekly"
       defer
     ></script>
-    <script src="dataJs/pickup_add.js?v=9"></script>
+    <script src="dataJs/pickup_add.js?v=10"></script>
 
 </body>
 

@@ -2550,7 +2550,7 @@ function getRecipientFullAddress(inputAddress, modelId)
   $.ajax({
     type: 'POST',
     url: 'ajax/courier/address_details_api.php',
-    data: { 'address_modal_recipient': recipientAddress },
+    data: { 'address_modal': recipientAddress },
     dataType: 'json',
     success: function (response) {
       if(response.status){
