@@ -466,7 +466,13 @@ if($sender_data->business_type == 'pharmacy' && !empty($row_order->tags)){
                                                 <div class="input-group mb-3">
 													<select class="form-control custom-select" id="deliveryType" name="deliveryType" required style="width: 100%;">
 														<option value="" selected>Select Delivery Type</option>
-														<option <?php if(time() > strtotime("12:00 PM")) { echo "disabled='disabled' class='disabled-cls'"; }?>value="SAME DAY (1PM to 4PM)"
+														<option <?php if(time() > strtotime("12:00 PM")) { echo "disabled='disabled' class='disabled-cls'"; }?>value="SAMEDAY (BEFORE 9PM)"
+                                                        <?php if($row_order->delivery_type == "SAMEDAY (BEFORE 9PM)") { ?> selected <?php } ?>
+                                                        >SAMEDAY (BEFORE 9PM)</option>
+                                                        <option <?php if(time() > strtotime("12:00 PM")) { echo "disabled='disabled' class='disabled-cls'"; }?>value="SAMEDAY (BEFORE 7PM)"
+                                                        <?php if($row_order->delivery_type == "SAMEDAY (BEFORE 7PM)") { ?> selected <?php } ?>
+                                                        >SAMEDAY (BEFORE 7PM)</option>
+                                                        <option <?php if(time() > strtotime("12:00 PM")) { echo "disabled='disabled' class='disabled-cls'"; }?>value="SAME DAY (1PM to 4PM)"
                                                         <?php if($row_order->delivery_type == "SAME DAY (1PM to 4PM)") { ?> selected <?php } ?>
                                                         >SAME DAY (1PM to 4PM)</option>
 														<option <?php if(time() > strtotime("12:00 PM")) { echo "disabled='disabled' class='disabled-cls'"; }?> value="SAME DAY (BEFORE 5PM)"
@@ -484,6 +490,9 @@ if($sender_data->business_type == 'pharmacy' && !empty($row_order->tags)){
 														<option <?php if(time() > strtotime("9:00 PM")) { echo "disabled='disabled' class='disabled-cls'"; }?> value="URGENT (90 MINUTES)"
                                                         <?php if($row_order->delivery_type == "URGENT (90 MINUTES)") { ?> selected <?php } ?>
                                                         >URGENT (90 MINUTES)</option>
+                                                        <option value="NEXT DAY (BEFORE 7PM)"
+                                                        <?php if($row_order->delivery_type == "NEXT DAY (BEFORE 7PM)") { ?> selected <?php } ?>
+                                                        >NEXT DAY (BEFORE 7PM)</option>
 														<option value="NEXT DAY (BEFORE 5PM)"
                                                         <?php if($row_order->delivery_type == "NEXT DAY (BEFORE 5PM)") { ?> selected <?php } ?>
                                                         >NEXT DAY (BEFORE 5PM)</option>
