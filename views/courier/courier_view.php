@@ -1065,56 +1065,6 @@ if($sender_data->business_type == 'pharmacy' && !empty($row_order->tags)){
                 
                 <!-- RECEIPIENT DETAILS -->
 
-
-            <?php  if( $sender_data->business_type == "pharmacy" ) { ?>
-                <div class="row">
-                    <div class="col-lg-12 col-xl-12 col-md-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class=" col-sm-12 col-md-4 mb-2">
-                                        <div class="">
-                                            <h5> &nbsp;<b>Charge</b></h5>
-                                            <p class="text-muted  m-l-5"><?php echo $row_order->charge; ?></p>
-                                        </div>
-                                    </div>
-
-                                    <div class=" col-sm-12 col-md-4 mb-2">
-                                        <div class="">
-                                            <h5> &nbsp;<b>No of Rx</b></h5>
-                                            <p class="text-muted  m-l-5"><?php echo $row_order->no_of_rx; ?></p>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="mb-3">
-                                <h5> &nbsp;<b>Tags</b></h5>
-                                    <?php foreach ($tags as $tag){ ?>
-                                    <div class="form-check">
-                                        <p class="text-muted  m-l-5">
-                                            <input class="form-check-input" type="checkbox" id="<?php echo strtolower(str_replace(' ', '', $tag)); ?>" name="tags[]" value="<?php echo htmlspecialchars($tag); ?>" <?php if (isTagChecked($tag, $rowTags)) echo 'checked'; ?> disabled>
-                                            <label class="form-check-label" for="<?php echo strtolower(str_replace(' ', '', $tag)); ?>"><?php echo htmlspecialchars($tag); ?></label>
-                                        </p>
-                                    </div>
-                                    <?php } ?>
-                                </div>
-
-                                
-                                <div class="mb-3">
-                                    <label for="notes" class="form-label">Notes</label>
-                                    <textarea class="form-control" id="notesForDriver" name="notes_for_driver" rows="3" placeholder="Please be brief" readonly><?php echo $row_order->notes_for_driver ?></textarea>
-                                    <div class="form-text"></div>
-                                </div>
-                              
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            <?php  } ?>
-
-
-
-
                 <div class="row">
                     <div class="col-lg-12 col-xl-12 col-md-12">
                         <div class="card">
@@ -1177,6 +1127,54 @@ if($sender_data->business_type == 'pharmacy' && !empty($row_order->tags)){
                         </div>
                     </div>
                 </div>
+
+                <?php  if( $sender_data->business_type == "pharmacy" ) { ?>
+                <div class="row">
+                    <div class="col-lg-12 col-xl-12 col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class=" col-sm-12 col-md-4 mb-2">
+                                        <div class="">
+                                            <h5> &nbsp;<b>Charge</b></h5>
+                                            <p class="text-muted  m-l-5"><?php echo $row_order->charge; ?></p>
+                                        </div>
+                                    </div>
+
+                                    <div class=" col-sm-12 col-md-4 mb-2">
+                                        <div class="">
+                                            <h5> &nbsp;<b>No of Rx</b></h5>
+                                            <p class="text-muted  m-l-5"><?php echo $row_order->no_of_rx; ?></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                <h5> &nbsp;<b>Tags</b></h5>
+                                    <?php foreach ($tags as $tag){ ?>
+                                    <div class="form-check">
+                                        <p class="text-muted  m-l-5">
+                                            <input class="form-check-input" type="checkbox" id="<?php echo strtolower(str_replace(' ', '', $tag)); ?>" name="tags[]" value="<?php echo htmlspecialchars($tag); ?>" <?php if (isTagChecked($tag, $rowTags)) echo 'checked'; ?> disabled>
+                                            <label class="form-check-label" for="<?php echo strtolower(str_replace(' ', '', $tag)); ?>"><?php echo htmlspecialchars($tag); ?></label>
+                                        </p>
+                                    </div>
+                                    <?php } ?>
+                                </div>
+
+                                
+                                <div class="mb-3">
+                                    <label for="notes" class="form-label">Notes</label>
+                                    <textarea class="form-control" id="notesForDriver" name="notes_for_driver" rows="3" placeholder="Please be brief" readonly><?php echo $row_order->notes_for_driver ?></textarea>
+                                    <div class="form-text"></div>
+                                </div>
+                              
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php  } ?>
+
+
                 
                 <?php if ($numrows > 0) {
                 ?>
