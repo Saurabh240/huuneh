@@ -20,6 +20,11 @@
 // *************************************************************************
 
 
+// Function to check if a tag should be checked
+function isTagChecked($tag, $tags) {
+  return in_array($tag, $tags);
+}
+
 function cdp_cleanOutx($text)
 {
   $text =  strtr($text, array('\r\n' => "", '\r' => "", '\n' => ""));

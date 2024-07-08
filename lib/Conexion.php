@@ -136,4 +136,16 @@ class Conexion
         $this->cdp_execute();
         return $this->stmt->fetchAll();
     }
+
+    public function getAllTags()
+    {
+        $allTags = [
+            "Fridge Item (2-4 C)",
+            "Hand Deliver",
+            "Narcotics",
+            "Pickup Rx Paper",
+            "Pick up Old Medication"
+        ];
+        return $allTags;
+    }
 }
