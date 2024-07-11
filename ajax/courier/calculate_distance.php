@@ -195,7 +195,7 @@ function getRatesByDeliveryTypeAndBusinessType($deliveryType, $businessType) {
         ]
     ];
 
-    if ($businessType == 'flower_shop' || $businessType == 'pharmacy') {
+    if ($businessType == 'flower_shop' || $businessType == 'flower_shop_2' || $businessType == 'pharmacy' || $businessType == 'pharmacy_2' || $businessType == 'pharmacy_3') {
         return $rates[$businessType][$deliveryType] ?? null;
     } else if ($businessType == 'special') {
         return $rates['special'][$deliveryType] ?? null;
