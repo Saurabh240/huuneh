@@ -49,7 +49,7 @@ if ($search != null) {
 
 // // pagination variables
 $page = (isset($_REQUEST['page']) && !empty($_REQUEST['page'])) ? $_REQUEST['page'] : 1;
-$per_page = 10; //how much records you want to show
+$per_page = 25; //how much records you want to show
 $adjacents  = 4; //gap between pages after number of adjacents
 $offset = ($page - 1) * $per_page;
 

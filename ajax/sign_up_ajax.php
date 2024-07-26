@@ -103,6 +103,10 @@ $lname = get_last_name($full_name);
 $_POST['fname'] = $fname;
 $_POST['lname'] = $lname;
 
+if( empty($full_name) ){
+    $error = "Fullname is required";
+}
+
 if (empty($error)) {
 
     $settings = cdp_getSettingsCourier();
