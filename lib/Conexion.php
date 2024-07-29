@@ -105,8 +105,14 @@ class Conexion
     //Obtener los datos de la consulta
     public function cdp_registros()
     {
-        $this->cdp_execute();
-        return $this->stmt->fetchAll(PDO::FETCH_OBJ);
+        try {
+            $this->cdp_execute();
+            return $this->stmt->fetchAll(PDO::FETCH_OBJ);
+        } catch (PDOException $e) {
+            echo 'PDOException: ' . $e->getMessage();
+        } catch (Exception $e) {
+            echo 'Exception: ' . $e->getMessage();
+        }
     }
 
     //Obtener dato de la consulta

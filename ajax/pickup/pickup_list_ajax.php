@@ -30,7 +30,7 @@ $userData = $user->cdp_getUserData();
 
 $search = cdp_sanitize($_REQUEST['search']);
 
-$sWhere = "";
+$sWhere = " WHERE 1";
 
 if ($userData->userlevel == 3) {
 
@@ -43,9 +43,11 @@ if ($userData->userlevel == 3) {
 }
 if ($search != null) {
 
-	$sWhere .= " and  CONCAT(a.order_prefix,a.order_no) LIKE '%" . $search . "%'";
+	$sWhere .= " AND WHERE 	(CONCAT(a.order_prefix, a.order_no) LIKE '%" . $search . "%') 
+	OR (CONCAT(u.fname, ' ', u.lname) LIKE '%" . $search . "%') 
+   OR (addrs.recipient_address LIKE '%" . $search . "%')
+";
 }
-
 
 // // pagination variables
 $page = (isset($_REQUEST['page']) && !empty($_REQUEST['page'])) ? $_REQUEST['page'] : 1;
@@ -54,12 +56,38 @@ $adjacents  = 4; //gap between pages after number of adjacents
 $offset = ($page - 1) * $per_page;
 
 
-$sql = "SELECT  a.is_consolidate, a.notes_for_driver, a.delivery_type, a.order_incomplete, a.status_invoice, a.is_pickup, a.total_order, a.order_id, a.order_prefix, a.order_no, a.order_date, a.sender_id, a.receiver_id, a.order_courier, a.order_pay_mode, a.status_courier, a.driver_id, a.order_service_options, a.total_order,  b.mod_style, b.color FROM
-			 cdb_add_order as a
-			 INNER JOIN cdb_styles as b ON a.status_courier = b.id
-			 $sWhere
-			 order by order_id desc
-			 ";
+$sql = "SELECT a.is_consolidate, 
+       a.notes_for_driver, 
+       a.delivery_type,
+       a.sub_total, 
+       a.distance, 
+       a.order_incomplete, 
+       a.status_invoice, 
+       a.is_pickup, 
+       a.total_order, 
+       a.order_id, 
+       a.order_prefix, 
+       a.order_no, 
+       a.order_date, 
+       a.sender_id, 
+       a.receiver_id, 
+       a.order_courier, 
+       a.order_pay_mode, 
+       a.status_courier, 
+       a.driver_id, 
+       a.order_service_options, 
+       b.mod_style, 
+       b.color, 
+       u.username, 
+       u.fname, 
+       u.lname, 
+       addrs.recipient_address 
+FROM cdb_add_order AS a
+LEFT JOIN cdb_users AS u ON a.sender_id = u.id
+LEFT JOIN cdb_address_shipments AS addrs ON addrs.order_id = a.order_id
+INNER JOIN cdb_styles AS b ON a.status_courier = b.id
+$sWhere
+ORDER BY a.order_id DESC";
 
 $query_count = $db->cdp_query($sql);
 $db->cdp_execute();
@@ -86,6 +114,8 @@ if ($numrows > 0) { ?>
 					<th class="text-center"><b><?php echo $lang['lorigin'] ?></b></th>
 					<th class="text-center"><b><?php echo $lang['ldestination'] ?></b></th>
 					<th class="text-center"><b>Notes for driver</b></th>
+					<th class="text-center"><b>Total KM</b></th>
+					<th class="text-center"><b>Subtotal</b></th>
 					<th class="text-center"><b><?php echo $lang['lstatusshipment'] ?></b></th> 
 					<th class="text-center"><b>Total Cost</b></th>
 
@@ -135,7 +165,6 @@ if ($numrows > 0) { ?>
 						$address_order = $db->cdp_registro();
 
 
-
 					?>
 						<tr class="card-hovera">
 							<td><b><a href="courier_view.php?id=<?php echo $row->order_id; ?>"><?php echo $row->order_prefix . $row->order_no; ?></a></b></td>
@@ -156,8 +185,15 @@ if ($numrows > 0) { ?>
 							</td>
 
 							<td class="text-center"><?php echo $address_order->sender_address; ?></td>
-							<td class="text-center"><?php echo $address_order->recipient_address; ?></td>
+							<td class="text-center"><?php echo $row->recipient_address; ?></td>
 							<td class="text-center"><?php echo $row->notes_for_driver; ?></td>
+							<td class="text-center">
+								<?php echo $row->distance; ?>
+							</td>
+
+							<td class="text-center">
+								$ <?php echo $row->sub_total; ?>
+							</td>
 							<td class="text-center">
 
 								
