@@ -30,7 +30,7 @@ $userData = $user->cdp_getUserData();
 
 $search = cdp_sanitize($_REQUEST['search']);
 
-$sWhere = " WHERE 1";
+$sWhere = "";
 
 if ($userData->userlevel == 3) {
 
@@ -43,10 +43,7 @@ if ($userData->userlevel == 3) {
 }
 if ($search != null) {
 
-	$sWhere .= " AND WHERE 	(CONCAT(a.order_prefix, a.order_no) LIKE '%" . $search . "%') 
-	OR (CONCAT(u.fname, ' ', u.lname) LIKE '%" . $search . "%') 
-   OR (addrs.recipient_address LIKE '%" . $search . "%')
-";
+	$sWhere .= " and ( (CONCAT(a.order_prefix,a.order_no) LIKE '%" . $search . "%') OR (CONCAT(u.fname, ' ', u.lname) LIKE '%" . $search . "%') OR addrs.recipient_address LIKE '%" . $search . "%' )";
 }
 
 // // pagination variables
@@ -56,39 +53,17 @@ $adjacents  = 4; //gap between pages after number of adjacents
 $offset = ($page - 1) * $per_page;
 
 
-$sql = "SELECT a.is_consolidate, 
-       a.notes_for_driver, 
-       a.delivery_type,
-       a.sub_total, 
-       a.distance, 
-       a.order_incomplete, 
-       a.status_invoice, 
-       a.is_pickup, 
-       a.total_order, 
-       a.order_id, 
-       a.order_prefix, 
-       a.order_no, 
-       a.order_date, 
-       a.sender_id, 
-       a.receiver_id, 
-       a.order_courier, 
-       a.order_pay_mode, 
-       a.status_courier, 
-       a.driver_id, 
-       a.order_service_options, 
-       b.mod_style, 
-       b.color, 
-       u.username, 
-       u.fname, 
-       u.lname, 
-       addrs.recipient_address 
-FROM cdb_add_order AS a
-LEFT JOIN cdb_users AS u ON a.sender_id = u.id
-LEFT JOIN cdb_address_shipments AS addrs ON addrs.order_id = a.order_id
-INNER JOIN cdb_styles AS b ON a.status_courier = b.id
-$sWhere
-ORDER BY a.order_id DESC";
+$sql = "SELECT  a.is_consolidate, a.notes_for_driver, a.delivery_type,a.sub_total, a.distance, a.order_incomplete, a.status_invoice, a.is_pickup, a.total_order, a.order_id, a.order_prefix, a.order_no, a.order_date, a.sender_id, a.receiver_id, a.order_courier, a.order_pay_mode, a.status_courier, a.driver_id, a.order_service_options, a.total_order,  b.mod_style, b.color, 
+			 u.username, u.fname, u.lname, addrs.recipient_address FROM
+			 cdb_add_order as a
+			 LEFT JOIN cdb_users as u ON a.sender_id = u.id
+			 INNER JOIN cdb_address_shipments as addrs ON addrs.order_id = a.order_id
+			 INNER JOIN cdb_styles as b ON a.status_courier = b.id
+			 $sWhere
+			 order by order_id desc
+			 ";
 
+// echo '<pre>'; print_r($sql); exit;
 $query_count = $db->cdp_query($sql);
 $db->cdp_execute();
 $numrows = $db->cdp_rowCount();

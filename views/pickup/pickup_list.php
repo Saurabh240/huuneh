@@ -145,38 +145,14 @@ $statusrow = $core->cdp_getStatus();
         </div>
     </div>
 
-    <?php if ($userData->userlevel == 9) { ?>
+    <!-- <?php if ($userData->userlevel == 9) { ?>
         <div class="row">
-            <!-- Column -->
             <div class="col-lg-12 col-xl-12 col-md-12">
                 <div class="card">
                     <div class="card-body">
 
 
                         <div class="row">
-
-                            <!-- <div class="col-md-6 <?php if ($direction_layout === 'rtl') {
-                                                            echo 'pull-left';
-                                                        } else {
-                                                            echo 'pull-right';
-                                                        } ?>">
-
-
-                                <?php if ($userData->userlevel == 9 || $userData->userlevel == 3) { ?>
-                                    <div class="form-group">
-                                        <a href="pickup_add_full.php"><button type="button" class="btn btn btn-outline-dark"><i class="ti-plus" aria-hidden="true"></i> <?php echo $lang['left77'] ?></button></a>
-                                    </div>
-
-                                <?php
-
-                                } else { ?>
-
-                                    <div class="form-group">
-                                        <a href="pickup_add.php"><button type="button" class="btn btn-outline-dark"><i class="ti-plus" aria-hidden="true"></i> <?php echo $lang['left77'] ?></button></a>
-                                    </div>
-                                <?php } ?>
-
-                            </div> -->
 
                             <div class=" col-sm-6">
 
@@ -201,7 +177,7 @@ $statusrow = $core->cdp_getStatus();
                 </div>
             </div>
         </div>
-    <?php } ?>
+    <?php } ?> -->
 </div>
 </div>
             <?php include 'views/inc/footer.php'; ?>
@@ -232,25 +208,25 @@ $statusrow = $core->cdp_getStatus();
     <script src="dataJs/pickup.js"></script>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            cdp_search_client_load(1);
-        });
-        function cdp_search_client_load(page)
-        {
-            var search = $("#search_client").val();
+        // document.addEventListener("DOMContentLoaded", function() {
+        //     cdp_search_client_load(1);
+        // });
+        // function cdp_search_client_load(page)
+        // {
+        //     var search = $("#search_client").val();
 
-            var parametros = { "page": page, 'search': search };
-            $("#loader").fadeIn('slow');
-            $.ajax({
-                url: './ajax/pickup/search_client_ajax.php',
-                data: parametros,
-                beforeSend: function (objeto) {
-                },
-                success: function (data) {
-                    $(".search_client_outer_div").html(data).fadeIn('slow');
-                }
-            })
-        }
+        //     var parametros = { "page": page, 'search': search };
+        //     $("#loader").fadeIn('slow');
+        //     $.ajax({
+        //         url: './ajax/pickup/search_client_ajax.php',
+        //         data: parametros,
+        //         beforeSend: function (objeto) {
+        //         },
+        //         success: function (data) {
+        //             $(".search_client_outer_div").html(data).fadeIn('slow');
+        //         }
+        //     })
+        // }
     </script>   
 
 </body>
