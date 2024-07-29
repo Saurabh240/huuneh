@@ -501,25 +501,34 @@ $address_order = $db->cdp_registro();
                                             <label for="inputEmail3" class="control-label col-form-label">Delivery Type</label>
 												<div class="input-group mb-3">
 													<select class="form-control custom-select" id="deliveryType" name="deliveryType" required style="width: 100%;">
-														<option value="" selected>Select Delivery Type</option>
-														<option <?php if(time() > strtotime("12:00 PM")) { echo "disabled='disabled' class='disabled-cls'"; }?>value="SAME DAY (1PM to 4PM)"
+                                                    <option value="" selected>Select Delivery Type</option>
+														<option value="SAMEDAY (BEFORE 9PM)"
+                                                        <?php if($row_order->delivery_type == "SAMEDAY (BEFORE 9PM)") { ?> selected <?php } ?>
+                                                        >SAMEDAY (BEFORE 9PM)</option>
+                                                        <option value="SAMEDAY (BEFORE 7PM)"
+                                                        <?php if($row_order->delivery_type == "SAMEDAY (BEFORE 7PM)") { ?> selected <?php } ?>
+                                                        >SAMEDAY (BEFORE 7PM)</option>
+                                                        <option value="SAME DAY (1PM to 4PM)"
                                                         <?php if($row_order->delivery_type == "SAME DAY (1PM to 4PM)") { ?> selected <?php } ?>
                                                         >SAME DAY (1PM to 4PM)</option>
-														<option <?php if(time() > strtotime("12:00 PM")) { echo "disabled='disabled' class='disabled-cls'"; }?> value="SAME DAY (BEFORE 5PM)"
+														<option value="SAME DAY (BEFORE 5PM)"
                                                         <?php if($row_order->delivery_type == "SAME DAY (BEFORE 5PM)") { ?> selected <?php } ?>
                                                         >SAME DAY (BEFORE 5PM)</option>
-														<option <?php if(time() > strtotime("1:30 PM")) { echo "disabled='disabled' class='disabled-cls'"; }?> value="RUSH (4 HOURS)"
+														<option value="RUSH (4 HOURS)"
                                                         <?php if($row_order->delivery_type == "RUSH (4 HOURS)") { ?> selected <?php } ?>
                                                         >RUSH (4 HOURS)</option>
-														<option <?php if(time() > strtotime("2:30 PM")) { echo "disabled='disabled' class='disabled-cls'"; }?> value="RUSH (3 HOURS)"
+														<option value="RUSH (3 HOURS)"
                                                         <?php if($row_order->delivery_type == "RUSH (3 HOURS)") { ?> selected <?php } ?>
                                                         >RUSH (3 HOURS)</option>
-														<option <?php if(time() > strtotime("9:00 PM")) { echo "disabled='disabled' class='disabled-cls'"; }?> value="RUSH (2 HOURS)"
+														<option value="RUSH (2 HOURS)"
                                                         <?php if($row_order->delivery_type == "RUSH (2 HOURS)") { ?> selected <?php } ?>
                                                         >RUSH (2 HOURS)</option>
-														<option <?php if(time() > strtotime("9:00 PM")) { echo "disabled='disabled' class='disabled-cls'"; }?> value="URGENT (90 MINUTES)"
+														<option value="URGENT (90 MINUTES)"
                                                         <?php if($row_order->delivery_type == "URGENT (90 MINUTES)") { ?> selected <?php } ?>
                                                         >URGENT (90 MINUTES)</option>
+                                                        <option value="NEXT DAY (BEFORE 7PM)"
+                                                        <?php if($row_order->delivery_type == "NEXT DAY (BEFORE 7PM)") { ?> selected <?php } ?>
+                                                        >NEXT DAY (BEFORE 7PM)</option>
 														<option value="NEXT DAY (BEFORE 5PM)"
                                                         <?php if($row_order->delivery_type == "NEXT DAY (BEFORE 5PM)") { ?> selected <?php } ?>
                                                         >NEXT DAY (BEFORE 5PM)</option>
@@ -534,21 +543,6 @@ $address_order = $db->cdp_registro();
                                                         >NEXT DAY (BEFORE 10:30AM)</option>
                                                       
 													</select>
-
-                                                    <!-- <select class="form-control custom-select" id="deliveryType" name="deliveryType" required style="width: 100%;">
-														<option value="" selected>Select Delivery Type</option>
-														<option <?php if(time() > strtotime("12:00 PM")) { echo "disabled='disabled' class='disabled-cls'"; }?>value="SAME DAY (1PM to 4PM)">SAME DAY (1PM to 4PM)</option>
-														<option <?php if(time() > strtotime("12:00 PM")) { echo "disabled='disabled' class='disabled-cls'"; }?> value="SAME DAY (BEFORE 5PM)">SAME DAY (BEFORE 5PM)</option>
-														<option <?php if(time() > strtotime("1:30 PM")) { echo "disabled='disabled' class='disabled-cls'"; }?> value="RUSH (4 HOURS)">RUSH (4 HOURS)</option>
-														<option <?php if(time() > strtotime("2:30 PM")) { echo "disabled='disabled' class='disabled-cls'"; }?> value="RUSH (3 HOURS)">RUSH (3 HOURS)</option>
-														<option <?php if(time() > strtotime("9:00 PM")) { echo "disabled='disabled' class='disabled-cls'"; }?> value="RUSH (2 HOURS)">RUSH (2 HOURS)</option>
-														<option <?php if(time() > strtotime("9:00 PM")) { echo "disabled='disabled' class='disabled-cls'"; }?> value="URGENT (90 MINUTES)">URGENT (90 MINUTES)</option>
-														<option value="NEXT DAY (BEFORE 5PM)">NEXT DAY (BEFORE 5PM)</option>
-														<option value="NEXT DAY (BEFORE 2PM)">NEXT DAY (BEFORE 2PM)</option>
-														<option value="NEXT DAY (BEFORE 11:30AM)">NEXT DAY (BEFORE 11:30AM)</option>
-														<option value="NEXT DAY (BEFORE 10:30AM)">NEXT DAY (BEFORE 10:30AM)</option>
-                                                      
-													</select> -->
 												</div>
 											</div>
 
@@ -1027,7 +1021,7 @@ $address_order = $db->cdp_registro();
     <script src="assets/template/assets/libs/select2/dist/js/select2.min.js"></script>
     <script src="assets/template/assets/libs/sweetalert2/sweetalert2.min.js"></script>
     <script src="assets/template/assets/libs/intlTelInput/intlTelInput.js"></script>
-    <script src="dataJs/pickup_accept.js"></script>
+    <script src="dataJs/pickup_accept.js?v=4"></script>
 
 
 

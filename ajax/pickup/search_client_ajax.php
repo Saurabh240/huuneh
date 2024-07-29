@@ -47,7 +47,7 @@ if ($search != null) {
 
 // // pagination variables
 $page = (isset($_REQUEST['page']) && !empty($_REQUEST['page'])) ? $_REQUEST['page'] : 1;
-$per_page = 10; //how much records you want to show
+$per_page = 25; //how much records you want to show
 $adjacents  = 4; //gap between pages after number of adjacents
 $offset = ($page - 1) * $per_page;
 
@@ -70,6 +70,77 @@ $db->cdp_query($sql . " limit $offset, $per_page");
 $data = $db->cdp_registros();
 
 $total_pages = ceil($numrows / $per_page);
+
+
+
+function cdp_paginate_search_client($page, $total_pages, $pageVisible, $lang)
+{
+
+    $prevlabel = $lang['global-buttons-5'];
+    $nextlabel = $lang['global-buttons-4'];
+    $out = '<nav>';
+    $out .= '<ul class="pagination  pull-right">';
+
+    // previous label
+
+    if ($page == 1) {
+        $out .= "<li class='paginate_button page-item previous disabled'><a class='page-link'>$prevlabel</a></li>";
+    } else if ($page == 2) {
+        $out .= "<li class='page-item'><a class='page-link' href='javascript:void(0);' onclick='cdp_load_search_client(1)'>$prevlabel</a></li>";
+    } else {
+        $out .= "<li class='page-item'><a  class='page-link' href='javascript:void(0);' onclick='cdp_load_search_client(" . ($page - 1) . ")'>$prevlabel</a></li>";
+    }
+
+    // first label
+    if ($page > ($pageVisible + 1)) {
+        $out .= "<li class='page-item'><a  class='page-link' href='javascript:void(0);' onclick='cdp_load_search_client(1)'>1</a></li>";
+    }
+    // interval
+    if ($page > ($pageVisible + 2)) {
+        $out .= "<li class='page-item'><a  class='page-link'>...</a></li>";
+    }
+
+    // pages
+
+    $pmin = ($page > $pageVisible) ? ($page - $pageVisible) : 1;
+    $pmax = ($page < ($total_pages - $pageVisible)) ? ($page + $pageVisible) : $total_pages;
+    for ($i = $pmin; $i <= $pmax; $i++) {
+        if ($i == $page) {
+            $out .= "<li class='active page-item'><a class='page-link'>$i</a></li>";
+        } else if ($i == 1) {
+            $out .= "<li class='page-item'><a  class='page-link' href='javascript:void(0);' onclick='cdp_load_search_client(1)'>$i</a></li>";
+        } else {
+            $out .= "<li class='page-item'><a  class='page-link' href='javascript:void(0);' onclick='cdp_load_search_client(" . $i . ")'>$i</a></li>";
+        }
+    }
+
+    // interval
+
+    if ($page < ($total_pages - $pageVisible - 1)) {
+        $out .= "<li class='page-item'><a  class='page-link'>...</a></li>";
+    }
+
+    // last
+
+    if ($page < ($total_pages - $pageVisible)) {
+        $out .= "<li class='page-item'><a  class='page-link' href='javascript:void(0);' onclick='cdp_load_search_client($total_pages)'>$total_pages</a></li>";
+    }
+
+    // next
+
+    if ($page < $total_pages) {
+        $out .= "<li class='page-item'><a class='page-link' href='javascript:void(0);' onclick='cdp_load_search_client(" . ($page + 1) . ")'>$nextlabel</a></li>";
+    } else {
+        $out .= "<li class='disabled page-item'><a  class='page-link'>$nextlabel</a></li>";
+    }
+
+    $out .= "</ul>";
+    $out .= "</nav>";
+    return $out;
+}
+
+
+
 
 if ($numrows > 0) { ?>
 	<div class="table-responsive">
@@ -274,7 +345,8 @@ if ($numrows > 0) { ?>
 
 
 		<div class="pull-right">
-			<?php echo cdp_paginate($page, $total_pages, $adjacents, $lang);	?>
+			<?php echo cdp_paginate_search_client($page, $total_pages, $adjacents, $lang);	?>
+			
 		</div>
 	</div>
 <?php } ?>

@@ -116,7 +116,8 @@ if (CDP_APP_MODE_DEMO === true) {
             'notes' => cdp_sanitize($_POST['notes']),
             'phone' => cdp_sanitize($_POST['phone']),
             'gender' => cdp_sanitize($_POST['gender']),
-            'id' => cdp_sanitize($_POST['id'])
+            'id' => cdp_sanitize($_POST['id']),
+            'email_subscription' => cdp_sanitize($_POST['email_subscription'])
         );
 
         $userDataEdit = cdp_getUserEdit4bozo($_POST['id']);

@@ -49,12 +49,12 @@ if ($search != null) {
 
 // // pagination variables
 $page = (isset($_REQUEST['page']) && !empty($_REQUEST['page'])) ? $_REQUEST['page'] : 1;
-$per_page = 10; //how much records you want to show
+$per_page = 25; //how much records you want to show
 $adjacents  = 4; //gap between pages after number of adjacents
 $offset = ($page - 1) * $per_page;
 
 
-$sql = "SELECT  a.is_consolidate, a.delivery_type, a.order_incomplete, a.status_invoice, a.is_pickup, a.total_order, a.order_id, a.order_prefix, a.order_no, a.order_date, a.sender_id, a.receiver_id, a.order_courier, a.order_pay_mode, a.status_courier, a.driver_id, a.order_service_options, a.total_order,  b.mod_style, b.color FROM
+$sql = "SELECT  a.is_consolidate, a.notes_for_driver, a.delivery_type, a.order_incomplete, a.status_invoice, a.is_pickup, a.total_order, a.order_id, a.order_prefix, a.order_no, a.order_date, a.sender_id, a.receiver_id, a.order_courier, a.order_pay_mode, a.status_courier, a.driver_id, a.order_service_options, a.total_order,  b.mod_style, b.color FROM
 			 cdb_add_order as a
 			 INNER JOIN cdb_styles as b ON a.status_courier = b.id
 			 $sWhere
@@ -71,7 +71,6 @@ $data = $db->cdp_registros();
 
 $total_pages = ceil($numrows / $per_page);
 
-
 if ($numrows > 0) { ?>
 	<div class="table-responsive">
 
@@ -86,7 +85,8 @@ if ($numrows > 0) { ?>
 					<th class="text-center"><b><?php echo $lang['left499'] ?></b></th>
 					<th class="text-center"><b><?php echo $lang['lorigin'] ?></b></th>
 					<th class="text-center"><b><?php echo $lang['ldestination'] ?></b></th>
-					<th class="text-center"><b><?php echo $lang['lstatusshipment'] ?></b></th>
+					<th class="text-center"><b>Notes for driver</b></th>
+					<th class="text-center"><b><?php echo $lang['lstatusshipment'] ?></b></th> 
 					<th class="text-center"><b>Total Cost</b></th>
 
 					<th></th>
@@ -157,6 +157,7 @@ if ($numrows > 0) { ?>
 
 							<td class="text-center"><?php echo $address_order->sender_address; ?></td>
 							<td class="text-center"><?php echo $address_order->recipient_address; ?></td>
+							<td class="text-center"><?php echo $row->notes_for_driver; ?></td>
 							<td class="text-center">
 
 								

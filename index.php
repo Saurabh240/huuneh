@@ -41,7 +41,7 @@ if ($user->cdp_loginCheck() == true) {
     if ($_SESSION['userlevel'] == 9) {
         include('views/dashboard/index.php');
     } else if ($_SESSION['userlevel'] == 1) {
-        include('views/dashboard/dashboard_client.php');
+        include('views/pickup/pickup_add.php');
     } else if ($_SESSION['userlevel'] == 2) {
         include('views/dashboard/index.php');
     } else if ($_SESSION['userlevel'] == 3) {

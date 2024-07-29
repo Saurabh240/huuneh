@@ -387,4 +387,69 @@ class User
 
         return $row;
     }
+
+    public function cdp_getUserInfoViaToken($token)
+    {
+        $token = cdp_sanitize(trim($token));
+        $this->db->cdp_query('SELECT * FROM cdb_users WHERE api_token=:api_token');
+
+        $this->db->bind(':api_token', $token);
+
+        $this->db->cdp_execute();
+        return $user = $this->db->cdp_registro();
+    }
+
+    public function cdp_tokenCheck($token)
+    {
+        if (!empty($token)) {
+            $row = $this->cdp_getUserInfoViaToken($token);
+            return $row;
+        } else {
+            return false;
+        }
+    }
+
+    public function cdp_getUserAddress($address, $sender_id)
+    {
+        $address = trim($address);
+        $sender_id = trim($sender_id);
+
+        $this->db->cdp_query("SELECT * FROM cdb_senders_addresses WHERE `address`=:address AND `user_id`=:user_id");
+
+        $this->db->bind(':address', $address);
+        $this->db->bind(':user_id', $sender_id);
+
+        $this->db->cdp_execute();
+        return $address = $this->db->cdp_registro();
+    }
+
+    public function cdp_getRecipient($recipient_name, $sender_id)
+    {
+        $recipient_name = trim($recipient_name);
+        $first_name = get_first_name($recipient_name);
+        $last_name = get_last_name($recipient_name);
+
+        $this->db->cdp_query("SELECT * FROM cdb_recipients WHERE fname=:fname AND lname=:lname AND sender_id=:sender_id");
+
+        $this->db->bind(':fname', $first_name);
+        $this->db->bind(':lname', $last_name);
+        $this->db->bind(':sender_id', $sender_id);
+
+        $this->db->cdp_execute();
+        return $recipient = $this->db->cdp_registro();   
+    }
+
+    public function cdp_getRecipientAddress($recipient_id, $recipient_address)
+    {
+        $address = trim($recipient_address);
+        $recipient_id = trim($recipient_id);
+
+        $this->db->cdp_query("SELECT * FROM cdb_recipients_addresses WHERE address=:address AND recipient_id=:recipient_id");
+
+        $this->db->bind(':address', $address);
+        $this->db->bind(':recipient_id', $recipient_id);
+
+        $this->db->cdp_execute();
+        return $address = $this->db->cdp_registro();
+    }
 }

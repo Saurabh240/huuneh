@@ -80,6 +80,27 @@ class Conexion
         return $this->stmt->execute();
     }
 
+    // public function cdp_execute() {
+    //     try {
+    //         // Attempt to execute the statement
+    //         if ($this->stmt->execute()) {
+    //             return true; // If successful, return true
+    //         } else {
+    //             // If there's an error, fetch error information
+    //             $errorInfo = $this->stmt->errorInfo();
+    //             // Display the error information
+    //             echo "SQLSTATE error code: " . $errorInfo[0] . "<br>";
+    //             echo "Driver-specific error code: " . $errorInfo[1] . "<br>";
+    //             echo "Driver-specific error message: " . $errorInfo[2] . "<br>";
+    //             return false; // Indicate failure
+    //         }
+    //     } catch (PDOException $e) {
+    //         // Handle exceptions if any
+    //         echo "Execution failed: " . $e->getMessage() . "<br>";
+    //         return false; // Indicate failure
+    //     }
+    // }
+
 
     //Obtener los datos de la consulta
     public function cdp_registros()
@@ -114,5 +135,17 @@ class Conexion
     {
         $this->cdp_execute();
         return $this->stmt->fetchAll();
+    }
+
+    public function getAllTags()
+    {
+        $allTags = [
+            "Fridge Item (2-4 C)",
+            "Hand Deliver",
+            "Narcotics",
+            "Pickup Rx Paper",
+            "Pick up Old Medication"
+        ];
+        return $allTags;
     }
 }

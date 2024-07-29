@@ -66,7 +66,6 @@ $db->cdp_execute();
 $sender_user = $db->cdp_registro();
 
 
-
 //Prefix tracking   
 $sql = "SELECT * FROM cdb_settings";
 
@@ -424,7 +423,7 @@ $order_prefix = $settings->prefix;
 
                                                 <div class="col-md-2">
                                                     <div class="input-group-append input-sm">
-                                                        <button disabled id="add_recipient" type="button" data-type_user="user_recipient" data-toggle="modal" data-target="#myModalAddUser" class="btn btn-default"><i class="fa fa-plus"></i></button>
+                                                        <button disabled id="add_recipient" type="button" data-type_user="user_recipient" data-toggle="modal" data-target="#myModalAddRecipient" class="btn btn-default"><i class="fa fa-plus"></i></button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -443,7 +442,7 @@ $order_prefix = $settings->prefix;
                                                 </div>
                                                 <div class="col-md-2">
                                                     <div class="input-group-append input-sm">
-                                                        <button disabled id="add_address_recipient" type="button" data-type_user="user_recipient" data-toggle="modal" data-target="#myModalAddRecipient" class="btn btn-default"><i class="fa fa-plus"></i></button>
+                                                        <button disabled id="add_address_recipient" type="button" data-type_user="user_recipient" data-toggle="modal" data-target="#myModalAddRecipientAddresses" class="btn btn-default"><i class="fa fa-plus"></i></button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -453,6 +452,64 @@ $order_prefix = $settings->prefix;
                             </div>
                         </div>
                     </div>
+
+
+                <input type="hidden" id="businessType" value="" />
+
+                <div class="card" id="specialBusinessCard" style="display: none;">
+                    <div class="card-body">
+                        <!-- Charge and Rx Number Row -->
+                        <div class="mb-3 row">
+                            <div class="col-md-6">
+                            <label for="charge" class="form-label">Charge</label>
+                            <input type="text" class="form-control" name="charge" id="charge" placeholder="$ amount to be collected">
+                            </div>
+                            <div class="col-md-6">
+                            <label for="rxNumber" class="form-label"># of Rx - <span class="text-muted">For Pharmacy tracking purpose only</span></label>
+                            <input type="text" class="form-control" name="no_of_rx" id="rxNumber" placeholder="# of Rx">
+                            </div>
+                        </div>
+                        
+                        <!-- Tags Section -->
+                        <div class="mb-3">
+                            <label class="form-label">Tags</label>
+                            <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="fridgeItem" name="tags[]" value="Fridge Item (2-4 C)">
+                            <label class="form-check-label" for="fridgeItem">Fridge Item (2-4 C)</label>
+                            </div>
+                            <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="handDeliver" name="tags[]" value="Hand Deliver">
+                            <label class="form-check-label" for="handDeliver">Hand Deliver</label>
+                            </div>
+                            <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="narcotics" name="tags[]" value="Narcotics">
+                            <label class="form-check-label" for="narcotics">Narcotics</label>
+                            </div>
+                            <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="pickupRxPaper" name="tags[]" value="Pickup Rx Paper">
+                            <label class="form-check-label" for="pickupRxPaper">Pickup Rx Paper</label>
+                            </div>
+                            <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="pickUpOldMedication" name="tags[]" value="Pick up Old Medication">
+                            <label class="form-check-label" for="pickUpOldMedication">Pick up Old Medication</label>
+                            </div>
+                        </div>
+
+                        
+                        <!-- Notes Section -->
+                        <div class="mb-3">
+                            <label for="notes" class="form-label">Notes</label>
+                            <textarea class="form-control" id="notesForDriver" name="notes_for_driver" rows="3" placeholder="Please be brief"></textarea>
+                            <div class="form-text">Add any special instruction notes for the driver</div>
+                        </div>
+                        
+                        <!-- Dispatch Button -->
+                        <!-- <div class="text-end">
+                            <button type="submit" class="btn btn-primary">Dispatch</button>
+                        </div> -->
+                    </div>
+                </div>
+
 
                     <div class="row">
                         <div class="col-lg-12">
@@ -484,20 +541,23 @@ $order_prefix = $settings->prefix;
 											<div class="form-group col-md-3">
                                                     <label for="inputEmail3" class="control-label col-form-label">Delivery Type</label>
                                                     <div class="input-group mb-3">
-                                                        <select class="form-control custom-select" id="deliveryType" name="delivery_type" required style="width: 100%;">
-                                                            <option value="" selected>Select Delivery Type</option>
-                                                            <option <?php if(time() > strtotime("12:00 PM")) { echo "disabled='disabled' class='disabled-cls'"; }?>value="SAME DAY (1PM to 4PM)">SAME DAY (1PM to 4PM)</option>
-                                                            <option <?php if(time() > strtotime("12:00 PM")) { echo "disabled='disabled' class='disabled-cls'"; }?> value="SAME DAY (BEFORE 5PM)">SAME DAY (BEFORE 5PM)</option>
-                                                            <option <?php if(time() > strtotime("1:30 PM")) { echo "disabled='disabled' class='disabled-cls'"; }?> value="RUSH (4 HOURS)">RUSH (4 HOURS)</option>
-                                                            <option <?php if(time() > strtotime("2:30 PM")) { echo "disabled='disabled' class='disabled-cls'"; }?> value="RUSH (3 HOURS)">RUSH (3 HOURS)</option>
-                                                            <option <?php if(time() > strtotime("9:00 PM")) { echo "disabled='disabled' class='disabled-cls'"; }?> value="RUSH (2 HOURS)">RUSH (2 HOURS)</option>
-                                                            <option <?php if(time() > strtotime("9:00 PM")) { echo "disabled='disabled' class='disabled-cls'"; }?> value="URGENT (90 MINUTES)">URGENT (90 MINUTES)</option>
-                                                            <option value="NEXT DAY (BEFORE 5PM)">NEXT DAY (BEFORE 5PM)</option>
-                                                            <option value="NEXT DAY (BEFORE 2PM)">NEXT DAY (BEFORE 2PM)</option>
-                                                            <option value="NEXT DAY (BEFORE 11:30AM)">NEXT DAY (BEFORE 11:30AM)</option>
-                                                            <option value="NEXT DAY (BEFORE 10:30AM)">NEXT DAY (BEFORE 10:30AM)</option>
-                                                           
-                                                        </select>
+                                                    <select class="form-control custom-select" id="deliveryType" name="deliveryType" required style="width: 100%;">
+														<option value="" selected>Select Delivery Type</option>
+														<option <?php if(time() > strtotime("5:00 PM")) { echo "disabled='disabled' class='disabled-cls'"; }?>value="SAMEDAY (BEFORE 9PM)">SAMEDAY (BEFORE 9PM)</option>
+														<option <?php if(time() > strtotime("12:00 PM")) { echo "disabled='disabled' class='disabled-cls'"; }?>value="SAMEDAY (BEFORE 7PM)">SAMEDAY (BEFORE 7PM)</option>
+														<option <?php if(time() > strtotime("12:00 PM")) { echo "disabled='disabled' class='disabled-cls'"; }?>value="SAME DAY (1PM to 4PM)">SAME DAY (1PM to 4PM)</option>
+														<option <?php if(time() > strtotime("12:00 PM")) { echo "disabled='disabled' class='disabled-cls'"; }?> value="SAME DAY (BEFORE 5PM)">SAME DAY (BEFORE 5PM)</option>
+														<option <?php if(time() > strtotime("1:30 PM")) { echo "disabled='disabled' class='disabled-cls'"; }?> value="RUSH (4 HOURS)">RUSH (4 HOURS)</option>
+														<option <?php if(time() > strtotime("2:30 PM")) { echo "disabled='disabled' class='disabled-cls'"; }?> value="RUSH (3 HOURS)">RUSH (3 HOURS)</option>
+														<option <?php if(time() > strtotime("9:00 PM")) { echo "disabled='disabled' class='disabled-cls'"; }?> value="RUSH (2 HOURS)">RUSH (2 HOURS)</option>
+														<option <?php if(time() > strtotime("9:00 PM")) { echo "disabled='disabled' class='disabled-cls'"; }?> value="URGENT (90 MINUTES)">URGENT (90 MINUTES)</option>
+														<option value="NEXT DAY (BEFORE 7PM)">NEXT DAY (BEFORE 7PM)</option>
+														<option value="NEXT DAY (BEFORE 5PM)">NEXT DAY (BEFORE 5PM)</option>
+														<option value="NEXT DAY (BEFORE 2PM)">NEXT DAY (BEFORE 2PM)</option>
+														<option value="NEXT DAY (BEFORE 11:30AM)">NEXT DAY (BEFORE 11:30AM)</option>
+														<option value="NEXT DAY (BEFORE 10:30AM)">NEXT DAY (BEFORE 10:30AM)</option>
+                                                      
+													</select>
                                                     </div>
 											</div>
 
@@ -675,284 +735,8 @@ $order_prefix = $settings->prefix;
                         </div>
                     </div>
 
-                   <!-- <div class="row">
-                        <div class="col-lg-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <h4 class="card-title">
-                                                <i class="fas fas fa-boxes" style="color:#36bea6"></i>
-                                                <?php echo $lang['left212'] ?>
-                                            </h4>
-                                        </div>
-                                     
-                                        <div class="col-md-6 text-right">
-                                            <div>
-                                                <a href="shipping_tariffs_add.php" class="btn btn-default mb-2"> <span class="ti-shortcode"></span>
-                                                    <?php echo $lang['leftorder17712'] ?>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
+                    
 
-                                   
-                                    <div id="data_items"></div>
-
-                                   
-                                    <div class="col-md-3 text-left">
-                                        <button type="button" onclick="addPackage()" name="add_rows" id="add_rows" class="btn btn-outline-dark"><span class="fa fa-plus"></span> <?php echo $lang['left231'] ?></button>
-                                    </div>
-
-                                    <div><br></div>
-
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <span class="text-secondary text-left"><?php echo $lang['leftorder17713'] ?></span>
-                                        </div>
-                                        <div class="col-md-1">
-                                            <span class="text-secondary text-center" id="total_weight">0.00</span>
-                                        </div>
-                                        <div class="col-md-1 offset-3">
-                                            <span class="text-secondary text-center" id="total_vol_weight">0.00</span>
-                                        </div>
-                                        <div class="col-md-1">
-                                            <span class="text-secondary text-center" id="total_fixed">0.00</span>
-                                        </div>
-                                        <div class="col-md-1">
-                                            <span class="text-secondary text-center" id="total_declared">0.00</span>
-                                        </div>
-                                    </div>
-                                    <hr>
-
-                                    <div class="row" style="margin-top: 20px;">
-                                        <div class="table-responsive d-none" id="table-totals">
-                                            <table id="insvoice-item-table" class="table">
-                                                <tfoot>
-                                                    <tr class="card-hover">
-                                                        <td colspan="4" class="text-right"><b><?php echo $lang['leftorder2021'] ?></b></td>
-                                                        <td colspan="1"></td>
-                                                        <td class="text-right">
-                                                            <?php
-                                                            if ($core->for_symbol !== null) {
-                                                            ?>
-                                                                <b> <?php echo $core->for_symbol; ?> </b>
-                                                            <?php
-                                                            }
-                                                            ?>
-                                                            <span id="subtotal"> 0.00</span>
-                                                        </td>
-                                                        <td></td>
-                                                    </tr>
-                                                </tfoot>
-                                            </table>
-
-
-                                           
-
-                                            <div  class="card" id="row">
-                                                <div class="col-md-6">
-                                                    <h4 class="card-title">
-                                                        <i class="ti ti-briefcase " style="color:#36bea6"></i>
-                                                        <?php echo $lang['messageerrorform30'] ?>
-                                                    </h4>
-                                                </div>
-                                                <hr>
-                                                <div class="row row-shadow input-container"> 
-                                                  <div class="col-sm-12 col-md-6 col-lg-2">
-                                                    <div class="form-group">
-                                                        <label for="emailAddress1"><?php echo $lang['left905'] ?> &nbsp; <?php echo $core->weight_p; ?> </label>
-                                                        <div class="input-group">
-                                                          <input type="text" onchange="calculateFinalTotal(this);" onkeypress="return isNumberKey(event, this)" class="form-control form-control-sm" value="<?php echo $core->value_weight; ?>" name="price_lb" id="price_lb" style="border: 1px solid red;">
-                                                        </div>
-                                                     </div>
-                                                  </div>
-
-
-                                                  <div class="col-sm-12 col-md-6 col-lg-2">
-                                                    <div class="form-group">
-                                                        <label for="emailAddress1"><?php echo $lang['leftorder21'] ?> <?php echo $lang['leftorder222221'] ?> </label>
-                                                        <div class="input-group">
-                                                          <input type="text" onchange="calculateFinalTotal(this);" onkeypress="return isNumberKey(event, this)" value="0" name="discount_value" id="discount_value" class="form-control form-control-sm">
-                                                        </div>
-                                                        
-                                                        <?php
-                                                        if ($core->for_symbol !== null) {
-                                                        ?>
-                                                            <b> <?php echo $core->for_symbol; ?> </b>
-                                                        <?php
-                                                        }
-                                                        ?>
-                                                        <span id="discount"> 0.00</span>
-                                                        
-                                                     </div>
-                                                  </div>
-
-                                                  <div class="col-sm-12 col-md-6 col-lg-2">
-                                                    <div class="form-group">
-                                                        <label for="emailAddress1"><?php echo $lang['leftorder22'] ?> </label>
-                                                        <div class="input-group">
-                                                          <input type="text" onchange="calculateFinalTotal(this);" onkeypress="return isNumberKey(event, this)" class="form-control form-control-sm" value="100" name="insured_value" id="insured_value" style="border: 1px solid darkorange;">
-                                                        </div>
-                                                        
-                                                        <td class="text-center" id="insured_label"></td>
-                                                        
-                                                     </div>
-                                                  </div>
-
-
-                                                  <div class="col-sm-12 col-md-6 col-lg-2">
-                                                    <div class="form-group">
-                                                        <label for="emailAddress1"><?php echo $lang['leftorder24'] ?> <?php echo $lang['leftorder222221'] ?> </label>
-                                                        <div class="input-group">
-                                                          <input type="text" onchange="calculateFinalTotal(this);" onkeypress="return isNumberKey(event, this)" class="form-control form-control-sm" value="<?php echo $core->insurance; ?>" name="insurance_value" id="insurance_value" style="border: 1px solid darkorange;">
-                                                        </div>
-                                                        
-                                                        <?php
-                                                        if ($core->for_symbol !== null) {
-                                                        ?>
-                                                            <b> <?php echo $core->for_symbol; ?> </b>
-                                                        <?php
-                                                        }
-                                                        ?>
-                                                        <span id="insurance"> 0.00</span>
-                                                        
-                                                     </div>
-                                                  </div>
-
-
-                                                  <div class="col-sm-12 col-md-6 col-lg-2">
-                                                    <div class="form-group">
-                                                        <label for="emailAddress1"><?php echo $lang['leftorder25'] ?> <?php echo $lang['leftorder222221'] ?> </label>
-                                                        <div class="input-group">
-                                                          <input type="text" onchange="calculateFinalTotal(this);" onkeypress="return isNumberKey(event, this)" class="form-control form-control-sm" value="<?php echo $core->c_tariffs; ?>" name="tariffs_value" id="tariffs_value">
-                                                        </div>
-                                                        
-                                                        <?php
-                                                        if ($core->for_symbol !== null) {
-                                                        ?>
-                                                            <b> <?php echo $core->for_symbol; ?> </b>
-                                                        <?php
-                                                        }
-                                                        ?>
-                                                        <span id="total_impuesto_aduanero"> 0.00</span>
-                                                        
-                                                     </div>
-                                                  </div>
-
-
-                                                    <div class="col-sm-12 col-md-6 col-lg-2">
-                                                        <div class="form-group">
-                                                            <label for="emailAddress1"><?php echo $lang['leftorder67'] ?> <?php echo $lang['leftorder222221'] ?> </label>
-                                                            <div class="input-group">
-                                                              <input type="text" onchange="calculateFinalTotal(this);" onkeypress="return isNumberKey(event, this)" class="form-control form-control-sm" value="<?php echo $core->tax; ?>" name="tax_value" id="tax_value">
-                                                            </div>
-                                                            
-                                                            <?php
-                                                            if ($core->for_symbol !== null) {
-                                                            ?>
-                                                                <b> <?php echo $core->for_symbol; ?> </b>
-                                                            <?php
-                                                            }
-                                                            ?>
-                                                            <span id="impuesto"> 0.00</span>
-                                                            
-                                                         </div>
-                                                    </div>
-                                                
-                                                    <div class="col-sm-12 col-md-6 col-lg-2">
-                                                        <div class="form-group">
-                                                            <label for="emailAddress1"><?php echo $lang['leftorder19'] ?> <?php echo $lang['leftorder222221'] ?> </label>
-                                                            <div class="input-group">
-                                                              <input type="text" onchange="calculateFinalTotal(this);" value="<?php echo $core->declared_tax; ?>" onkeypress="return isNumberKey(event, this)" class="form-control form-control-sm" name="declared_value_tax" id="declared_value_tax">
-                                                            </div>
-                                                            
-                                                            <?php
-                                                            if ($core->for_symbol !== null) {
-                                                            ?>
-                                                                <b> <?php echo $core->for_symbol; ?> </b>
-                                                            <?php
-                                                            }
-                                                            ?>
-                                                            <span id="declared_value_label"> 0.00</span>
-                                                            
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-sm-12 col-md-6 col-lg-2">
-                                                        <div class="form-group">
-                                                            <label for="emailAddress1"><?php echo $lang['langs_048'] ?> </label>
-                                                            <div class="input-group">
-                                                              <input type="text" onchange="calculateFinalTotal(this);" onkeypress="return isNumberKey(event, this)" class="form-control form-control-sm" value="0" name="reexpedicion_value" id="reexpedicion_value">
-                                                            </div>
-                                                            
-                                                            <td class="text-right" id="reexpedicion_label"></td>
-                                                            
-                                                        </div>
-                                                    </div>
-
-
-
-                                                    <div class="col-sm-12 col-md-6 col-lg-2">
-                                                        <div class="form-group">
-                                                            <label for="emailAddress1"><?php echo $lang['leftorder1878'] ?></label>
-                                                            <?php
-                                                            if ($core->for_symbol !== null) {
-                                                            ?>
-                                                                <b> <?php echo $core->for_symbol; ?> </b>
-                                                            <?php
-                                                            }
-                                                            ?>
-                                                            <span id="fixed_value_label"> 0.00</span>
-                                                            
-                                                         </div>
-                                                    </div>
-
-
-                                                    <div class="col-sm-12 col-md-6 col-lg-2">
-                                                        <div class="form-group">
-                                                            <label for="emailAddress1"><?php echo $lang['leftorder2020'] ?></label>
-                                                            <?php
-                                                            if ($core->for_symbol !== null) {
-                                                            ?>
-                                                                <b> <?php echo $core->for_symbol; ?> </b>
-                                                            <?php
-                                                            }
-                                                            ?>
-                                                            <span id="total_envio" class="green-bold"> 0.00</span>
-                                                            
-                                                         </div>
-                                                    </div>
-
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-actions">
-                                                <div class="card-body">
-                                                    <div class="text-right">
-                                                        <input type="hidden" name="total_item_files" id="total_item_files" value="0" />
-                                                        <input type="hidden" name="deleted_file_ids" id="deleted_file_ids" />
-                                                        <button type="button" name="calculate_invoice" id="calculate_invoice" class="btn btn-info">
-                                                            <i class="fas fa-calculator"></i>
-                                                            <span class="ml-1">
-                                                                <?php echo $lang['leftorder17714'] ?>
-                                                            </span>
-                                                        </button>
-                                                        <button type="submit" name="create_invoice" id="create_invoice" class="btn btn-success" disabled>
-                                                            <i class="fas fa-save"></i>
-                                                            <span class="ml-1"><?php echo $lang['left1103'] ?></span>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> -->
                             <div class="row">
                               <div class="col-lg-12">
                             <div class="card">
@@ -1062,12 +846,7 @@ $order_prefix = $settings->prefix;
                                                     <div class="text-right">
                                                         <input type="hidden" name="total_item_files" id="total_item_files" value="0" />
                                                         <input type="hidden" name="deleted_file_ids" id="deleted_file_ids" />
-                                                        <button type="button" name="calculate_invoice" id="calculate_invoice" class="btn btn-info">
-                                                            <i class="fas fa-calculator"></i>
-                                                            <span class="ml-1">
-                                                                <?php echo $lang['leftorder17714'] ?>
-                                                            </span>
-                                                        </button>
+                                                       
                                                         &nbsp;
                                                         <button type="submit" name="create_invoice" id="create_invoice" class="btn btn-success" disabled>
                                                             <i class="fas fa-save"></i>
@@ -1132,11 +911,14 @@ $order_prefix = $settings->prefix;
     <script src="assets/template/assets/libs/intlTelInput/intlTelInput.js"></script>
     <script src="assets/template/dist/js/app-style-switcher.js"></script>
     <script src="assets/template/assets/libs/bootstrap-switch/dist/js/bootstrap-switch.min.js"></script>
-    <script src="dataJs/pickup_add_full.js"></script>
+    <script src="dataJs/pickup_add_full.js?v=10"></script>
 <script
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCAP41rsfjKCKORsVRuSM_4ff6f7YGV7kQ&callback=initAutocomplete&libraries=places&v=weekly"
       defer
     ></script>
+
+    <script src="dataJs/address_autocomplete.js"></script>
+
 </body>
 
 </html>

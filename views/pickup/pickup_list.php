@@ -181,7 +181,7 @@ $statusrow = $core->cdp_getStatus();
                             <div class=" col-sm-6">
 
                                 <div class="input-group">
-                                    <input type="text" name="search_client" id="search_client" class="form-control input-sm float-right" placeholder="Search by Client" onkeyup="cdp_search_client_load(1);">
+                                    <input type="text" name="search_client" id="search_client" class="form-control input-sm float-right" placeholder="Search by Client" onkeyup="cdp_load_search_client(1);">
                                     <div class="input-group-append input-sm">
                                         <button type="submit" class="btn btn-outline-dark"><i class="fa fa-search"></i></button>
                                     </div>

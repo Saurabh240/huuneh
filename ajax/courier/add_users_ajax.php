@@ -19,7 +19,7 @@
 // *                                                                       *
 // *************************************************************************
 
- 
+
 
 require_once("../../loader.php");
 require_once("../../helpers/querys.php");
@@ -27,17 +27,22 @@ $user = new User;
 $core = new Core;
 $errors = array();
 
+if(empty($_POST['full_name'])){
+    $errors['full_name'] = "Full Name is required";
+}
 
-if (empty($_POST['fname']))
-    $errors['fname'] = $lang['validate_field_ajax122'];
-if (empty($_POST['lname']))
-    $errors['lname'] = $lang['validate_field_ajax123'];
-if (empty($_POST['phone_custom']))
-    $errors['phone_custom'] = $lang['validate_field_ajax128'];
+// if (empty($_POST['fname']))
+//     $errors['fname'] = $lang['validate_field_ajax122'];
+// if (empty($_POST['lname']))
+//     $errors['lname'] = $lang['validate_field_ajax123'];
+// if (empty($_POST['phone_custom']))
+//     $errors['phone_custom'] = $lang['validate_field_ajax128'];
 if (empty($_POST['address_modal_user']))
     $errors['address_modal_user'] = $lang['validate_field_ajax134'];
 
-
+$full_name = cdp_sanitize($_POST['full_name']);
+$_POST['fname'] = get_first_name($full_name);
+$_POST['lname'] = get_last_name($full_name);
 
 $response = array();
 
@@ -63,9 +68,13 @@ if (isset($_POST['register_customer_to_user']) && $_POST['register_customer_to_u
 
 
 // Verificar si el correo electrónico ya está en uso y si es válido
-if ($user->cdp_emailExists($_POST['email'])) {
+if (!empty($_POST['email']) && $user->cdp_emailExists($_POST['email'])) {
     $response['status'] = 'error';
     $response['message'] = $lang['messagesform47'];
+}
+$address_line_2 = null;
+if(!empty($_POST['modal_user_address2'])){
+    $address_line_2 = cdp_sanitize($_POST['modal_user_address2']);
 }
 
 
@@ -80,6 +89,7 @@ if (!isset($response['status'])) {
         'fname' => cdp_sanitize($_POST['fname']),
         'phone' => cdp_sanitize($_POST['phone']),
         'email' => cdp_sanitize($_POST['email']),
+        'address_line_2' => $address_line_2,
         'userlevel' => '1',
         'active' => '1',
         'locker' => cdp_sanitize($_POST['locker']),
@@ -96,31 +106,34 @@ if (!isset($response['status'])) {
     }
 
     $db->cdp_query('INSERT INTO cdb_users
-              (   
-                  username,
-                  password,
-                  locker,
-                  userlevel,
-                  email,
-                  fname,
-                  lname,
-                  created,
-                  phone,
-                  active
-              )
+    (   
+        username,
+        password,
+        locker,
+        userlevel,
+        email,
+        fname,
+        lname,
+        created,
+        phone,
+        active,
+        address_line_2
+    )
 
-              VALUES (
-                  :username,
-                  :password,
-                  :locker,
-                  :userlevel,
-                  :email,
-                  :fname,
-                  :lname,
-                  :created,           
-                  :phone,
-                  :active
-              )');
+    VALUES (
+        :username,
+        :password,
+        :locker,
+        :userlevel,
+        :email,
+        :fname,
+        :lname,
+        :created,           
+        :phone,
+        :active,
+        :address_line_2
+    )');
+
 
     $db->bind(':userlevel', $data['userlevel']);
     $db->bind(':locker', $prefixlk. ' ' .$data['locker']);
@@ -129,11 +142,12 @@ if (!isset($response['status'])) {
     $db->bind(':lname', $data['lname']);
     $db->bind(':phone', $data['phone']);
     $db->bind(':active', $data['active']);
+    $db->bind(':address_line_2', $data['address_line_2']);
     $db->bind(':username', $data['username']);
     $db->bind(':password', $data['password']);
     $db->bind(':created', $data['created']);
 
-    $db->cdp_execute();
+    $res = $db->cdp_execute();
 
     $recipient_id = $db->dbh->lastInsertId();
 

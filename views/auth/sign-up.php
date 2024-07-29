@@ -117,7 +117,7 @@
                                                 </div>
                                             </div>
 
-                                                    <div class="col-md-6">
+                                                    <!-- <div class="col-md-6">
                                                         <div class="mb-3">
                                                             <label class="form-label"><?php echo $lang['left138'] ?> <span class="text-danger">*</span></label>
                                                             <div class="form-icon position-relative">
@@ -125,10 +125,10 @@
                                                                 <input type="text" class="form-control ps-5" placeholder="<?php echo $lang['left139'] ?>" name="fname" id="fname">
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> -->
                                                     <!--end col-->
 
-                                                    <div class="col-md-6">
+                                                    <!-- <div class="col-md-6">
                                                         <div class="mb-3">
                                                             <label class="form-label"><?php echo $lang['left140'] ?> <span class="text-danger">*</span></label>
                                                             <div class="form-icon position-relative">
@@ -136,7 +136,21 @@
                                                                 <input type="text" class="form-control ps-5" placeholder="<?php echo $lang['left141'] ?>" name="lname" id="lname">
                                                             </div>
                                                         </div>
+                                                    </div> -->
+
+                                                    <input type="hidden" class="form-control ps-5" placeholder="<?php echo $lang['left139'] ?>" name="fname" id="fname">
+                                                    <input type="hidden" class="form-control ps-5" placeholder="<?php echo $lang['left141'] ?>" name="lname" id="lname">
+                                                                
+                                                    <div class="col-md-12">
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Full Name <span class="text-danger">*</span></label>
+                                                            <div class="form-icon position-relative">
+                                                                <i data-feather="user" class="fea icon-sm icons"></i>
+                                                                <input type="text" class="form-control ps-5" placeholder="Enter Full Name" name="full_name" id="full_name">
+                                                            </div>
+                                                        </div>
                                                     </div>
+
                                                 </div>
                                                     <!--end col-->
                                                  <div class="row">
@@ -199,6 +213,16 @@
 
                                                 <div class="row">
 
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3">
+                                                            <label class="form-label"><?php echo $lang['user_manage10'] ?> <span class="text-danger">*</span></label>
+                                                            <div class="form-icon position-relative">
+                                                                <i data-feather="map-pin" class="fea icon-sm icons"></i>
+                                                                <input type="text" class="form-control ps-5" placeholder="<?php echo $lang['user_manage10'] ?>" name="address" id="address">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
                                                     <div class="col-md-4">
                                                         <div class="mb-3">
                                                             <label class="form-label"><?php echo $lang['translate_search_address_country'] ?> <span class="text-danger">*</span></label>
@@ -241,16 +265,6 @@
                                                     </div>
                                                 </div>
                                                 <!--end col-->
-
-                                                <div class="col-md-6">
-                                                    <div class="mb-3">
-                                                        <label class="form-label"><?php echo $lang['user_manage10'] ?> <span class="text-danger">*</span></label>
-                                                        <div class="form-icon position-relative">
-                                                            <i data-feather="map-pin" class="fea icon-sm icons"></i>
-                                                            <input type="text" class="form-control ps-5" placeholder="<?php echo $lang['user_manage10'] ?>" name="address" id="address">
-                                                        </div>
-                                                    </div>
-                                                </div>
 
                                                 <div class="col-md-6">
                                                     <div class="mb-3">
@@ -514,6 +528,164 @@
             }
         });
     });
+
+
+    // For pickup location autocomplete.
+
+function loadSenderCities(selectedStateId, cityInput, modelId)
+{
+
+      // Select city
+      if (cityInput) {
+        var $citySelect = modelId ? $("#city" + modelId) : $("#city");
+        $.ajax({
+          url: "ajax/select2_cities.php?id=" + selectedStateId, // Your data source URL for cities
+          dataType: "json",
+          data: {
+            state_id: selectedStateId
+          },
+          success: function (citiesData) {
+            // Find the selected city's text
+            var selectedCity = citiesData.find(function (city) {
+              return city.text == cityInput;
+            });
+    
+            // Create a new option element
+            var newCityOption = new Option(selectedCity.text, selectedCity.id, true, true);
+    
+            // Append it to the select
+            $citySelect.append(newCityOption).trigger('change');
+    
+            // Manually trigger the change event to update Select2
+            $citySelect.trigger({
+              type: 'select2:select',
+              params: {
+                data: selectedCity
+              }
+            });
+          }
+        });
+      }
+}
+
+function loadSenderStates(selectedCountryId, stateInput, cityInput, modelId)
+{
+      // Select state
+      if (stateInput) {
+        var $stateSelect = modelId ? $("#state" + modelId) : $("#state");
+        $.ajax({
+          url: "ajax/select2_states.php?id=" + selectedCountryId, // Your data source URL for states
+          dataType: "json",
+          data: {
+            country_id: selectedCountryId
+          },
+          success: function (statesData) {
+            // Find the selected state's text
+            var selectedState = statesData.find(function (state) {
+              return state.text == stateInput;
+            });
+    
+            // Create a new option element
+            var newStateOption = new Option(selectedState.text, selectedState.id, true, true);
+    
+            // Append it to the select
+            $stateSelect.append(newStateOption).trigger('change');
+    
+            // Manually trigger the change event to update Select2
+            $stateSelect.trigger({
+              type: 'select2:select',
+              params: {
+                data: selectedState
+              }
+            });
+    
+            // After state is selected, load cities
+            loadSenderCities(selectedState.id, cityInput, modelId); // Assuming cdp_load_cities(modal) function exists
+          }
+        });
+      }
+    
+}
+
+function loadSenderCountries(fullAddress, modelId)
+{
+  if (!fullAddress) return;
+
+    var countryInput = fullAddress.country;
+    var stateInput = fullAddress.state;
+    var cityInput = fullAddress.city;
+    var selectedZip = fullAddress.zip_code;
+    var $countrySelect;
+    modelId ? $("#postal" + modelId).val(selectedZip) : $("#postal").val(selectedZip);
+    // Select country
+    if (countryInput) {
+      $countrySelect = modelId ? $countrySelect = $("#country" + modelId) : $("#country");
+      $.ajax({
+        url: "ajax/select2_countries.php", // Your data source URL for countries
+        dataType: "json",
+        success: function (countriesData) {
+          var selectedCountry = countriesData.find(function (country) {
+            return country.text == countryInput;
+          });
+  
+          // Create a new option element
+          var newCountryOption = new Option(selectedCountry.text, selectedCountry.id, true, true);
+  
+          // Append it to the select
+          $countrySelect.append(newCountryOption).trigger('change');
+  
+          // Manually trigger the change event to update Select2
+          $countrySelect.trigger({
+            type: 'select2:select',
+            params: {
+              data: selectedCountry
+            }
+          });
+
+          // After country is selected, load states
+          loadSenderStates(selectedCountry.id, stateInput, cityInput, modelId); 
+        }
+      });
+    }
+    
+
+}
+
+
+
+function getSenderFullAddress(inputAddress, modelId)
+{
+  var userAddress = $("#" + inputAddress).val();
+  console.log(userAddress);
+
+  $.ajax({
+    type: 'POST',
+    url: 'ajax/courier/address_details_api.php',
+    data: { 'address_modal': userAddress },
+    dataType: 'json',
+    success: function (response) {
+      if(response.status){
+        var fullAddress = response.fullAddress;
+        loadSenderCountries(fullAddress, modelId);
+      }else{
+        // alert(response.message);
+      }
+
+    },
+    error: function () {
+      // Handle error
+      alert('Error: Something Went Wrong!.');
+    }
+  });
+  
+}
+
+
+
+$("#address").on("change", function(){
+    getSenderFullAddress("address", "");
+});
+
 </script>
 
 

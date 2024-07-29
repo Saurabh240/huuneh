@@ -3,7 +3,7 @@
 
 $(function () {
     cdp_load(1);
-
+    cdp_load_search_client(1)
 });
 
 
@@ -20,6 +20,23 @@ function cdp_load(page) {
         },
         success: function (data) {
             $(".outer_div").html(data).fadeIn('slow');
+        }
+    })
+}
+
+
+function cdp_load_search_client(page) {
+    var search = $("#search_client").val();
+
+    var parametros = { "page": page, 'search': search };
+    $("#loader").fadeIn('slow');
+    $.ajax({
+        url: './ajax/pickup/search_client_ajax.php',
+        data: parametros,
+        beforeSend: function (objeto) {
+        },
+        success: function (data) {
+            $(".search_client_outer_div").html(data).fadeIn('slow');
         }
     })
 }

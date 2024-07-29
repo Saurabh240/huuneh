@@ -110,7 +110,7 @@ foreach ($data as $row) {
 
         <div class="page-wrapper">
 
-            <div class="page-breadcrumb">
+            <!--<div class="page-breadcrumb">-->
                 <div class="row">
                     <div class="col-5 align-self-center">
                         <h4 class="page-title"><?php echo $lang['left-menu-sidebar-2'] ?></h4>

@@ -852,9 +852,9 @@ $("#invoice_form").on("submit", function (event) {
   var order_no = $("#order_no").val();
   var agency = $("#agency").val();
   var origin_off = $("#origin_off").val();
-  var sender_id = document.getElementById('sender_id').value
+  var sender_id = $("#sender_id option:selected").val();
   var sender_address_id = $("#sender_address_id option:selected").val();
-  var recipient_id = $("#recipient_id").val();
+  var recipient_id = $("#recipient_id option:selected").val();
   var recipient_address_id = $("#recipient_address_id option:selected").val();
   var order_item_category = $("#order_item_category").val();
   var order_courier = $("#order_courier").val();
@@ -1095,7 +1095,7 @@ function cdp_select2_init_sender() {
       allowClear: true,
     })
     .on("change", function (e) {
-      var sender_id = $("#sender_id").val();
+      var sender_id = $("#sender_address_id option:selected").val();
       $("#sender_address_id").attr("disabled", true);
       $("#recipient_id").attr("disabled", true);
 
@@ -1122,7 +1122,7 @@ function cdp_select2_init_sender() {
 }
 
 function cdp_select2_init_sender_address() {
-  var sender_id = $("#sender_id").val();
+  var sender_id = $("#sender_address_id option:selected").val();
   $("#sender_address_id")
     .select2({
       ajax: {
@@ -1153,8 +1153,8 @@ function cdp_select2_init_sender_address() {
       allowClear: true,
     })
     .on("change", function (e) {
-      var sender_address_id = $("#sender_address_id").val();
-      var recipient_address_id = $("#recipient_address_id").val();
+      var sender_address_id = $("#sender_address_id option:selected").val()
+      var recipient_address_id = $("#recipient_id option:selected").val();
       if (!recipient_address_id || !sender_address_id) {
         $("#table-totals").addClass("d-none");
       }
@@ -1199,7 +1199,7 @@ function cdp_formatAdressSelection(repo) {
 }
 
 function cdp_select2_init_recipient() {
-  var recipient_id = $("#recipient_id").val();
+  var recipient_id = $("#recipient_id option:selected").val();
 
   $("#recipient_id")
     .select2({
@@ -1225,7 +1225,7 @@ function cdp_select2_init_recipient() {
       allowClear: true,
     })
     .on("change", function (e) {
-      var recipient_id = $("#recipient_id").val();
+      var recipient_id = $("#recipient_id option:selected").val();
       $("#add_address_recipient").attr("disabled", true);
       $("#recipient_address_id").attr("disabled", true);
       $("#recipient_address_id").val(null);
@@ -1240,7 +1240,7 @@ function cdp_select2_init_recipient() {
 }
 
 function cdp_select2_init_recipient_address() {
-  var recipient_id = $("#recipient_id").val();
+  var recipient_id = $("#recipient_id option:selected").val();
 
   $("#recipient_address_id")
     .select2({
@@ -1272,8 +1272,8 @@ function cdp_select2_init_recipient_address() {
       allowClear: true,
     })
     .on("change", function (e) {
-      var recipient_address_id = $("#recipient_address_id").val();
-      var sender_address_id = $("#sender_address_id").val();
+      var recipient_address_id = $("#recipient_id option:selected").val();
+      var sender_address_id = $("#sender_address_id option:selected").val()
       if (!recipient_address_id || !sender_address_id) {
         $("#table-totals").addClass("d-none");
       }
@@ -1316,18 +1316,19 @@ $("#add_user_from_modal_shipments").on("submit", function (event) {
   }
 
   // Validación del correo electrónico en el lado del cliente
-  var email = $.trim($("#email").val());
-  if (email.length == 0) {
-    Swal.fire({
-      type: 'error',
-      title: 'Oops...',
-      text: message_error_form83,
-      icon: 'error',
-      confirmButtonColor: '#336aea'
-    });
-    $("#email").focus();
-    return false;
-  } else if (!isValidEmailAddress(email)) { // Función para validar el formato del correo electrónico
+  // var email = $.trim($("#email").val());
+  // if (email.length == 0) {
+  //   Swal.fire({
+  //     type: 'error',
+  //     title: 'Oops...',
+  //     text: message_error_form83,
+  //     icon: 'error',
+  //     confirmButtonColor: '#336aea'
+  //   });
+  //   $("#email").focus();
+  //   return false;
+  // } else 
+  if (email && !isValidEmailAddress(email)) { // Función para validar el formato del correo electrónico
     Swal.fire({
       type: 'warning',
       title: 'Oops...',
@@ -1407,8 +1408,8 @@ $("#add_user_from_modal_shipments").on("submit", function (event) {
     return false;
   }
 
-  if (iti.isValidNumber()) {
-    var sender_id = $("#sender_id").val();
+  // if (iti.isValidNumber()) {
+    var sender_id = $("#sender_address_id option:selected").val();
     $("#save_data_user").attr("disabled", true);
     var parametros = $(this).serialize();
 
@@ -1484,12 +1485,13 @@ $("#add_user_from_modal_shipments").on("submit", function (event) {
         $("#save_data_user").attr("disabled", false);
       }
     });
-  } else {
-    input.classList.add("error");
-    var errorCode = iti.getValidationError();
-    errorMsgSender.innerHTML = errorMap[errorCode];
-    errorMsgSender.classList.remove("hide");
-  }
+  // } 
+  // else {
+  //   input.classList.add("error");
+  //   var errorCode = iti.getValidationError();
+  //   errorMsgSender.innerHTML = errorMap[errorCode];
+  //   errorMsgSender.classList.remove("hide");
+  // }
 });
 
 
@@ -1529,18 +1531,19 @@ $("#add_recipient_from_modal_shipments").on("submit", function (event) {
   }
 
   // Validación del correo electrónico en el lado del cliente
-  var email = $.trim($("#email_recipient").val());
-  if (email.length == 0) {
-    Swal.fire({
-      type: 'error',
-      title: 'Oops...',
-      text: translate_label_email,
-      icon: 'error',
-      confirmButtonColor: '#336aea'
-    });
-    $("#email_recipient").focus();
-    return false;
-  } else if (!isValidEmailAddress(email)) { // Función para validar el formato del correo electrónico
+  // var email = $.trim($("#email_recipient").val());
+  // if (email.length == 0) {
+  //   Swal.fire({
+  //     type: 'error',
+  //     title: 'Oops...',
+  //     text: translate_label_email,
+  //     icon: 'error',
+  //     confirmButtonColor: '#336aea'
+  //   });
+  //   $("#email_recipient").focus();
+  //   return false;
+  // } else 
+  if (email && !isValidEmailAddress(email)) { // Función para validar el formato del correo electrónico
     Swal.fire({
       type: 'warning',
       title: 'Oops...',
@@ -1620,8 +1623,8 @@ $("#add_recipient_from_modal_shipments").on("submit", function (event) {
     return false;
   }
 
-  if (iti_recipient.isValidNumber()) {
-    var sender_id = $("#sender_id").val();
+  // if (iti_recipient.isValidNumber()) {
+    var sender_id = $("#sender_address_id option:selected").val();
     $("#save_data_recipient").attr("disabled", true);
     var parametros = $(this).serialize();
 
@@ -1697,12 +1700,12 @@ $("#add_recipient_from_modal_shipments").on("submit", function (event) {
       }
     });
 
-  } else {
-    input_recipient.classList.add("error");
-    var errorCode = iti_recipient.getValidationError();
-    errorMsgRecipient.innerHTML = errorMap[errorCode];
-    errorMsgRecipient.classList.remove("hide");
-  }
+  // } else {
+  //   input_recipient.classList.add("error");
+  //   var errorCode = iti_recipient.getValidationError();
+  //   errorMsgRecipient.innerHTML = errorMap[errorCode];
+  //   errorMsgRecipient.classList.remove("hide");
+  // }
 });
 
 
@@ -1774,7 +1777,7 @@ $("#add_address_users_from_modal_shipments").on("submit", function (event) {
   }
 
 
-  var sender_id = $("#sender_id").val();
+  var sender_id = $("#sender_address_id option:selected").val();
   $("#save_data_address_users").attr("disabled", true);
   var parametros = $(this).serialize();
 
@@ -1909,7 +1912,7 @@ $("#add_address_recipients_from_modal_shipments").on("submit", function (event) 
   }
 
 
-  var recipient_id = $("#recipient_id").val();
+  var recipient_id = $("#recipient_id option:selected").val();
   $("#save_data_address_recipients").attr("disabled", true);
   var parametros = $(this).serialize();
 
@@ -2115,10 +2118,10 @@ function cdp_showSuccess(messages, shipment_id) {
 
 
 function getTariffs() {
-  // var recipient_id = $("#recipient_id").val();
-  // var recipient_address_id = $("#recipient_address_id").val();
+  // var recipient_id = $("#recipient_id option:selected").val();
+  // var recipient_address_id = $("#recipient_id option:selected").val();
   // var sender_id = $("#sender_id_temp").val();
-  // var sender_address_id = $("#sender_address_id").val();
+  // var sender_address_id = $("#sender_address_id option:selected").val()
   // var packages = JSON.stringify(packagesItems);
 
   // var data = {
@@ -2145,7 +2148,6 @@ function getTariffs() {
 
   // $("#price_lb").val(data.data.price);
   // $("#price_lb_label").html(data.data.price);
-  calculateFinalTotal();
   if (!deliveryType) {
     $("#total_before_tax").text("0.0");
     $("#total_after_tax").text("0.0");
@@ -2165,9 +2167,9 @@ function getTariffs() {
   //   });
 
   $("#create_invoice").attr("disabled", true);
-
   var origin = "";
   var destination = "";
+  var sender_id = "";
   $('#sender_address_id').on('select2:select', function (e) {
     var selectedData = e.params.data;
     origin = selectedData.text;
@@ -2179,6 +2181,7 @@ function getTariffs() {
   });
   origin = $('#sender_address_id option:selected').text();
   destination = $('#recipient_address_id option:selected').text();
+  sender_id = $("#sender_id option:selected").val();
   // google api accepts information like given below.
   // origin = "Seattle,Washington";
   // destination = "San+Francisco,California";
@@ -2186,14 +2189,14 @@ function getTariffs() {
 
 
 
-  if (!deliveryType) {
+  if(!origin || !destination || !deliveryType || !sender_id){
     return;
   }
 
   $.ajax({
     type: 'POST',
     url: 'ajax/courier/calculate_distance.php', // Replace with your PHP script for calculating distance
-    data: { 'origin': origin, 'destination': destination, 'deliveryType': deliveryType },
+    data: { 'origin': origin, 'destination': destination, 'deliveryType': deliveryType, 'sender_id': sender_id },
     dataType: 'json',
     success: function (data) {
       console.log("All", data);
@@ -2223,3 +2226,15 @@ $("#calculate_invoice").css({ opacity: 0, height: 0, width: 0, padding: 0 });
 $("#calculate_invoice").on("click", getTariffs);
 
 $("#deliveryType").on('change', getTariffs);
+
+$(document).ready(function(){
+  var sender_id = $("#sender_id option:selected").val();
+  $("#sender_id").val(sender_id);
+  var sender_address_id = $("#sender_address_id option:selected").val();
+  $("#sender_address_id").val(sender_address_id);
+  var recipient_id = $("#recipient_id option:selected").val();
+  $("#recipient_id").val(recipient_id);
+  var recipient_address_id = $("#recipient_address_id option:selected").val();
+  $("#recipient_address_id").val(recipient_address_id);
+  getTariffs();
+})

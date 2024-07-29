@@ -38,10 +38,10 @@ $error = "";
 //$requiredFields = array('terms', 'country', 'state', 'city', 'address', 'postal', 'username', 'email', 'phone', 'fname', 'lname', 'document_number', 'document_type');
 $account_type= $_POST['account_type'];
 if($account_type == 'business'){
-    $requiredFields = array('terms', 'country', 'state', 'city', 'address', 'postal', 'username', 'phone', 'fname','business_name','business_type');
+    $requiredFields = array('terms', 'country', 'state', 'city', 'address', 'postal', 'username', 'phone', 'full_name','business_name','business_type');
 
 }else{
-    $requiredFields = array('terms', 'country', 'state', 'city', 'address', 'postal', 'username', 'phone', 'fname');
+    $requiredFields = array('terms', 'country', 'state', 'city', 'address', 'postal', 'username', 'phone', 'full_name');
 
 }
 foreach ($requiredFields as $field) {
@@ -97,6 +97,15 @@ if ($_POST['pass'] != $_POST['pass2']) {
     $error = $lang['messagesform74'];
 }
 
+$full_name = cdp_sanitize($_POST['full_name']);
+$fname = get_first_name($full_name);
+$lname = get_last_name($full_name);
+$_POST['fname'] = $fname;
+$_POST['lname'] = $lname;
+
+if( empty($full_name) ){
+    $error = "Fullname is required";
+}
 
 if (empty($error)) {
 

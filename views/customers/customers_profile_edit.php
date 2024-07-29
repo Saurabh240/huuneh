@@ -182,6 +182,11 @@ $user_addreses = $db->cdp_registros();
                                 <li class="nav-item">
                                     <a class="nav-link active" id="pills-setting-tab" data-toggle="pill" href="#previous-month" role="tab" aria-controls="pills-setting" aria-selected="false"><span><?php echo $lang['edit-clien2'] ?> <i class="icon-double-angle-right"></i> <?php echo $row->username; ?></span></a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="pills-api-token-tab" data-toggle="pill" href="#api-token" role="tab" aria-controls="pills-api-token" aria-selected="false">
+                                        <span>Generate API Token <i class="icon-double-angle-right"></i> <?php echo $row->username; ?></span>
+                                    </a>
+                                </li>
                             </ul>
                             <!-- Tabs -->
                             <div class="tab-content" id="pills-tabContent">
@@ -451,8 +456,23 @@ $user_addreses = $db->cdp_registros();
                                                     </div>
                                                 </div>
 
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group ml-4">
+                                                            <input class="form-check-input" type="checkbox" role="switch" name="email_subscription" id="email_subscription"
+                                                                <?php 
+                                                                    if($row->email_subscription == 1)
+                                                                        echo "checked";
+                                                                ?>
+                                                            >
+                                                                <label class="form-check-label" for="email_subscription">Email Notification Subscription</label>
+                                                                
+                                                        </div>
+                                                    </div>
+                                                </div>
+
                                             </section>
-                                            <div class="form-group">
+                                            <div class="form-group mt-1">
                                                 <div class="col-sm-12">
                                                     <button class="btn btn-outline-primary btn-confirmation" name="save_data" id="save_data" type="submit"><?php echo $lang['user-account20'] ?><span><i class="icon-ok"></i></span></button>
                                                     <a href="customers_list.php" class="btn btn-outline-secondary btn-confirmation"><span><i class="ti-share-alt"></i></span> <?php echo $lang['user_manage30'] ?></a>
@@ -462,6 +482,43 @@ $user_addreses = $db->cdp_registros();
                                         </form>
                                     </div>
                                 </div>
+                                
+                                <div class="tab-pane fade" id="api-token" role="tabpanel" aria-labelledby="pills-api-token-tab">
+                                    <div class="card-body">
+                                        <!-- <div id="loader" style="display:none"></div> -->
+                                        
+                                        <form class="form-horizontal form-material" id="save_token" name="save_token" method="post">
+                                            <section>
+                                                <div class="row">
+                                                    
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="token"><?php echo $lang['generate_token'] ?></label>
+                                                            <div class="input-group">
+                                                                <input type="text" class="form-control" id="token" name="token" readonly value="<?php echo $row->api_token; ?>">
+                                                               
+                                                                <div class="input-group-append">
+                                                                    <button class="btn btn-outline-secondary" type="button" id="copyTokenBtn" data-toggle="tooltip" data-placement="top" title="Copy Token">
+                                                                        <i class="fas fa-copy"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </section>
+                                            <div class="form-group mt-1">
+                                                <div class="col-sm-12">
+                                                    <button class="btn btn-primary" type="button" id="generateTokenBtn">Generate</button>
+                                                    <button class="btn btn-success btn-confirmation" name="save_data_token" type="submit">Save<i class="icon-ok"></i></span></button>
+                                                </div>
+                                                <input name="token_user_id" id="token_user_id" type="hidden" value="<?php echo $row->id; ?>" />
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -488,7 +545,7 @@ $user_addreses = $db->cdp_registros();
     <script src="assets/template/assets/libs/select2/dist/js/select2.min.js"></script>
     <script src="assets/template/assets/libs/intlTelInput/intlTelInput.js"></script>
 
-    <script src="dataJs/customers_profile_edit.js"></script>
+    <script src="dataJs/customers_profile_edit.js?v=8"></script>
 
 
 </body>

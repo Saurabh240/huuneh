@@ -10,7 +10,7 @@
 					<form class="form-horizontal" method="post" id="add_recipient_from_modal_shipments" name="add_recipient_from_modal_shipments">
 
 						<div class="row">
-							<div class="col-md-6">
+							<!-- <div class="col-md-6">
 								<div class="form-group">
 									<label for="emailAddress1"><?php echo $lang['user_manage6'] ?></label>
 									<input type="text" class="form-control" name="fname_recipient" id="fname_recipient" placeholder="<?php echo $lang['user_manage6'] ?>">
@@ -21,20 +21,31 @@
 									<label for="phoneNumber1"><?php echo $lang['user_manage7'] ?></label>
 									<input type="text" class="form-control" name="lname_recipient" id="lname_recipient" placeholder="<?php echo $lang['user_manage7'] ?>">
 								</div>
+							</div> -->
+
+							<input type="hidden" class="form-control" name="fname_recipient" id="fname_recipient" placeholder="<?php echo $lang['user_manage6'] ?>">
+							<input type="hidden" class="form-control" name="lname_recipient" id="lname_recipient" placeholder="<?php echo $lang['user_manage7'] ?>">
+								
+							<div class="col-md-12">
+								<div class="form-group">
+									<label for="phoneNumber1">Full Name<span class="text-muted" style="font-size: 12px;"> (Required*)</span></label>
+									<input type="text" class="form-control" name="fullname_recipient" id="fullname_recipient" placeholder="Full Name">
+								</div>
 							</div>
+
 						</div>
 
 						<div class="row">
 							<div class="col-md-6">
 								<div class="form-group">
-									<label for="emailAddress1"><?php echo $lang['user_manage5'] ?></label>
+									<label for="emailAddress1"><?php echo $lang['user_manage5'] ?><span class="text-muted" style="font-size: 12px;"> (Optional)</span></label>
 									<input type="text" class="form-control" id="email_recipient" name="email_recipient" placeholder="<?php echo $lang['user_manage5'] ?>">
 								</div>
 							</div>
 
 							<div class="col-md-6">
 								<div class="form-group">
-									<label for="phoneNumber1"><?php echo $lang['user_manage9'] ?></label>
+									<label for="phoneNumber1"><?php echo $lang['user_manage9'] ?><span class="text-muted" style="font-size: 12px;"> (Optional)</span></label>
 									<input type="tel" class="form-control" name="phone_custom_recipient" id="phone_custom_recipient">
 
 									<span id="valid-msg-recipient" class="hide"></span>
@@ -47,6 +58,14 @@
 						<h4><?php echo $lang['laddress'] ?> </h4>
 
 						<div class="row">
+
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="phoneNumber1"><?php echo $lang['user_manage10'] ?></label>
+									<input type="text"  autocomplete="off" class="form-control" name="address_modal_recipient" id="address_modal_recipient" placeholder="<?php echo $lang['user_manage10'] ?>">
+								</div>
+							</div>
+
 							<div class="col-md-4">
 								<div class="form-group">
 									<label><?php echo $lang['leftorder318'] ?></label>
@@ -78,12 +97,7 @@
 								</div>
 							</div>
 
-							<div class="col-md-4">
-								<div class="form-group">
-									<label for="phoneNumber1"><?php echo $lang['user_manage10'] ?></label>
-									<input type="text"  autocomplete="off" class="form-control" name="address_modal_recipient" id="address_modal_recipient" placeholder="<?php echo $lang['user_manage10'] ?>">
-								</div>
-							</div>
+							
 						</div>
 
 						<input type="hidden" name="total_address_recipient" id="total_address_recipient" value="1" />

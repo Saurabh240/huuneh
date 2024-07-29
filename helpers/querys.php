@@ -138,7 +138,26 @@ function cdp_updateUserrx0xr($datos)
     return $db->cdp_execute();
 }
 
+function cdp_getUserEditByToken($token)
+{
+    $db = new Conexion;
 
+    $db->cdp_query('SELECT * FROM cdb_users WHERE api_token=:token');
+
+    $db->bind(':token', $token);
+
+    $db->cdp_execute();
+
+    $data = $db->cdp_registro();
+    $rowCount = $db->cdp_rowCount();
+
+    $datos = [
+        'data' => $data,
+        'rowCount' => $rowCount
+    ];
+
+    return $datos;
+}
 
 function cdp_getUserEdit4bozo($id)
 {
@@ -4885,6 +4904,26 @@ function cdp_updateCustomers($datos)
 }
 
 
+
+function cdp_updateCustomersApiToken($datos)
+{
+    $db = new Conexion;
+
+    $db->cdp_query('UPDATE cdb_users SET
+    
+        api_token =:api_token
+
+        where id = :id
+    ');
+
+    $db->bind(':api_token', $datos['api_token']);
+    $db->bind(':id', $datos['id']);
+
+    return $db->cdp_execute();
+}
+
+
+
 function cdp_updateCustomersprofile($datos)
 {
     $db = new Conexion;
@@ -4898,6 +4937,7 @@ function cdp_updateCustomersprofile($datos)
         fname =:fname,
         lname =:lname,
         notes =:notes,
+        email_subscription =:email_subscription,
         phone =:phone,
         gender =:gender
 
@@ -4909,6 +4949,7 @@ function cdp_updateCustomersprofile($datos)
     $db->bind(':fname', $datos['fname']);
     $db->bind(':lname', $datos['lname']);
     $db->bind(':notes', $datos['notes']);
+    $db->bind(':email_subscription', $datos['email_subscription']);
     $db->bind(':phone', $datos['phone']);
     $db->bind(':gender', $datos['gender']);
     $db->bind(':document_type', $datos['document_type']);
@@ -5333,7 +5374,11 @@ function cdp_insertCourierPickupFromCustomer($datos)
         due_date,
         notes,
         status_invoice,
-        order_incomplete                 
+        order_incomplete,
+        charge,
+        no_of_rx,
+        notes_for_driver,
+        tags              
         )
     VALUES
         (
@@ -5354,8 +5399,11 @@ function cdp_insertCourierPickupFromCustomer($datos)
         :due_date,
         :notes,
         :status_invoice,
-        :order_incomplete         
-
+        :order_incomplete,
+        :charge,
+        :no_of_rx,
+        :notes_for_driver,
+        :tags
         )
 ");
 
@@ -5379,6 +5427,10 @@ function cdp_insertCourierPickupFromCustomer($datos)
     $db->bind(':status_invoice',   $datos["status_invoice"]);
     $db->bind(':volumetric_percentage',   $datos["volumetric_percentage"]);
     $db->bind(':notes',   $datos["notes"]);
+    $db->bind(':charge',   $datos["charge"]);
+    $db->bind(':no_of_rx',   $datos["no_of_rx"]);
+    $db->bind(':notes_for_driver',   $datos["notes_for_driver"]);
+    $db->bind(':tags',   $datos["tags"]);
 
     $db->cdp_execute();
     
@@ -6475,4 +6527,85 @@ function updateCustomerPackagesStatusDelivered($data)
 
 
     return $db->cdp_execute();
+}
+
+
+function cdp_recipientAddressExists($recipient_address) {
+    $db = new Conexion;
+    $db->cdp_query("SELECT `country`, `state`, `city`, `zip_code`, `address` FROM `cdb_recipients_addresses` WHERE `address` = :address");
+    $db->bind(':address', $recipient_address);
+    $db->cdp_execute();
+
+    return  $db->cdp_registro();
+}
+
+function cdp_getCountryByName($country){
+    $db = new Conexion;
+    $db->cdp_query("SELECT `id`, `name` FROM `cdb_countries` WHERE `name` = :country");
+    $db->bind(':country', $country);
+    $db->cdp_execute();
+
+    return  $db->cdp_registro();
+    
+}
+
+function cdp_getStateByName($state){
+    $db = new Conexion;
+    $db->cdp_query("SELECT `id`, `name` FROM `cdb_states` WHERE `name` = :state");
+    $db->bind(':state', $state);
+    $db->cdp_execute();
+
+    return  $db->cdp_registro();
+    
+}
+
+function cdp_getCityByName($city){
+    $db = new Conexion;
+    $db->cdp_query("SELECT `id`, `name` FROM `cdb_cities` WHERE `name` = :city");
+    $db->bind(':city', $city);
+    $db->cdp_execute();
+
+    return  $db->cdp_registro();
+    
+}
+
+function cdp_saveRecipientAddress($data)
+{
+    $db = new Conexion;
+    $db->cdp_query("
+                  INSERT INTO cdb_recipients_addresses 
+                  (
+                    country,
+                    state,
+                    city,
+                    address,
+                    zip_code,
+                    recipient_id                                
+                  )
+                  VALUES 
+                  (
+                      :country,
+                      :state,
+                      :city, 
+                      :address,
+                      :zip_code,
+                      :recipient_id                            
+                  )
+                ");
+
+    $db->bind(':country',  cdp_sanitize($data["country_modal_recipient_address"]));
+    $db->bind(':state',  cdp_sanitize($data["state_modal_recipient_address"]));
+    $db->bind(':city',  cdp_sanitize($data["city_modal_recipient_address"]));
+    $db->bind(':address',  cdp_sanitize($data["address_modal_recipient_address"]));
+    $db->bind(':zip_code',  cdp_sanitize($data["postal_modal_recipient_address"]));
+    $db->bind(':recipient_id',  $data["recipient"]);
+
+    $insert = $db->cdp_execute();
+
+    $last_address_id = $db->dbh->lastInsertId();
+
+    $db->cdp_query("SELECT * FROM cdb_recipients_addresses where id_addresses= '" . $last_address_id . "'");
+    $customer_address = $db->cdp_registro();
+    
+    return $customer_address;
 }

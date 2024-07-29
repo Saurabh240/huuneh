@@ -1,0 +1,75 @@
+openapi: 3.0.0
+info:
+  title: Add Pickup Client Webhook API
+  description: Endpoint for adding pickup client data via webhook.
+  version: 1.0.0
+servers:
+  - url: http://localhost/huuneh/webhooks
+paths:
+  /add_pickup_client_webhook.php:
+    post:
+      summary: Add Pickup Client Data via Webhook
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                api_token:
+                  type: string
+                  example: <api token value>
+                delivery_type:
+                  type: string
+                  enum:
+                    - SAME DAY (1PM to 4PM)
+                    - SAME DAY (BEFORE 5PM)
+                    - RUSH (4 HOURS)
+                    - RUSH (3 HOURS)
+                    - RUSH (2 HOURS)
+                    - URGENT (90 MINUTES)
+                    - NEXT DAY (BEFORE 5PM)
+                    - NEXT DAY (BEFORE 2PM)
+                    - NEXT DAY (BEFORE 11:30AM)
+                    - NEXT DAY (BEFORE 10:30AM
+                  example: RUSH (4 HOURS)
+                pickup_address:
+                  type: string
+                  example: 80 Hutcherson Square
+                recipient_full_name:
+                  type: string
+                  example: <Recipient Full Name>
+                dropoff_address:
+                  type: string
+                  example: 46 Village Centre Pl, Suite 200
+                notes:
+                  type: string
+                  example: These are some example notes.
+                charge:
+                  type: number
+                  example: 120
+                notes_for_driver:
+                  type: string
+                  example: any thing
+                no_of_rx:
+                  type: integer
+                  example: 12
+                tags:
+                  type: array
+                  items:
+                    type: string
+                    example: 
+                      - "Fridge Item (2-4 C)"
+              required:
+                - api_token
+                - delivery_type
+                - pickup_address
+                - recipient_full_name
+                - dropoff_address
+      responses:
+        '200':
+          description: Data successfully processed.
+        '400':
+          description: Bad request - invalid parameters or missing API token.
+        '500':
+          description: Internal server error - processing failure.

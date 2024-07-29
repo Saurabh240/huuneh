@@ -13,6 +13,12 @@
 						<div class="row">
 							<div class="col-md-4">
 								<div class="form-group">
+									<label for="phoneNumber1"><?php echo $lang['user_manage10'] ?></label>
+									<input type="text" class="form-control" name="address_modal_recipient_address" id="address_modal_recipient_address" placeholder="<?php echo $lang['user_manage10'] ?>">
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
 									<label><?php echo $lang['leftorder318'] ?></label>
 									<select style="width: 100% !important;" class="select2 form-control" name="country_modal_recipient_address" id="country_modal_recipient_address">
 									</select>
@@ -42,12 +48,7 @@
 								</div>
 							</div>
 
-							<div class="col-md-4">
-								<div class="form-group">
-									<label for="phoneNumber1"><?php echo $lang['user_manage10'] ?></label>
-									<input type="text" class="form-control" name="address_modal_recipient_address" id="address_modal_recipient_address" placeholder="<?php echo $lang['user_manage10'] ?>">
-								</div>
-							</div>
+							
 						</div>
 
 				</div>
