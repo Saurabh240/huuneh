@@ -219,6 +219,10 @@ try {
 
   // Get recipient ID and address ID
   $recipient_id = $user->cdp_getRecipient($_POST['recipient_full_name'], $sender_id);
+  if(empty($recipient_id)){
+        $user->cdp_addRecipient($_POST['recipient_full_name'], $sender_id);
+        $recipient_id = $user->cdp_getRecipient($_POST['recipient_full_name'], $sender_id);
+  }
   if (empty($recipient_id)) {
     throw new Exception('Recipient not found.');
   }
@@ -252,7 +256,7 @@ try {
 
     $recipient_address_id = cdp_saveRecipientAddress($saveRecipientAddress);
 
-    if(empty($recipient_address_id->id_address)){
+    if(empty($recipient_address_id->id_addresses)){
         throw new Exception('Could not save recipient address');
     }
      

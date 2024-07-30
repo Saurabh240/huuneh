@@ -279,7 +279,7 @@ class User
 
 
 
-        /**
+    /**
      * User::cdp_ccnumberExists()
      */
     public function cdp_ccnumberExists($document_number, $id = null)
@@ -436,7 +436,7 @@ class User
         $this->db->bind(':sender_id', $sender_id);
 
         $this->db->cdp_execute();
-        return $recipient = $this->db->cdp_registro();   
+        return $recipient = $this->db->cdp_registro();
     }
 
     public function cdp_getRecipientAddress($recipient_id, $recipient_address)
@@ -451,5 +451,26 @@ class User
 
         $this->db->cdp_execute();
         return $address = $this->db->cdp_registro();
+    }
+
+    public function cdp_addRecipient($recipient_name, $sender_id)
+    {
+        $fname = trim(get_first_name($recipient_name));
+        $lname = trim(get_last_name($recipient_name));
+
+        // Insert the record
+        $this->db->cdp_query("INSERT INTO cdb_recipients (fname, lname, sender_id) VALUES (:fname, :lname, :sender_id)");
+
+        $this->db->bind(':fname', $fname);
+        $this->db->bind(':lname', $lname);
+        $this->db->bind(':sender_id', $sender_id);
+
+        $this->db->cdp_execute();
+
+        // Get the last inserted ID
+        $lastInsertedId =  $this->db->dbh->lastInsertId();
+
+        return $lastInsertedId;
+
     }
 }
