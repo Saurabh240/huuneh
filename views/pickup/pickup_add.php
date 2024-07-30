@@ -274,7 +274,7 @@ echo 'Fixed Time ->'.strtotime("2:00 PM");exit;*/
 
                     <input type="hidden" id="businessType" value="<?php echo $userData->business_type; ?>" />
 
-                <?php  if( $userData->business_type == "pharmacy" ) { ?>
+                <?php  if( $userData->business_type == "pharmacy" || $userData->business_type == "pharmacy_2" || $userData->business_type == "pharmacy_3" ) { ?>
                     <div class="card">
                         <div class="card-body">
                             <!-- Charge and Rx Number Row -->
