@@ -726,7 +726,7 @@ $("#invoice_form").on("submit", function (event) {
   // Get business type
   var business_type = $("#businessType").val();
 
-  if (business_type && business_type === "pharmacy") {
+  if (business_type && business_type === "pharmacy" || business_type === "pharmacy_2" || business_type === "pharmacy_3") {
     // Collect checked checkbox values
     $('input[name="tags[]"]:checked').each(function() {
       tags.push($(this).val());
@@ -1200,7 +1200,7 @@ function cdp_select2_init_sender() {
         businessType = selectedData[0].business_type;
     }
     $("#businessType").val(businessType);
-    if (businessType == "pharmacy") {
+    if (businessType == "pharmacy" || businessType == "pharmacy_2" || businessType == "pharmacy_3") {
         $("#specialBusinessCard").css("display", "flex");
     } else {
         $("#specialBusinessCard").css("display", "none");
