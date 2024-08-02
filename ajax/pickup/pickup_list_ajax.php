@@ -60,6 +60,27 @@ $sql = "SELECT  a.is_consolidate, a.notes_for_driver, a.delivery_type,a.sub_tota
 			 INNER JOIN cdb_address_shipments as addrs ON addrs.order_id = a.order_id
 			 INNER JOIN cdb_styles as b ON a.status_courier = b.id
 			 $sWhere
+			 GROUP BY
+				a.order_id,
+				a.is_consolidate,
+				a.notes_for_driver,
+				a.delivery_type,
+				a.order_prefix,
+				a.order_no,
+				a.order_date,
+				a.sender_id,
+				a.receiver_id,
+				a.order_courier,
+				a.order_pay_mode,
+				a.status_courier,
+				a.driver_id,
+				a.order_service_options,
+				b.mod_style,
+				b.color,
+				u.username,
+				u.fname,
+				u.lname,
+				addrs.recipient_address
 			 order by order_id desc
 			 ";
 
