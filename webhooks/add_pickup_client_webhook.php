@@ -189,7 +189,7 @@ try {
   $notes_for_driver = "";
   $tags = json_encode([]);
 
-  if($sender->business_type == "pharmacy"){
+  if($sender->business_type == "pharmacy" || $sender->business_type == "pharmacy_2" || $sender->business_type == "pharmacy_3"){
     if(is_array($_POST['tags']) && !empty($_POST['tags'])){
         $invalid_tags = array_diff($_POST['tags'], $allowed_tags);
         if (!empty($invalid_tags)) {
@@ -219,6 +219,10 @@ try {
 
   // Get recipient ID and address ID
   $recipient_id = $user->cdp_getRecipient($_POST['recipient_full_name'], $sender_id);
+  if(empty($recipient_id)){
+        $user->cdp_addRecipient($_POST['recipient_full_name'], $sender_id);
+        $recipient_id = $user->cdp_getRecipient($_POST['recipient_full_name'], $sender_id);
+  }
   if (empty($recipient_id)) {
     throw new Exception('Recipient not found.');
   }
@@ -229,10 +233,10 @@ try {
     // throw new Exception('Recipient address not found.');
     $full_address = getAddressDetailsHelper($_POST['dropoff_address']);
     if(!empty($full_address)){
-        $country_id = @cdp_getCountryByName($full_address.country)->id;
-        $state_id = @cdp_getStateByName($full_address.state)->id;
-        $city_id = @cdp_getCityByName($full_address.city)->id;
-        $zip_code = $full_address.zip_code;
+        $country_id = @cdp_getCountryByName($full_address['country'])->id;
+        $state_id = @cdp_getStateByName($full_address['state'])->id;
+        $city_id = @cdp_getCityByName($full_address['city'])->id;
+        $zip_code = $full_address['zip_code'];
     }else{
         throw new Exception('Recipient address not found.');    
     }
@@ -252,7 +256,7 @@ try {
 
     $recipient_address_id = cdp_saveRecipientAddress($saveRecipientAddress);
 
-    if(empty($recipient_address_id->id_address)){
+    if(empty($recipient_address_id->id_addresses)){
         throw new Exception('Could not save recipient address');
     }
      

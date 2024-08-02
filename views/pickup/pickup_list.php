@@ -124,7 +124,7 @@ $statusrow = $core->cdp_getStatus();
                         <div class=" col-sm-6">
 
                             <div class="input-group">
-                                <input type="text" name="search" id="search" class="form-control input-sm float-right" placeholder="<?php echo $lang['left21551'] ?>" onkeyup="cdp_load(1);">
+                                <input type="text" name="search" id="search" class="form-control input-sm float-right" placeholder="Search by Invoice/client/recipient address" onkeyup="cdp_load(1);">
                                 <div class="input-group-append input-sm">
                                     <button type="submit" class="btn btn-outline-dark"><i class="fa fa-search"></i></button>
                                 </div>
