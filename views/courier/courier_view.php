@@ -129,7 +129,7 @@ $moderow = $core->cdp_getShipmode();
 $tags = $db->getAllTags();
 
 $rowTags = [];
-if($sender_data->business_type == 'pharmacy' && !empty($row_order->tags)){
+if(($sender_data->business_type == 'pharmacy' || $sender_data->business_type == 'pharmacy_2' || $sender_data->business_type == 'pharmacy_3') && !empty($row_order->tags)){
     $rowTags = json_decode($row_order->tags, TRUE);
 }
 
@@ -1137,7 +1137,7 @@ if($sender_data->business_type == 'pharmacy' && !empty($row_order->tags)){
                     </div>
                 </div>
 
-                <?php  if( $sender_data->business_type == "pharmacy" ) { ?>
+                <?php  if( $sender_data->business_type == "pharmacy" || $sender_data->business_type == "pharmacy_2" || $sender_data->business_type == "pharmacy_3" ) { ?>
                 <div class="row">
                     <div class="col-lg-12 col-xl-12 col-md-12">
                         <div class="card">
