@@ -135,6 +135,8 @@ $core = new Core();
 $deliveryTypes = [
   "SAME DAY (1PM to 4PM)" => "SAME DAY (1PM to 4PM)",
   "SAME DAY (BEFORE 5PM)" => "SAME DAY (BEFORE 5PM)",
+  "SAMEDAY (BEFORE 7PM)" => "SAMEDAY (BEFORE 7PM)",
+  "SAMEDAY (BEFORE 9PM)" => "SAMEDAY (BEFORE 9PM)",
   "RUSH (4 HOURS)" => "RUSH (4 HOURS)",
   "RUSH (3 HOURS)" => "RUSH (3 HOURS)",
   "RUSH (2 HOURS)" => "RUSH (2 HOURS)",
@@ -726,7 +728,8 @@ if (!empty($errors)) {
     echo json_encode([
         'success' => true,
         'messages' => $messages,
-        'shipment_id' => $shipment_id,
+        //'shipment_id' => $shipment_id,
+        'shipment'=>$order_track
     ]);
 }
 
