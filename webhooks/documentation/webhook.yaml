@@ -24,6 +24,8 @@ paths:
                   enum:
                     - SAME DAY (1PM to 4PM)
                     - SAME DAY (BEFORE 5PM)
+                    - SAMEDAY (BEFORE 7PM)
+                    - SAMEDAY (BEFORE 9PM)
                     - RUSH (4 HOURS)
                     - RUSH (3 HOURS)
                     - RUSH (2 HOURS)
