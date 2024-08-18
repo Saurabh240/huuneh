@@ -135,6 +135,8 @@ $core = new Core();
 $deliveryTypes = [
   "SAME DAY (1PM to 4PM)" => "SAME DAY (1PM to 4PM)",
   "SAME DAY (BEFORE 5PM)" => "SAME DAY (BEFORE 5PM)",
+  "SAME DAY (BEFORE 7PM)" => "SAME DAY (BEFORE 7PM)",
+  "SAME DAY (BEFORE 9PM)" => "SAME DAY (BEFORE 9PM)",
   "RUSH (4 HOURS)" => "RUSH (4 HOURS)",
   "RUSH (3 HOURS)" => "RUSH (3 HOURS)",
   "RUSH (2 HOURS)" => "RUSH (2 HOURS)",
@@ -151,6 +153,7 @@ try {
     throw new Exception('Sender Not found');
   }
   $token = $_POST['api_token'];
+
   $sender = $user->cdp_tokenCheck($token);
 
   if (!$sender || empty($sender->id)) {
@@ -726,7 +729,8 @@ if (!empty($errors)) {
     echo json_encode([
         'success' => true,
         'messages' => $messages,
-        'shipment_id' => $shipment_id,
+        //'shipment_id' => $shipment_id,
+        'shipment'=>$order_track
     ]);
 }
 
