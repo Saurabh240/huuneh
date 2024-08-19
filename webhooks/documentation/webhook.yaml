@@ -44,6 +44,9 @@ paths:
                 dropoff_address:
                   type: string
                   example: 46 Village Centre Pl, Suite 200
+                recipient_phone:
+                  type: string
+                  example: <Phone number>
                 notes:
                   type: string
                   example: These are some example notes.

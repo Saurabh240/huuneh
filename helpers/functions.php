@@ -194,11 +194,11 @@ function get_first_name($full_name)
 
 function get_last_name($full_name)
 {
-    $parts = explode(' ', $full_name);
-    
-    $num_parts = count($parts);
-    
-    return $parts[$num_parts - 1];
+  $parts = explode(' ', $full_name);
+
+  array_shift($parts);
+
+  return implode(' ', $parts);
 }
 
 function get_fullname($first_name, $last_name)

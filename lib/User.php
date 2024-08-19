@@ -453,16 +453,17 @@ class User
         return $address = $this->db->cdp_registro();
     }
 
-    public function cdp_addRecipient($recipient_name, $sender_id)
+    public function cdp_addRecipient($recipient_name, $sender_id, $phone=null)
     {
         $fname = trim(get_first_name($recipient_name));
         $lname = trim(get_last_name($recipient_name));
 
         // Insert the record
-        $this->db->cdp_query("INSERT INTO cdb_recipients (fname, lname, sender_id) VALUES (:fname, :lname, :sender_id)");
+        $this->db->cdp_query("INSERT INTO cdb_recipients (fname, lname,phone,sender_id) VALUES (:fname, :lname, :phone, :sender_id)");
 
         $this->db->bind(':fname', $fname);
         $this->db->bind(':lname', $lname);
+        $this->db->bind(':phone', $phone);
         $this->db->bind(':sender_id', $sender_id);
 
         $this->db->cdp_execute();
