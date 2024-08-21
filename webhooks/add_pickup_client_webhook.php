@@ -51,6 +51,12 @@
  *                     example="46 Village Centre Pl, Suite 200"
  *                 ),
  *                 @OA\Property(
+ *                     property="recipient_phone",
+ *                     type="string",
+ *                     description="Phone number of the recipient",
+ *                     example=""
+ *                 ),
+ *                 @OA\Property(
  *                     property="notes",
  *                     type="string",
  *                     description="Additional notes",
@@ -213,7 +219,6 @@ try {
   // Get sender ID and address ID
   $sender_id = $sender->id;
   $sender_address_id = $user->cdp_getUserAddress($_POST['pickup_address'], $sender_id);
-  
   if (empty($sender_address_id)) {
     throw new Exception('Sender address not found.');
   }
@@ -223,7 +228,11 @@ try {
   // Get recipient ID and address ID
   $recipient_id = $user->cdp_getRecipient($_POST['recipient_full_name'], $sender_id);
   if(empty($recipient_id)){
-        $user->cdp_addRecipient($_POST['recipient_full_name'], $sender_id);
+        $phone = null;
+        if(isset($_POST['recipient_phone'])){
+            $phone = trim($_POST['recipient_phone']);
+        }
+        $user->cdp_addRecipient($_POST['recipient_full_name'],$sender_id, $phone);
         $recipient_id = $user->cdp_getRecipient($_POST['recipient_full_name'], $sender_id);
   }
   if (empty($recipient_id)) {
