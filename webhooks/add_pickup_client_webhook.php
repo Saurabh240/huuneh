@@ -161,6 +161,7 @@ try {
   }
 
   // Validate delivery type
+  
   if (empty($_POST['delivery_type']) || !array_key_exists($_POST['delivery_type'], $deliveryTypes)) {
     throw new Exception('Invalid or missing delivery type.');
   }
@@ -213,11 +214,13 @@ try {
   // Get sender ID and address ID
   $sender_id = $sender->id;
   $sender_address_id = $user->cdp_getUserAddress($_POST['pickup_address'], $sender_id);
+
   
   if (empty($sender_address_id)) {
     throw new Exception('Sender address not found.');
   }
   $business_type = $sender_address_id->business_type;
+
   $sender_address_id = $sender_address_id->id_addresses;
 
   // Get recipient ID and address ID
@@ -288,13 +291,14 @@ try {
   if ($distance) {
       // Calculate shipping price based on distance and delivery type
       $rates = getRatesByDeliveryTypeAndBusinessType1($delivery_type, $business_type);
+
       if ($rates) {
           $baseRate = $rates['baseRate'];
           $additionalRatePerKm = $rates['additionalRatePerKm'];
           $baseKm = $rates['baseKm'];
           $shippingPrice = calculateShippingPrice1($distance, $baseRate, $additionalRatePerKm, $baseKm);
       } else {
-          echo "<p>Invalid delivery type or business type.</p>";
+        //  echo "<p>Invalid delivery type or business type.</p>";
       }
   } else {
       echo "<p>Error calculating distance.</p>";
