@@ -139,6 +139,10 @@ function getAddressDetails($address, $apiKey) {
     $addressComponents = $data['results'][0]['address_components'];
     $details = [];
 
+    echo "<pre>";
+    print_r($data['results']);
+    exit;
+
     foreach ($addressComponents as $component) {
         if (in_array('locality', $component['types'])) {
             $details['city'] = $component['long_name'];

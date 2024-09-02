@@ -75,13 +75,32 @@ function calculateAndDisplayDistance(origin, destination, deliveryType) {
     dataType: 'json',
     success: function (data) {
       console.log("All", data);
+      
       // Update distance input with calculated distance
       $('#distance').val(data.distance);
-      // $('.fixed_value').val(data.shipmentfee);
-      $('.fixed_value').val(data.baseRate);
-      localStorage.setItem('baseRate', data.baseRate)
-      localStorage.setItem('shipmentfee', data.shipmentfee)
-      calculateFinalTotal();
+      
+        // $('.fixed_value').val(data.shipmentfee);
+        $('.fixed_value').val(data.baseRate);
+        localStorage.setItem('baseRate', data.baseRate)
+        localStorage.setItem('shipmentfee', data.shipmentfee)
+        
+        // If price and price_with_tax and tax are returned in data success function
+        // Then don't call calculateFinalTotal. Make your own function to display and store in inputs of form.
+
+        calculateFinalTotal();
+      
+        // FLAT PRICING FOR SPECIAL ACCOUNTS.
+        if(data.price && data.with_tax){
+          var pickuptotal = data.price; // representing the subtotal
+          var total_order = data.with_tax;
+          var tax_value = parseFloat(data.with_tax) - parseFloat(data.price);
+
+          $("#subtotal").html(pickuptotal.toFixed(2));
+          $("#total_before_tax").html(Number(pickuptotal).toFixed(2));
+          $("#total_after_tax").html(total_order.toFixed(2));
+          $("#tax_13").html(tax_value.toFixed(2));
+          $("#total_envio_ajax").val(pickuptotal);
+        }
 
     },
     error: function () {

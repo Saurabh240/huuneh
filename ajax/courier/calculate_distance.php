@@ -25,21 +25,45 @@ if (isset($_POST["origin"]) && isset($_POST["destination"]) && isset($_POST["del
     $destination = urlencode($_POST["destination"]);
     $deliveryType = $_POST["deliveryType"];
 
-    $courier['distance'] = calculateDistance($origin, $destination, $apiKey);
-    if ($courier['distance'] !== false) {
-        // Calculate shipping price based on distance and delivery type
-        $rates = getRatesByDeliveryTypeAndBusinessType($deliveryType, $business_type);
-        if ($rates) {
-            $baseRate = $rates['baseRate'];
-            $additionalRatePerKm = $rates['additionalRatePerKm'];
-            $baseKm = $rates['baseKm'];
+    $courier['distance'] = calculateDistance($origin, $destination, $apiKey, $address_details = []);
 
-            $courier['baseRate'] = $baseRate;
-            $courier['shipmentfee'] = calculateShippingPrice($courier['distance'], $baseRate, $additionalRatePerKm, $baseKm);
-            echo json_encode($courier);
-        } else {
-            echo "<p>Invalid delivery type or business type.</p>";
-        }
+    if ($courier['distance'] !== false) {
+
+
+        // From response data extract the city.
+        // check if business_type is special.
+        // mysql query to compare this city with the flat_pricing city in our database
+        // If pickup time is 12PM do consider that as well.
+        // return price and price_with_tax and tax separately
+        if($user->business_type == "special" && !empty($address_details['city'])){
+            $city = $address_details['city'];
+            $db->cdp_query('SELECT * FROM `flat_pricing` WHERE destination_city=:destination_city');
+            $db->bind(':destination_city', $city);
+            $db->cdp_execute();
+            $flat_pricing = $db->cdp_registro();
+            // $flat_pricing = [ $flat_pricing;
+
+            
+            echo json_encode($flat_pricing);
+
+        }else{
+            // Calculate shipping price based on distance and delivery type
+            $rates = getRatesByDeliveryTypeAndBusinessType($deliveryType, $business_type);
+            if ($rates) {
+                $baseRate = $rates['baseRate'];
+                $additionalRatePerKm = $rates['additionalRatePerKm'];
+                $baseKm = $rates['baseKm'];
+
+                $courier['baseRate'] = $baseRate;
+                $courier['shipmentfee'] = calculateShippingPrice($courier['distance'], $baseRate, $additionalRatePerKm, $baseKm);
+                echo json_encode($courier);
+
+            }else {
+                echo "<p>Invalid delivery type or business type.</p>";
+            }
+    
+        } 
+        
     } else {
         echo "<p>Error calculating distance.</p>";
     }
@@ -48,13 +72,31 @@ if (isset($_POST["origin"]) && isset($_POST["destination"]) && isset($_POST["del
 }
 
 // Function to calculate distance between two coordinates
-function calculateDistance($origin, $destination, $apiKey) {
+function calculateDistance($origin, $destination, $apiKey, &$details) {
     $url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=$origin&destinations=$destination&key=$apiKey";
     $response = file_get_contents($url);
     $data = json_decode($response, true);
-
+ 
     // Check if API request was successful
     if ($data['status'] == 'OK') {
+
+        $addressComponents = $data['results'][0]['address_components'];
+        
+        foreach ($addressComponents as $component) {
+            if (in_array('locality', $component['types'])) {
+                $details['city'] = $component['long_name'];
+            }
+            if (in_array('administrative_area_level_1', $component['types'])) {
+                $details['state'] = $component['long_name'];
+            }
+            if (in_array('postal_code', $component['types'])) {
+                $details['zip_code'] = $component['long_name'];
+            }
+            if (in_array('country', $component['types'])) {
+                $details['country'] = $component['long_name'];
+            }
+        }
+        
         // Extract distance in meters
         if($distance = $data['rows'][0]['elements'][0]['status'] == 'ZERO_RESULTS'){
             $distance = 0;
