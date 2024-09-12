@@ -68,11 +68,15 @@ function calculateAndDisplayDistance(origin, destination, deliveryType) {
   if (!deliveryType) {
     deliveryType = document.getElementById('deliveryType').value;
   }
+
   $.ajax({
     type: 'POST',
     url: 'ajax/courier/calculate_distance.php', // Replace with your PHP script for calculating distance
     data: { 'origin': origin, 'destination': destination, 'deliveryType': deliveryType },
     dataType: 'json',
+	beforeSend: function() {
+		$('#loadingIcon').show();
+	},
     success: function (data) {
       console.log("All", data);
       // Update distance input with calculated distance
@@ -82,12 +86,15 @@ function calculateAndDisplayDistance(origin, destination, deliveryType) {
       localStorage.setItem('baseRate', data.baseRate)
       localStorage.setItem('shipmentfee', data.shipmentfee)
       calculateFinalTotal();
-
+      $('#loadingIcon').hide();
     },
     error: function () {
-      // Handle error
+	$('#loadingIcon').hide();
       //alert('Error calculating distance.');
-    }
+    },
+	complete: function() {
+		$('#loadingIcon').hide();
+	  },
   });
 }     // }
 // Automatically select the first (and only) option

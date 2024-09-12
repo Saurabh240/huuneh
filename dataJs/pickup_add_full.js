@@ -1881,6 +1881,9 @@ function calculateAndDisplayDistance(origin, destination, deliveryType, sender_i
     url: 'ajax/courier/calculate_distance.php', // Replace with your PHP script for calculating distance
     data: { 'origin': origin, 'destination': destination, 'deliveryType': deliveryType, 'sender_id': sender_id },
     dataType: 'json',
+	beforeSend: function() {
+		$('#loadingIcon').show();
+	},
     success: function (data) {
       console.log("All", data);
       // Update distance input with calculated distance
@@ -1891,11 +1894,16 @@ function calculateAndDisplayDistance(origin, destination, deliveryType, sender_i
       localStorage.setItem('baseRate', data.baseRate)
       localStorage.setItem('shipmentfee', data.shipmentfee)
       getTariffs();
+	  $('#loadingIcon').hide();
     },
     error: function () {
+		$('#loadingIcon').hide();
       // Handle error
       // alert('Error calculating distance.');
-    }
+    },
+	complete: function() {
+		$('#loadingIcon').hide();
+	  },
   });
 }
 
