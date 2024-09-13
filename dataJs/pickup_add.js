@@ -52,6 +52,8 @@ var packagesItems = [
 
 // Function to calculate distance between two coordinates and update distance input
 function calculateAndDisplayDistance(origin, destination, deliveryType) {
+	   var send_sender_id = $("#sender_id option:selected").val();
+	   var send_recipient_id = $("#recipient_id option:selected").val();
   // AJAX request to calculate distance
   if (!origin) {
     origin = $('#sender_address_id option:selected').text();
@@ -72,7 +74,7 @@ function calculateAndDisplayDistance(origin, destination, deliveryType) {
   $.ajax({
     type: 'POST',
     url: 'ajax/courier/calculate_distance.php', // Replace with your PHP script for calculating distance
-    data: { 'origin': origin, 'destination': destination, 'deliveryType': deliveryType },
+    data: { 'origin': origin, 'destination': destination, 'deliveryType': deliveryType,'send_sender_id':send_sender_id,'send_recipient_id':send_recipient_id },
     dataType: 'json',
 	beforeSend: function() {
 		$('#loadingIcon').show();

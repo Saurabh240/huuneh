@@ -24,17 +24,26 @@ if (isset($_POST["origin"]) && isset($_POST["destination"]) && isset($_POST["del
     $origin = urlencode($_POST["origin"]);
 	$destination = urlencode($_POST["destination"]);
     $deliveryType = $_POST["deliveryType"];
-
+	if(isset($_POST["send_sender_id"])){
+		$db->cdp_query('SELECT name FROM cdb_senders_addresses,cdb_cities WHERE cdb_cities.id=cdb_senders_addresses.city && user_id ='.$_POST["send_sender_id"].' && address="'.$_POST["origin"].'"');
+		$db->cdp_execute();
+		$originCityName = $db->cdp_registro();
+		$originCity = $originCityName->name??'';
+	}
+	if(isset($_POST["send_recipient_id"])){
+		$db->cdp_query('SELECT name FROM  cdb_recipients_addresses,cdb_cities WHERE cdb_cities.id=cdb_recipients_addresses.city  && recipient_id ='.$_POST["send_recipient_id"].' && address="'.$_POST["destination"].'"'); 	
+		$db->cdp_execute();		
+		$destinationCityName = $db->cdp_registro();
+		$destinationCity = $destinationCityName->name??'';
+	}
     $distance_bw = $courier['distance']= calculateDistance($origin, $destination, $apiKey);
     if ($courier['distance'] !== false) {
-		
-		if($business_type=="special"){
-			   $originCity = extractCityName($origin, $apiKey);
-			   $destinationCity = extractCityName($destination, $apiKey);
+		  // $originCity = extractCityName($origin, $apiKey);
+		   // $destinationCity = extractCityName($destination, $apiKey);
+		if($business_type=="special" && $originCity!='' && $destinationCity!=''){
 			   $courier=getPrices($originCity,$destinationCity);
 			   $courier['distance']=$distance_bw;
-				if(isset($courier['baseRate'])){
-				echo json_encode($courier); }
+				if(isset($courier['baseRate'])){ echo json_encode($courier); }
 			  
 		}
 		if(($business_type=="special" && !isset($courier['baseRate'])) ||  $business_type!="special"){
@@ -121,9 +130,9 @@ function extractCityName($address, $apiKey) {
 			if (in_array('locality', $component['types'])) {
                 $details['city'] = $component['long_name'];
             }
-			if (in_array('neighborhood', $component['types'])) {
+			/*if (in_array('neighborhood', $component['types'])) {
                 $details['city'] = $component['long_name'];
-            }
+            }*/
 		}
       
         if (in_array('administrative_area_level_1', $component['types'])) {
