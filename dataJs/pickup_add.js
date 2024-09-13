@@ -55,16 +55,22 @@ function calculateAndDisplayDistance(origin, destination, deliveryType) {
 	   var send_sender_id = $("#sender_id option:selected").val();
 	   var send_recipient_id = $("#recipient_id option:selected").val();
   // AJAX request to calculate distance
+  var origin_id;
+  var destination_id;
   if (!origin) {
     origin = $('#sender_address_id option:selected').text();
+    origin_id = $('#sender_address_id option:selected').val();
     if (!origin) {
-      origin = $("#select2-sender_address_id-container").text()
+      origin = $("#select2-sender_address_id-container").text();
+      origin_id = $("#select2-sender_address_id-container").val();
     }
   }
   if (!destination) {
     destination = $('#recipient_address_id option:selected').text();
+    destination_id = $('#recipient_address_id option:selected').val();
     if (!destination) {
       destination = $("#select2-recipient_address_id-container").text();
+      destination_id = $("#select2-recipient_address_id-container").val();
     }
   }
   if (!deliveryType) {
@@ -74,7 +80,7 @@ function calculateAndDisplayDistance(origin, destination, deliveryType) {
   $.ajax({
     type: 'POST',
     url: 'ajax/courier/calculate_distance.php', // Replace with your PHP script for calculating distance
-    data: { 'origin': origin, 'destination': destination, 'deliveryType': deliveryType,'send_sender_id':send_sender_id,'send_recipient_id':send_recipient_id },
+    data: { 'origin': origin, 'destination': destination, 'deliveryType': deliveryType,'send_sender_id':send_sender_id,'send_recipient_id':send_recipient_id,'origin_id':origin_id,'destination_id':destination_id},
     dataType: 'json',
 	beforeSend: function() {
 		$('#loadingIcon').show();

@@ -24,18 +24,22 @@ if (isset($_POST["origin"]) && isset($_POST["destination"]) && isset($_POST["del
     $origin = urlencode($_POST["origin"]);
 	$destination = urlencode($_POST["destination"]);
     $deliveryType = $_POST["deliveryType"];
-	if(isset($_POST["send_sender_id"])){
-		$db->cdp_query('SELECT name FROM cdb_senders_addresses,cdb_cities WHERE cdb_cities.id=cdb_senders_addresses.city && user_id ='.$_POST["send_sender_id"].' && address="'.$_POST["origin"].'"');
+	if(isset($_POST["origin_id"])){
+		
+		//$db->cdp_query('SELECT name FROM cdb_senders_addresses,cdb_cities WHERE cdb_cities.id=cdb_senders_addresses.city && user_id ='.$_POST["send_sender_id"].' && address="'.$_POST["origin"].'"');
+		$db->cdp_query('SELECT name FROM cdb_senders_addresses,cdb_cities WHERE cdb_cities.id=cdb_senders_addresses.city && id_addresses='.$_POST["origin_id"]);
 		$db->cdp_execute();
 		$originCityName = $db->cdp_registro();
 		$originCity = $originCityName->name??'';
 	}
-	if(isset($_POST["send_recipient_id"])){
-		$db->cdp_query('SELECT name FROM  cdb_recipients_addresses,cdb_cities WHERE cdb_cities.id=cdb_recipients_addresses.city  && recipient_id ='.$_POST["send_recipient_id"].' && address="'.$_POST["destination"].'"'); 	
+	if(isset($_POST["destination_id"])){
+		//$db->cdp_query('SELECT name FROM  cdb_recipients_addresses,cdb_cities WHERE cdb_cities.id=cdb_recipients_addresses.city  && recipient_id ='.$_POST["send_recipient_id"].' && address="'.$_POST["destination"].'"'); 	
+		$db->cdp_query('SELECT name FROM  cdb_recipients_addresses,cdb_cities WHERE cdb_cities.id=cdb_recipients_addresses.city && id_addresses='.$_POST["destination_id"]); 	
 		$db->cdp_execute();		
 		$destinationCityName = $db->cdp_registro();
 		$destinationCity = $destinationCityName->name??'';
 	}
+	
     $distance_bw = $courier['distance']= calculateDistance($origin, $destination, $apiKey);
     if ($courier['distance'] !== false) {
 		  // $originCity = extractCityName($origin, $apiKey);

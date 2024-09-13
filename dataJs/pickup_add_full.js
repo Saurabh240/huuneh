@@ -1858,11 +1858,15 @@ $('#deliveryType').on('change', function () {
 //Function to calculate distance between two coordinates and update distance input
 function calculateAndDisplayDistance(origin, destination, deliveryType, sender_id = null) {
   var send_recipient_id = $("#recipient_id option:selected").val();
+   var origin_id;
+  var destination_id;
   if (!origin) {
     origin = $('#sender_address_id option:selected').text();
+    origin_id = $('#sender_address_id option:selected').val();
   }
   if (!destination) {
     destination = $('#recipient_address_id option:selected').text();
+    destination_id = $('#recipient_address_id option:selected').val();
   }
   if (!deliveryType) {
     deliveryType = document.getElementById('deliveryType').value;
@@ -1880,7 +1884,7 @@ function calculateAndDisplayDistance(origin, destination, deliveryType, sender_i
   $.ajax({
     type: 'POST',
     url: 'ajax/courier/calculate_distance.php', // Replace with your PHP script for calculating distance
-    data: { 'origin': origin, 'destination': destination, 'deliveryType': deliveryType, 'sender_id': sender_id,'send_sender_id':sender_id,'send_recipient_id':send_recipient_id },
+    data: { 'origin': origin, 'destination': destination, 'deliveryType': deliveryType, 'sender_id': sender_id,'send_sender_id':sender_id,'send_recipient_id':send_recipient_id,'origin_id':origin_id,'destination_id':destination_id },
 	
     dataType: 'json',
 	beforeSend: function() {
