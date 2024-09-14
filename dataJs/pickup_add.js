@@ -64,6 +64,8 @@ function calculateAndDisplayDistance(origin, destination, deliveryType) {
       origin = $("#select2-sender_address_id-container").text();
       origin_id = $("#select2-sender_address_id-container").val();
     }
+  }else{
+	   origin_id = $('#sender_address_id option:selected').val();
   }
   if (!destination) {
     destination = $('#recipient_address_id option:selected').text();
@@ -72,6 +74,8 @@ function calculateAndDisplayDistance(origin, destination, deliveryType) {
       destination = $("#select2-recipient_address_id-container").text();
       destination_id = $("#select2-recipient_address_id-container").val();
     }
+  }else{
+	 destination_id = $('#recipient_address_id option:selected').val();  
   }
   if (!deliveryType) {
     deliveryType = document.getElementById('deliveryType').value;
@@ -2347,11 +2351,11 @@ $(document).ready(function () {
   $(document).on('change', '#recipient_address_id', function () {
     // var recipient_id = $(this).val();
     var recipient_id = $("#recipient_id option:selected").val();
-    // alert(recipient_id);
+    console.log('recipient_change');
+	
     $.ajax({
       type: 'POST',
       url: "ajax/select2_recipient_addresses.php?id=" + recipient_id, // Replace with your PHP script for calculating distance
-      // data: { 'origin': origin, 'destination': destination, 'deliveryType':deliveryType },
       data: function (params) {
         return {
           q: params.term, // search term
@@ -2359,17 +2363,11 @@ $(document).ready(function () {
       },
       dataType: 'json',
       success: function (data) {
-        // console.log("Data length:",$('#sender_address_id').length);
-        // console.log('receiver detail:',data);
+      
         if (data.length == 1) {
-          // alert("True");
-          // Automatically select the first (and only) option
-          // $('#select2-recipient_address_id-container').text(data[0].text);
-          // $("#recipient_address_id").val(data[0].id)
           $('#recipient_address_id').empty().append('<option value="' + data[0].id + '">' + data[0].text + '</option>');
 
-        }
-        //  console.log('sender detail:',data);        
+        }    
 
       },
       error: function () {
@@ -2377,20 +2375,16 @@ $(document).ready(function () {
         alert('Error calculating distance.');
       }
     });
+	calculateAndDisplayDistance(senderadd, receiveradd, deliveryType);
   });
-  // $('#sender_address_id select').trigger('change.select2');
-  // alert(recipient_id);
+ 
 
 
   var senderadd = "";
   var receiveradd = "";
   var deliveryType = "";
 
-  // if ($('#recipient_address_id option').length == 1) {
-  //   // Automatically select the first (and only) option
-  //   var singleOption = $('#recipient_address_id option').first().val();
-  //   $('#recipient_address_id').val(singleOption).trigger('change');
-  // }
+  
 
 
 
@@ -2418,7 +2412,6 @@ $(document).ready(function () {
 
     console.log("Selected receiver value:", receiveradd);
     // Display the selected value and text
-    calculateAndDisplayDistance(senderadd, receiveradd, deliveryType);
 
   });
 

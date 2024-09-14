@@ -24,16 +24,14 @@ if (isset($_POST["origin"]) && isset($_POST["destination"]) && isset($_POST["del
     $origin = urlencode($_POST["origin"]);
 	$destination = urlencode($_POST["destination"]);
     $deliveryType = $_POST["deliveryType"];
+	$check_deliveryType=array('SAMEDAY (BEFORE 7PM)','NEXT DAY (BEFORE 7PM)','SAMEDAY (BEFORE 9PM)');
 	if(isset($_POST["origin_id"])){
-		
-		//$db->cdp_query('SELECT name FROM cdb_senders_addresses,cdb_cities WHERE cdb_cities.id=cdb_senders_addresses.city && user_id ='.$_POST["send_sender_id"].' && address="'.$_POST["origin"].'"');
 		$db->cdp_query('SELECT name FROM cdb_senders_addresses,cdb_cities WHERE cdb_cities.id=cdb_senders_addresses.city && id_addresses='.$_POST["origin_id"]);
 		$db->cdp_execute();
 		$originCityName = $db->cdp_registro();
 		$originCity = $originCityName->name??'';
 	}
-	if(isset($_POST["destination_id"])){
-		//$db->cdp_query('SELECT name FROM  cdb_recipients_addresses,cdb_cities WHERE cdb_cities.id=cdb_recipients_addresses.city  && recipient_id ='.$_POST["send_recipient_id"].' && address="'.$_POST["destination"].'"'); 	
+	if(isset($_POST["destination_id"])){	
 		$db->cdp_query('SELECT name FROM  cdb_recipients_addresses,cdb_cities WHERE cdb_cities.id=cdb_recipients_addresses.city && id_addresses='.$_POST["destination_id"]); 	
 		$db->cdp_execute();		
 		$destinationCityName = $db->cdp_registro();
@@ -42,9 +40,8 @@ if (isset($_POST["origin"]) && isset($_POST["destination"]) && isset($_POST["del
 	
     $distance_bw = $courier['distance']= calculateDistance($origin, $destination, $apiKey);
     if ($courier['distance'] !== false) {
-		  // $originCity = extractCityName($origin, $apiKey);
-		   // $destinationCity = extractCityName($destination, $apiKey);
-		if($business_type=="special" && $originCity!='' && $destinationCity!=''){
+		$flag = array_search ($deliveryType, $check_deliveryType);
+		if($business_type=="special" && $originCity!='' && $destinationCity!='' && $flag!='' && $flag>=0){
 			   $courier=getPrices($originCity,$destinationCity);
 			   $courier['distance']=$distance_bw;
 				if(isset($courier['baseRate'])){ echo json_encode($courier); }
@@ -80,14 +77,14 @@ function getPrices($pickcity,$dropcity){
     $spreadsheet = IOFactory::load($csvFile);
 
     $sheetNames = $spreadsheet->getSheetNames();
-		
+	$data=array();
 	if(count($sheetNames)>0){
 		$key_ind = array_search($pick.' UPDATE', $sheetNames);
-		$spreadsheet->setActiveSheetIndexByName($sheetNames[$key_ind]);
-	}
-    $sheet = $spreadsheet->getActiveSheet();
-	$highestColumn = $sheet->getHighestColumn();
-	$data=array();
+		if($key_ind!='' && $key_ind>=0){
+		  $spreadsheet->setActiveSheetIndexByName($sheetNames[$key_ind]);
+		  $sheet = $spreadsheet->getActiveSheet();
+	      $highestColumn = $sheet->getHighestColumn();
+	
     for ($row = 9; $row <= 34; $row++) {
         $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row, NULL, TRUE, FALSE);
                 // Check if the cell contains the search text
@@ -101,7 +98,8 @@ function getPrices($pickcity,$dropcity){
 					}
                 }
     }
-	
+	}
+	}
 	return($data);
 }
 
@@ -179,7 +177,7 @@ function calculateDistance($origin, $destination, $apiKey) {
 
 // Function to get rates based on delivery type and business type
 function getRatesByDeliveryTypeAndBusinessType($deliveryType, $businessType) {
-    $rates = [
+    $rates = [ 
         'default' => [
             'SAMEDAY (BEFORE 9PM)' => ['baseRate' => 10.00, 'additionalRatePerKm' => 0.55, 'baseKm' => 10],
             'SAMEDAY (BEFORE 7PM)' => ['baseRate' => 10.00, 'additionalRatePerKm' => 0.55, 'baseKm' => 10],

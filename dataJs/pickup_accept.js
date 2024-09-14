@@ -2179,21 +2179,16 @@ function getTariffs() {
     var selectedData = e.params.data;
     destination = selectedData.text;
   });
-   var origin_id;
-  var destination_id;
+  
   origin = $('#sender_address_id option:selected').text();
-  origin_id = $('#sender_address_id option:selected').val();
+  var origin_id = $('#sender_address_id option:selected').val();
   destination = $('#recipient_address_id option:selected').text();
-  destination_id = $('#recipient_address_id option:selected').val();
+  var destination_id = $('#recipient_address_id option:selected').val();
   sender_id = $("#sender_id option:selected").val();
-  // google api accepts information like given below.
-  // origin = "Seattle,Washington";
-  // destination = "San+Francisco,California";
+
   var send_recipient_id = $("#recipient_id option:selected").val();
 
  
-
-
   if(!origin || !destination || !deliveryType || !sender_id){
     return;
   }
