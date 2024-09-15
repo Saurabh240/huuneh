@@ -572,7 +572,15 @@ $order_prefix = $settings->prefix;
 													</select>
                                                     </div>
 											</div>
-
+											
+											<div class="col-md-2">
+										 <label for="admin_discount" class="control-label col-form-label">Discount (in $)</label>
+										 <div class="input-group mb-3">
+											   <input type="number" id="admin_discount" name="admin_discount" min="1" step="1" value=0 class="form-control">
+											    <input type="hidden" id="total_price">
+											</div>
+										</div>
+										
                                         <!--<div class="form-group col-md-3">
                                             <label for="inputlname" class="control-label col-form-label"><?php echo $lang['add-title17'] ?></label>
                                             <div class="input-group mb-3">
