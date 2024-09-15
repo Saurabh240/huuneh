@@ -329,6 +329,24 @@ $("#clean_file_button").on("click", function () {
   $(".resultados_file").html("");
 });
 
+$("#admin_discount").on("change", function () {
+	var total_price = $("#total_price").val();
+	if($("#admin_discount").val()>parseFloat(total_price)){
+		 Swal.fire({
+		  type: 'Error!',
+		  title: 'Oops...',
+		  text: 'Discount should not be grater than Total',
+		  icon: 'error',
+		  confirmButtonColor: '#336aea'
+		});
+		$("#admin_discount").val(0);
+		$("#admin_discount").focus();
+		
+		$("#total_after_tax").html(total_price);
+	}else{
+	    calculateFinalTotal();
+	}
+});
 $("input[type=file]").on("change", function () {
   deleted_file_ids = [];
   var inputFile = document.getElementById("filesMultiple");
@@ -725,25 +743,23 @@ function calculateFinalTotal(element = null) {
   $("#fixed_value_ajax").val(baseRate);
   var distanceHtml = parseFloat($('#distance').val()).toFixed(2)
   $("#total_distance").html(distanceHtml);
-  //$("#insurance").html(total_seguro.toFixed(2));
-  //$("#total_impuesto_aduanero").html(total_impuesto_aduanero.toFixed(2));
+ 
   var shipmentfee = localStorage.getItem('shipmentfee');
   $("#total_before_tax").html(Number(shipmentfee).toFixed(2));
   var total_tax_value = parseFloat(parseFloat(shipmentfee) + (parseFloat(shipmentfee) * (13 / 100)));
+   $("#total_price").val(total_tax_value.toFixed(2));
+   var admin_discount = $("#admin_discount").val();
+   total_tax_value=total_tax_value-admin_discount;
   $("#total_after_tax").html(total_tax_value.toFixed(2));
-  // alert(parseFloat(shipmentfee));
-  // alert(parseFloat(total_envio.toFixed(2)));
-  // parseInt(shipmentfee.toFixed(2))
-  // var subTotal = parseFloat(shipmentfee) + parseFloat(total_envio.toFixed(2));
-  //$("#total_envio").html(shipmentfee);
+
   $("#total_envio_ajax").val(shipmentfee);
 
-  // $("#total_weight").html(sumador_libras.toFixed(2));
-  //$("#total_vol_weight").html(sumador_volumetric.toFixed(2));
+ 
   $("#total_fixed").html(max_fixed_charge.toFixed(2));
-  //$("#total_declared").html(shipmentfee);
+ 
   var tax = 0.00;
-  tax = parseFloat(total_tax_value) - parseFloat(shipmentfee);
+  //tax = parseFloat(total_tax_value) - parseFloat(shipmentfee);
+  tax = (parseFloat(shipmentfee) * (13 / 100));
   $("#tax_13").html(tax.toFixed(2));
 
 }
@@ -1004,7 +1020,13 @@ $("#invoice_form").on("submit", function (event) {
   var distance = $("#distance").val();
 
   data.append("distance", distance);
+  
+  var admin_discount = $("#admin_discount").val();
 
+  data.append("admin_discount", admin_discount); 
+  
+  
+  
   var total_file = document.getElementById("filesMultiple").files.length;
 
   for (var i = 0; i < total_file; i++) {

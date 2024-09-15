@@ -531,6 +531,7 @@ function calculateFinalTotal(element = null) {
   var shipmentfee = localStorage.getItem('shipmentfee');
   $("#total_before_tax").html(Number(shipmentfee).toFixed(2));
   var total_tax_value = parseFloat(parseFloat(shipmentfee) + (parseFloat(shipmentfee) * (13 / 100)));
+ 
   $("#total_after_tax").html(total_tax_value.toFixed(2));
   // alert(parseFloat(shipmentfee));
   // alert(parseFloat(total_envio.toFixed(2)));
@@ -1883,7 +1884,7 @@ function calculateAndDisplayDistance(origin, destination, deliveryType, sender_i
   $.ajax({
     type: 'POST',
     url: 'ajax/courier/calculate_distance.php', // Replace with your PHP script for calculating distance
-    data: { 'origin': origin, 'destination': destination, 'deliveryType': deliveryType, 'sender_id': sender_id,'send_sender_id':sender_id,'send_recipient_id':send_recipient_id, 'origin_id':origin_id, 'destination_id':destination_id },
+    data: { 'origin': origin, 'destination': destination, 'deliveryType': deliveryType, 'sender_id': sender_id,'send_sender_id':sender_id,'send_recipient_id':send_recipient_id, 'origin_id':origin_id, 'destination_id':destination_id},
 	
     dataType: 'json',
 	beforeSend: function() {

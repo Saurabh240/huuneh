@@ -475,8 +475,16 @@ $address_order = $db->cdp_registro();
                                        
                                      <?php
                                         } ?>
+									
+										<div class="col-md-2">
+										 <label for="admin_discount" class="control-label col-form-label">Discount (in $)</label>
+										 <div class="input-group mb-3">
+											   <input type="number" id="admin_discount" name="admin_discount" min="1" step="0.1" value=0 class="form-control">
+											    <input type="hidden" id="total_price">
+											</div>
+										</div>
                                     </div>
-
+								
 
 
                                     <div class="col-md-12 row" id="image_preview"></div>
