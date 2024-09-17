@@ -80,7 +80,7 @@ if (!empty($range)) {
 }
 
 
-$sql = "SELECT a.total_declared_value, a.total_weight, a.total_tax_discount, a.sub_total, a.total_tax_insurance, a.total_tax_custom_tariffis, a.total_tax, a.status_invoice,  a.is_consolidate, a.is_pickup,  a.total_order, a.order_id, a.order_prefix, a.order_no, a.order_date, a.sender_id, a.order_courier,a.status_courier,  b.mod_style, b.color FROM
+$sql = "SELECT a.total_declared_value, a.total_weight, a.total_tax_discount, a.sub_total, a.total_tax_insurance, a.total_tax_custom_tariffis, a.total_tax, a.status_invoice,  a.is_consolidate, a.is_pickup,  a.total_order, a.order_id, a.order_prefix, a.order_no, a.order_date, a.sender_id, a.order_courier,a.status_courier,  b.mod_style, b.color, a.delivery_type FROM
 			 cdb_add_order as a
 			 INNER JOIN cdb_styles as b ON a.status_courier = b.id
 			 
@@ -107,22 +107,15 @@ if ($numrows > 0) { ?>
 		<table id="zero_config" class="table-sm table table-condensed table-hover table-striped custom-table-checkbox">
 			<thead>
 				<tr style="background-color: #3e5569; color: white">
-
-					<th><b><?php echo $lang['ltracking'] ?></b></th>
-					<th class="text-center"><b><?php echo $lang['ddate'] ?></b></th>
-					<th class="text-center"><b><?php echo $lang['report-text37'] ?></b></th>
-					<th class="text-center"><b><?php echo $lang['lorigin'] ?></b></th>
-					<th class="text-center"><b><?php echo $lang['lstatusshipment'] ?></b></th>
-					<th class="text-center"><b><?php echo $lang['report-text52'] ?></b></th>
-					<th class="text-center"><b><?php echo $lang['report-text43'] ?></b></th>
-					<th class="text-center"><b><?php echo $lang['report-text44'] ?></b></th>
-					<th class="text-center"><b><?php echo $lang['report-text48'] ?></b></th>
-					<th class="text-center"><b><?php echo $lang['report-text49'] ?></b></th>
-					<th class="text-center"><b><?php echo $lang['report-text51'] ?></b></th>
-					<th class="text-center"><b><?php echo $lang['report-text50'] ?></b></th>
-					<th class="text-center"><b><?php echo $lang['report-text42'] ?></b></th>
-					<th class="text-center"><b></b></th>
-
+					<tr style="background-color: #3e5569; color: white">
+						<th><b>Order Number</b></th>
+						<th class="text-center"><b><?php echo $lang['ddate']; ?></b></th>
+						<th class="text-center"><b>Order Type</b></th>
+						<th class="text-center"><b><?php echo $lang['lstatusshipment']; ?></b></th>
+						<th class="text-center"><b>Sender Address</b></th>
+						<th class="text-center"><b>Recipient Address</b></th>
+						<th class="text-center"><b><?php echo $lang['report-text43']; ?></b></th>
+						<th class="text-center"><b><?php echo $lang['report-text42']; ?></b></th>
 				</tr>
 			</thead>
 			<tbody id="projects-tbl">
@@ -206,83 +199,42 @@ if ($numrows > 0) { ?>
 
 
 						<tr class="card-hover">
-
 							<td><b><a href="courier_view.php?id=<?php echo $row->order_id; ?>"><?php echo $row->order_prefix . $row->order_no; ?></a></b></td>
-							<td class="text-center">
-								<?php echo $row->order_date; ?>
-							</td>
-
-							<td class="text-center">
-								<?php echo $sender_data->fname; ?> <?php echo $sender_data->lname; ?>
-							</td>
-
-
-
-							<td class="text-center"><?php echo $address_order->sender_country; ?>-<?php echo $address_order->sender_city; ?></td>
-
-
+							<td class="text-center"><?php echo $row->order_date; ?></td>
+							<td class="text-center"><?php echo $row->delivery_type; ?></td>
 							<td class="">
 
-								<!-- <span style="background: <?php echo $status_style_pickup->color; ?>;"  class="label label-large" ><?php echo $status_style_pickup->mod_style; ?></span> -->
-
-
-
-								<?php
-								// if($row->status_courier==12 or $row->status_courier==21){
-								?>
-
 								<span style="background: <?php echo $row->color; ?>;" class="label label-large"><?php echo $row->mod_style; ?></span>
+								<br>
+
 								<?php
-								// }
+								if ($row->is_pickup == true) { ?>
+
+									<span style="background: <?php echo $status_style_pickup->color; ?>;" class="label label-large"><?php echo $status_style_pickup->mod_style; ?></span>
+								<?php
+								}
+								?>
+
+								<?php
+								if ($row->is_consolidate == true) { ?>
+
+									<span style="background: <?php echo $status_style_consolidate->color; ?>;" class="label label-large"><?php echo $status_style_consolidate->mod_style; ?></span>
+								<?php
+								}
 								?>
 							</td>
-
+								<td class="text-center"><?php echo $address_order->sender_country; ?>-<?php echo $address_order->sender_city; ?></td>
+							<td class="text-center"><?php echo $address_order->recipient_country; ?>-<?php echo $address_order->recipient_city; ?></td>
+						
 							<td class="text-center">
-								<?php echo $row->total_weight; ?>
+								<?php echo cdb_money_format($row->sub_total); ?>
 
 							</td>
-
 							<td class="text-center">
-								<?php echo cdb_money_format_bar($row->sub_total); ?>
-
+								 <?php echo cdb_money_format($row->total_order); ?>
 							</td>
-
-							<td class="text-center">
-								<?php echo cdb_money_format_bar($row->total_tax_discount); ?>
-
-							</td>
-
-							<td class="text-center">
-								<?php echo cdb_money_format_bar($row->total_tax_insurance); ?>
-
-							</td>
-
-							<td class="text-center">
-								<?php echo cdb_money_format_bar($row->total_tax_custom_tariffis); ?>
-
-							</td>
-
-							<td class="text-center">
-								<?php echo cdb_money_format_bar($row->total_tax); ?>
-
-							</td>
-
-							<td class="text-center">
-								<?php echo cdb_money_format_bar($row->total_declared_value); ?>
-
-							</td>
-
-
-							<td class="text-center">
-								<b><?php echo $core->currency; ?></b> <?php echo cdb_money_format($row->total_order); ?>
-							</td>
-
-							<td>
-								<span class="label label-large <?php echo $label_class; ?>"><?php echo $text_status; ?></span>
-
-							</td>
-
-
+							
+							
 						</tr>
 					<?php $count++;
 					} ?>
@@ -290,51 +242,15 @@ if ($numrows > 0) { ?>
 				<?php } ?>
 			</tbody>
 			<tfoot>
-
 				<tr class="card-hover">
 					<td class="text-center"><b><?php echo $lang['report-text53'] ?></b></td>
-					<td colspan="4"></td>
-					<td class="text-center">
-						<b> <?php echo $sumador_weight; ?> </b>
-
-					</td>
-
+					<td colspan="5"></td>
 					<td class="text-center">
 						<b> <?php echo cdb_money_format($sumador_subtotal); ?> </b>
-
 					</td>
-
-					<td class="text-center">
-						<b> <?php echo cdb_money_format($sumador_discount); ?> </b>
-
-					</td>
-
-					<td class="text-center">
-						<b> <?php echo cdb_money_format($sumador_insurance); ?> </b>
-
-					</td>
-
-					<td class="text-center">
-						<b> <?php echo cdb_money_format($sumador_c_tariff); ?> </b>
-
-					</td>
-
-					<td class="text-center">
-						<b> <?php echo cdb_money_format($sumador_tax); ?> </b>
-
-					</td>
-
-					<td class="text-center">
-						<b> <?php echo cdb_money_format($sumador_declared_tax); ?> </b>
-
-					</td>
-
-
-
 					<td class="text-center">
 						<b><?php echo cdb_money_format($sumador_total); ?> </b>
 					</td>
-
 				</tr>
 			</tfoot>
 
