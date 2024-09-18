@@ -335,14 +335,18 @@ $("#admin_discount").on("change", function () {
 		 Swal.fire({
 		  type: 'Error!',
 		  title: 'Oops...',
-		  text: 'Discount should not be grater than Total',
+		  text: 'Discount should not be grater than Subtotal',
 		  icon: 'error',
 		  confirmButtonColor: '#336aea'
 		});
-		$("#admin_discount").val(0);
+		$("#admin_discount").val('');
 		$("#admin_discount").focus();
-		
-		$("#total_after_tax").html(total_price);
+		$("#discount_div").html(total_price);
+		var tax = 0.00;
+		tax = (parseFloat(total_price) * (13 / 100));
+		var total_tax_value = parseFloat(parseFloat(total_price) + tax);
+		$("#total_after_tax").html(total_tax_value.toFixed(2));
+		$("#tax_13").html(tax.toFixed(2));
 	}else{
 	    calculateFinalTotal();
 	}
@@ -746,10 +750,15 @@ function calculateFinalTotal(element = null) {
  
   var shipmentfee = localStorage.getItem('shipmentfee');
   $("#total_before_tax").html(Number(shipmentfee).toFixed(2));
-  var total_tax_value = parseFloat(parseFloat(shipmentfee) + (parseFloat(shipmentfee) * (13 / 100)));
-   $("#total_price").val(total_tax_value.toFixed(2));
-   var admin_discount = $("#admin_discount").val();
-   total_tax_value=total_tax_value-admin_discount;
+  var admin_discount = $("#admin_discount").val();
+  var shipmentfee_after_discount=parseFloat(shipmentfee);
+   if(admin_discount!='' && admin_discount>0){
+  var shipmentfee_after_discount=parseFloat(shipmentfee)-parseFloat(admin_discount);
+   }
+  var total_tax_value = parseFloat(shipmentfee_after_discount + (parseFloat(shipmentfee_after_discount) * (13 / 100)));
+   $("#total_price").val(parseFloat(shipmentfee).toFixed(2));
+   $("#discount_div").html(shipmentfee_after_discount.toFixed(2));
+  
   $("#total_after_tax").html(total_tax_value.toFixed(2));
 
   $("#total_envio_ajax").val(shipmentfee);
@@ -758,8 +767,8 @@ function calculateFinalTotal(element = null) {
   $("#total_fixed").html(max_fixed_charge.toFixed(2));
  
   var tax = 0.00;
-  //tax = parseFloat(total_tax_value) - parseFloat(shipmentfee);
-  tax = (parseFloat(shipmentfee) * (13 / 100));
+  tax = parseFloat(total_tax_value) - parseFloat(shipmentfee_after_discount);
+ 
   $("#tax_13").html(tax.toFixed(2));
 
 }

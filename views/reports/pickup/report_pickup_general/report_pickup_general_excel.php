@@ -134,6 +134,7 @@ $html = '
 						<th class="text-center"><b>'.$lang['ddate'].'</b></th>
 						<th class="text-center"><b>Order Type</b></th>
 						<th class="text-center"><b>'.$lang['lstatusshipment'].'</b></th>
+						<th class="text-center"><b>'.$lang['report-text37'].' Name</b></th>
 						<th class="text-center"><b>Sender Address</b></th>
 						<th class="text-center"><b>Recipient Address</b></th>
 						<th class="text-center"><b>'.$lang['report-text43'].'</b></th>
@@ -211,8 +212,9 @@ if ($numrows > 0) {
 		$html .= '<td>' . $row->order_date . '</td>';
 		$html .= '<td>' . $row->delivery_type . '</td>';
 		$html .= '<td>' . $row->mod_style . '</td>';
-		$html .= '<td>' . $address_order->sender_country . '-' . $address_order->sender_city . '</td>';
-		$html .= '<td>' . $address_order->recipient_country . '-' . $address_order->recipient_city . '</td>';
+		$html .= '<td>' . $sender_data->fname .' '.$sender_data->lname. '</td>';
+		$html .= '<td>' . $address_order->sender_address.', '.$address_order->sender_city.', '.$address_order->sender_state.', '.$address_order->sender_country.', '.$address_order->sender_zip_code . '</td>';
+		$html .= '<td>' . $address_order->recipient_address.', '.$address_order->recipient_country.', '.$address_order->recipient_state.', '.$address_order->recipient_country.', '.$address_order->recipient_zip_code . '</td>';
 		$html .= '<td>' . cdb_money_format_bar($row->sub_total) . '</td>';
 		$html .= '<td>' . cdb_money_format_bar($row->total_order) . '</td>';
 		$html .= '</tr>';
@@ -220,7 +222,7 @@ if ($numrows > 0) {
 
 	$html .= '<tr>';
 	$html .= '<td><b>' . $lang['report-text53'] . '</td> </b>';
-	$html .= '<td  colspan="5"></td>';
+	$html .= '<td  colspan="6"></td>';
 	$html .= '<td><b>' . cdb_money_format_bar($sumador_subtotal) . ' </b></td>';
 	$html .= '<td><b>' . cdb_money_format_bar($sumador_total) . ' </b></td>';
 	$html .= '</tr>';

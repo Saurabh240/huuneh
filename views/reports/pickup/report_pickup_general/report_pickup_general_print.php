@@ -165,6 +165,7 @@ $fecha = str_replace('-', '/', $fecha);
 						<th class="text-center"><b><?php echo $lang['ddate']; ?></b></th>
 						<th class="text-center"><b>Order Type</b></th>
 						<th class="text-center"><b><?php echo $lang['lstatusshipment']; ?></b></th>
+						<th class="text-center"><b><?php echo $lang['report-text37'] ?> Name</b></th>
 						<th class="text-center"><b>Sender Address</b></th>
 						<th class="text-center"><b>Recipient Address</b></th>
 						<th class="text-center"><b><?php echo $lang['report-text43']; ?></b></th>
@@ -247,8 +248,11 @@ $fecha = str_replace('-', '/', $fecha);
 							<td class="text-center"><?php echo $row->order_date; ?></td>
 							<td class="text-center"><?php echo $row->delivery_type; ?></td>
 							<td class="text-center"><?php echo $row->mod_style; ?></td>
-							<td class="text-center"><?php echo $address_order->sender_country; ?>-<?php echo $address_order->sender_city; ?></td>
-							<td class="text-center"><?php echo $address_order->recipient_country; ?>-<?php echo $address_order->recipient_city; ?></td>
+							<td class="text-center">
+								<?php echo $sender_data->fname; ?> <?php echo $sender_data->lname; ?>
+							</td>
+							<td class="text-center"><?php echo $address_order->sender_address.', '.$address_order->sender_city.', '.$address_order->sender_state.', '.$address_order->sender_country.', '.$address_order->sender_zip_code; ?></td>
+							<td class="text-center"><?php echo $address_order->recipient_address.', '.$address_order->recipient_country.', '.$address_order->recipient_state.', '.$address_order->recipient_country.', '.$address_order->recipient_zip_code; ?></td>
 						
 							<td class="text-center">
 								<?php echo cdb_money_format($row->sub_total); ?>
@@ -266,7 +270,7 @@ $fecha = str_replace('-', '/', $fecha);
 
                 <tr class="card-hover">
 					<td class="text-center"><b><?php echo $lang['report-text53'] ?></b></td>
-					<td colspan="5"></td>
+					<td colspan="6"></td>
 					<td class="text-center">
 						<b> <?php echo cdb_money_format($sumador_subtotal); ?> </b>
 					</td>

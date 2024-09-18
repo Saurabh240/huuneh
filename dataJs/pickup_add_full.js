@@ -154,6 +154,30 @@ function cdp_load_cities(modal) {
   });
 }
 
+$("#admin_discount").on("change", function () {
+	var total_price = $("#total_price").val();
+	if($("#admin_discount").val()>parseFloat(total_price)){
+		 Swal.fire({
+		  type: 'Error!',
+		  title: 'Oops...',
+		  text: 'Discount should not be grater than Subtotal',
+		  icon: 'error',
+		  confirmButtonColor: '#336aea'
+		});
+		$("#admin_discount").val('');
+		$("#admin_discount").focus();
+		$("#discount_div").html(total_price);
+		var tax = 0.00;
+		tax = (parseFloat(total_price) * (13 / 100));
+		var total_tax_value = parseFloat(parseFloat(total_price) + tax);
+		$("#total_after_tax").html(total_tax_value.toFixed(2));
+		$("#tax_13").html(tax.toFixed(2));
+	}else{
+		
+	    calculateFinalTotal();
+	}
+});
+
 function loadPackages() {
   $("#data_items").html("");
   packagesItems.forEach(function (item, index) {
@@ -530,9 +554,20 @@ function calculateFinalTotal(element = null) {
   //$("#total_impuesto_aduanero").html(total_impuesto_aduanero.toFixed(2));
   var shipmentfee = localStorage.getItem('shipmentfee');
   $("#total_before_tax").html(Number(shipmentfee).toFixed(2));
-  var total_tax_value = parseFloat(parseFloat(shipmentfee) + (parseFloat(shipmentfee) * (13 / 100)));
- 
+    var admin_discount = $("#admin_discount").val();
+   var shipmentfee_after_discount=parseFloat(shipmentfee);
+   if(admin_discount!='' && admin_discount>0){
+  var shipmentfee_after_discount=parseFloat(shipmentfee)-parseFloat(admin_discount);
+   }
+  var total_tax_value = parseFloat(shipmentfee_after_discount + (parseFloat(shipmentfee_after_discount) * (13 / 100)));
+   $("#total_price").val(parseFloat(shipmentfee).toFixed(2));
+   $("#discount_div").html(shipmentfee_after_discount.toFixed(2));
+  
   $("#total_after_tax").html(total_tax_value.toFixed(2));
+   var tax = 0.00;
+  tax = parseFloat(total_tax_value) - parseFloat(shipmentfee_after_discount);
+ 
+  $("#tax_13").html(tax.toFixed(2));
   // alert(parseFloat(shipmentfee));
   // alert(parseFloat(total_envio.toFixed(2)));
   // parseInt(shipmentfee.toFixed(2))
@@ -866,9 +901,11 @@ $("#invoice_form").on("submit", function (event) {
   data.append('total_order', total_order);
   var sub_total = $("#total_before_tax").text();
   data.append('sub_total', sub_total);
-
+  var admin_discount = $("#admin_discount").val();
+  data.append("admin_discount", admin_discount); 
+  
   var total_file = document.getElementById("filesMultiple").files.length;
-
+   
   for (var i = 0; i < total_file; i++) {
     data.append(
       "filesMultiple[]",

@@ -479,8 +479,8 @@ $address_order = $db->cdp_registro();
 										<div class="col-md-2">
 										 <label for="admin_discount" class="control-label col-form-label">Discount (in $)</label>
 										 <div class="input-group mb-3">
-											   <input type="number" id="admin_discount" name="admin_discount" min="1" step="1" value=<?php echo $row_order->admin_discount??0; ?> class="form-control">
-											    <input type="hidden" id="total_price">
+											   <input type="number" id="admin_discount" name="admin_discount" min="0" step="1" value=<?php echo $row_order->admin_discount??''; ?> class="form-control">
+											   <input type="hidden" id="total_price">
 											</div>
 										</div>
                                     </div>
@@ -734,10 +734,19 @@ $address_order = $db->cdp_registro();
                                                                  <input type="hidden" name="total_envio_ajax" id="total_envio_ajax" value="">
                                                             </div>
                                                  </div>
-
-                                                 <div class="col-sm-12 col-md-4 col-lg-3">
+												 <div class="col-sm-12 col-md-4 col-lg-2">
                                                      <div class="form-group">
-                                                            <label for="emailAddress1">TaxL (13%)</label>
+                                                            <label for="discount_div">After Discount</label>
+                                                                
+                                                                
+                                                            <b> $ </b>
+                                                            <span id="discount_div">NaN</span>
+                                                                
+                                                            </div>
+                                                 </div>
+                                                 <div class="col-sm-12 col-md-4 col-lg-2">
+                                                     <div class="form-group">
+                                                            <label for="tax_13">TaxL (13%)</label>
                                                                 
                                                                 
                                                             <b> $ </b>
@@ -747,7 +756,7 @@ $address_order = $db->cdp_registro();
                                                  </div>
                                                 
 
-                                                <div class="col-sm-12 col-md-4 col-lg-3">
+                                                <div class="col-sm-12 col-md-4 col-lg-2">
                                                      <div class="form-group">
                                                             <label for="emailAddress1">TOTAL</label>
                                                                 

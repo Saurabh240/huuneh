@@ -90,6 +90,7 @@ if ($numrows > 0) { ?>
 				<th class="text-center"><b><?php echo $lang['ddate']; ?></b></th>
 				<th class="text-center"><b>Order Type</b></th>
 				<th class="text-center"><b><?php echo $lang['lstatusshipment']; ?></b></th>
+				<th class="text-center"><b><?php echo $lang['report-text37'] ?> Name</b></th>
 				<th class="text-center"><b>Sender Address</b></th>
 				<th class="text-center"><b>Recipient Address</b></th>
 				<th class="text-center"><b><?php echo $lang['report-text43']; ?></b></th>
@@ -184,26 +185,13 @@ if ($numrows > 0) { ?>
 							<td class="">
 
 								<span style="background: <?php echo $row->color; ?>;" class="label label-large"><?php echo $row->mod_style; ?></span>
-								<br>
-
-								<?php
-								if ($row->is_pickup == true) { ?>
-
-									<span style="background: <?php echo $status_style_pickup->color; ?>;" class="label label-large"><?php echo $status_style_pickup->mod_style; ?></span>
-								<?php
-								}
-								?>
-
-								<?php
-								if ($row->is_consolidate == true) { ?>
-
-									<span style="background: <?php echo $status_style_consolidate->color; ?>;" class="label label-large"><?php echo $status_style_consolidate->mod_style; ?></span>
-								<?php
-								}
-								?>
+								
 							</td>
-								<td class="text-center"><?php echo $address_order->sender_country; ?>-<?php echo $address_order->sender_city; ?></td>
-							<td class="text-center"><?php echo $address_order->recipient_country; ?>-<?php echo $address_order->recipient_city; ?></td>
+							<td class="text-center">
+								<?php echo $sender_data->fname; ?> <?php echo $sender_data->lname; ?>
+							</td>
+							<td class="text-center"><?php echo $address_order->sender_address.', '.$address_order->sender_city.', '.$address_order->sender_state.', '.$address_order->sender_country.', '.$address_order->sender_zip_code; ?></td>
+							<td class="text-center"><?php echo $address_order->recipient_address.', '.$address_order->recipient_country.', '.$address_order->recipient_state.', '.$address_order->recipient_country.', '.$address_order->recipient_zip_code; ?></td>
 						
 							<td class="text-center">
 								<?php echo cdb_money_format($row->sub_total); ?>
@@ -224,7 +212,7 @@ if ($numrows > 0) { ?>
 
 				<tr class="card-hover">
 					<td class="text-center"><b><?php echo $lang['report-text53'] ?></b></td>
-					<td colspan="5"></td>
+					<td colspan="6"></td>
 					<td class="text-center">
 						<b> <?php echo cdb_money_format($sumador_subtotal); ?> </b>
 					</td>
