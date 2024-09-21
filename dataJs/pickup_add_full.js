@@ -555,8 +555,9 @@ function calculateFinalTotal(element = null) {
   var shipmentfee = localStorage.getItem('shipmentfee');
   $("#total_before_tax").html(Number(shipmentfee).toFixed(2));
     var admin_discount = $("#admin_discount").val();
+	//alert(admin_discount);
    var shipmentfee_after_discount=parseFloat(shipmentfee);
-   if(admin_discount!='' && admin_discount>0){
+   if(admin_discount!=''){
   var shipmentfee_after_discount=parseFloat(shipmentfee)-parseFloat(admin_discount);
    }
   var total_tax_value = parseFloat(shipmentfee_after_discount + (parseFloat(shipmentfee_after_discount) * (13 / 100)));
