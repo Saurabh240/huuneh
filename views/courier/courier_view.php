@@ -1448,6 +1448,7 @@ if(($sender_data->business_type == 'pharmacy' || $sender_data->business_type == 
                                                 <th><b><?php echo $lang['langs_048'] ?></b></th> -->
                                                 <th><b><?php echo $lang['left240'] ?></th>
                                                 <th><b><?php echo $lang['leftorder67'] ?> (13%) </b></th>
+												<th><b>Discount</b></th>
                                                 <th><b><?php echo $lang['leftorder2020'] ?></b></th>
                                             </tr>
                                         </thead>
@@ -1462,13 +1463,17 @@ if(($sender_data->business_type == 'pharmacy' || $sender_data->business_type == 
                                                 <td class="text-center" id="reexp"><?php echo "$ " . cdb_money_format($row_order->total_reexp); ?></td> -->
                                                 <td class="text-left" id="total_envio"><b><?php echo "$ " . cdb_money_format_bar(floatval($row_order->sub_total)); ?></b></td>
                                                 <td class="text-left" id="impuesto"><?php 
-                                                    if (floatval($row_order->total_order) && floatval($row_order->total_order) > floatval($row_order->sub_total)) {
-                                                        $tax = floatval($row_order->total_order) - floatval($row_order->sub_total);
+												
+                                                    if (floatval($row_order->total_order)) { 
+														 $tax= ($row_order->sub_total) * (13 / 100);
+                                                        //$tax = floatval($row_order->total_order) - floatval($row_order->sub_total);
                                                         echo "$ " . cdb_money_format_bar($tax);
                                                     } else {
+														 
                                                         echo "$ 0.00";
                                                     }
                                                 ?></td>
+												<td><?php echo "$ " . cdb_money_format_bar($row_order->admin_discount); ?></td>
                                                 <td class="text-left" id="total_envio"><b><?php echo "$ " . cdb_money_format_bar(floatval($row_order->total_order)); ?></b></td>
                                             </tr>
                             

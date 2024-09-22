@@ -67,8 +67,20 @@ echo 'Fixed Time ->'.strtotime("2:00 PM");exit;*/
             background:#EBEBE4;
         }
         .pac-container {
-                     z-index: 10000 !important;
+			z-index: 10000 !important;
             }
+		#loadingIcon {
+		   position: absolute;
+			  top: 0;
+			  left: 0;
+			  width: 100%;
+			  height: 100%;
+			  background-color: rgba(255, 255, 255, 0.8); /* White background with transparency */
+			  display: flex;
+			  justify-content: center;
+			  align-items: center;
+			  z-index: 10;
+		}
     </style>
 </head>
 
@@ -495,6 +507,9 @@ echo 'Fixed Time ->'.strtotime("2:00 PM");exit;*/
                                     <hr>
                                     
                                     <div class="row" style="margin-top: 20px;">
+									<div id="loadingIcon" style="display: none;">
+									<img src="assets/images/loader-small.gif" class="loader_small" id="loader_small">
+									 </div>
                                         <div class="table-responsive d-none" id="table-totals">
                                             <!-- <table id="insvoice-item-table" class="table">
                                                 <tfoot>
@@ -526,6 +541,7 @@ echo 'Fixed Time ->'.strtotime("2:00 PM");exit;*/
                                                         <?php echo $lang['messageerrorform30'] ?>
                                                     </h4>
                                                 </div>
+												
                                                 <hr>
                                                 <div class="row row-shadow input-container"> 
                                                 <!-- <div class="col-sm-12 col-md-6 col-lg-2">

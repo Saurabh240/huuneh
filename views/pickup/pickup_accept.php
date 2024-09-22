@@ -94,6 +94,18 @@ $address_order = $db->cdp_registro();
             border: 1px solid blue;
             outline: none;
         }
+		#loadingIcon {
+		   position: absolute;
+			  top: 0;
+			  left: 0;
+			  width: 100%;
+			  height: 100%;
+			  background-color: rgba(255, 255, 255, 0.8); /* White background with transparency */
+			  display: flex;
+			  justify-content: center;
+			  align-items: center;
+			  z-index: 10;
+		}
     </style>
 
 </head>
@@ -463,8 +475,16 @@ $address_order = $db->cdp_registro();
                                        
                                      <?php
                                         } ?>
+									
+										<div class="col-md-2">
+										 <label for="admin_discount" class="control-label col-form-label">Discount (in $)</label>
+										 <div class="input-group mb-3">
+											   <input type="number" id="admin_discount" name="admin_discount" step="1" value=<?php echo $row_order->admin_discount??''; ?> class="form-control">
+											   <input type="hidden" id="total_price">
+											</div>
+										</div>
                                     </div>
-
+								
 
 
                                     <div class="col-md-12 row" id="image_preview"></div>
@@ -648,6 +668,9 @@ $address_order = $db->cdp_registro();
                                     <hr>
                                     
                                     <div class="row" style="margin-top: 20px;">
+									<div id="loadingIcon" style="display: none;">
+									<img src="assets/images/loader-small.gif" class="loader_small" id="loader_small">
+									 </div>
                                         <div class="table-responsive d-none" id="table-totals">
                                             <!-- <table id="insvoice-item-table" class="table">
                                                 <tfoot>
@@ -711,10 +734,19 @@ $address_order = $db->cdp_registro();
                                                                  <input type="hidden" name="total_envio_ajax" id="total_envio_ajax" value="">
                                                             </div>
                                                  </div>
-
-                                                 <div class="col-sm-12 col-md-4 col-lg-3">
+												 <div class="col-sm-12 col-md-4 col-lg-2">
                                                      <div class="form-group">
-                                                            <label for="emailAddress1">TaxL (13%)</label>
+                                                            <label for="discount_div">After Discount</label>
+                                                                
+                                                                
+                                                            <b> $ </b>
+                                                            <span id="discount_div">NaN</span>
+                                                                
+                                                            </div>
+                                                 </div>
+                                                 <div class="col-sm-12 col-md-4 col-lg-2">
+                                                     <div class="form-group">
+                                                            <label for="tax_13">TaxL (13%)</label>
                                                                 
                                                                 
                                                             <b> $ </b>
@@ -724,7 +756,7 @@ $address_order = $db->cdp_registro();
                                                  </div>
                                                 
 
-                                                <div class="col-sm-12 col-md-4 col-lg-3">
+                                                <div class="col-sm-12 col-md-4 col-lg-2">
                                                      <div class="form-group">
                                                             <label for="emailAddress1">TOTAL</label>
                                                                 

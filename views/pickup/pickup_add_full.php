@@ -120,6 +120,18 @@ $order_prefix = $settings->prefix;
         .pac-container{
             z-index: 1051 !important;
         }
+		#loadingIcon {
+		   position: absolute;
+			  top: 0;
+			  left: 0;
+			  width: 100%;
+			  height: 100%;
+			  background-color: rgba(255, 255, 255, 0.8); /* White background with transparency */
+			  display: flex;
+			  justify-content: center;
+			  align-items: center;
+			  z-index: 10;
+		}
 </style>
 </head>
 
@@ -560,7 +572,15 @@ $order_prefix = $settings->prefix;
 													</select>
                                                     </div>
 											</div>
-
+											
+											<div class="col-md-2">
+										 <label for="admin_discount" class="control-label col-form-label">Discount (in $)</label>
+										 <div class="input-group mb-3">
+											   <input type="number" id="admin_discount" name="admin_discount" step="1" class="form-control">
+											    <input type="hidden" id="total_price">
+											</div>
+										</div>
+										
                                         <!--<div class="form-group col-md-3">
                                             <label for="inputlname" class="control-label col-form-label"><?php echo $lang['add-title17'] ?></label>
                                             <div class="input-group mb-3">
@@ -745,6 +765,9 @@ $order_prefix = $settings->prefix;
                                     <hr>
                                     
                                     <div class="row" style="margin-top: 20px;">
+									<div id="loadingIcon" style="display: none;">
+									<img src="assets/images/loader-small.gif" class="loader_small" id="loader_small">
+									 </div>
                                         <div class="table-responsive d-none" id="table-totals">
                                         <!--    <table id="insvoice-item-table" class="table">
                                                 <tfoot>
@@ -778,7 +801,7 @@ $order_prefix = $settings->prefix;
                                                 </div>
                                                 <hr>
                                                 <div class="row row-shadow input-container"> 
-                                                <div class="col-sm-12 col-md-6 col-lg-2">
+                                                <!--div class="col-sm-12 col-md-6 col-lg-2">
                                                         <div class="form-group" hidden>
                                                             <label for="emailAddress1"><?php echo $lang['leftorder1879'] ?></label>
                                                             <?php
@@ -788,10 +811,10 @@ $order_prefix = $settings->prefix;
                                                             <?php
                                                             }
                                                             ?>
-                                                            <!-- <span id="fixed_value_label"> 0.00</span> -->
+                                                          
                                                             <input type="hidden" name="fixed_value_ajax" id="fixed_value_ajax" value="0">
                                                          </div>
-                                                    </div>
+                                                    </div-->
                                                     
                                                 <div class="col-sm-12 col-md-4 col-lg-3">
                                                     <div class="form-group">
@@ -817,8 +840,27 @@ $order_prefix = $settings->prefix;
                                                             
                                                         </div>
                                                 </div>
-
-                                                <div class="col-sm-12 col-md-4 col-lg-3">
+												 <div class="col-sm-12 col-md-4 col-lg-2">
+                                                     <div class="form-group">
+                                                            <label for="discount_div">After Discount</label>
+                                                                
+                                                                
+                                                            <b> $ </b>
+                                                            <span id="discount_div">NaN</span>
+                                                                
+                                                            </div>
+                                                 </div>
+                                                 <div class="col-sm-12 col-md-4 col-lg-2">
+                                                     <div class="form-group">
+                                                            <label for="tax_13">TaxL (13%)</label>
+                                                                
+                                                                
+                                                            <b> $ </b>
+                                                            <span id="tax_13">NaN</span>
+                                                                
+                                                            </div>
+                                                 </div>
+                                                <div class="col-sm-12 col-md-4 col-lg-2">
                                                     <div class="form-group">
                                                         <label for="emailAddress1"><?php echo $lang['leftorder1882'] ?> (<?php echo '13%';//echo $core->tax; ?>)</label>
                                                             

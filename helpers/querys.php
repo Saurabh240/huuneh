@@ -5366,6 +5366,7 @@ function cdp_insertCourierPickupFromCustomer($datos)
         receiver_id,                
         receiver_address_id,
         volumetric_percentage,
+		admin_discount,
         order_datetime,
         order_item_category, 
         order_package,
@@ -5391,6 +5392,7 @@ function cdp_insertCourierPickupFromCustomer($datos)
         :receiver_id,       
         :receiver_address_id,    
         :volumetric_percentage,
+		:admin_discount,
         :order_datetime,
         :order_item_category, 
         :order_package,
@@ -5414,6 +5416,7 @@ function cdp_insertCourierPickupFromCustomer($datos)
     $db->bind(':order_incomplete',  $datos['order_incomplete']);
     $db->bind(':is_pickup',  $datos['is_pickup']);
     $db->bind(':order_no', $datos["order_no"]);
+    $db->bind(':admin_discount', $datos["admin_discount"]);
     $db->bind(':order_datetime',  $datos['order_datetime']);
     $db->bind(':sender_id',  $datos["sender_id"]);
     $db->bind(':receiver_id',  $datos["recipient_id"]);
@@ -5449,6 +5452,7 @@ function cdp_updateCourierShipmentFromCustomer($datos)
         receiver_id =:receiver_id,  
         sender_address_id=:sender_address_id,
         receiver_address_id =:receiver_address_id,
+		admin_discount =:admin_discount,
         agency =:agency,
         origin_off =:origin_off,
         order_package =:order_package,
@@ -5476,6 +5480,7 @@ function cdp_updateCourierShipmentFromCustomer($datos)
     $db->bind(':receiver_id',  $datos["recipient_id"]);
     $db->bind(':sender_address_id',  $datos["sender_address_id"]);
     $db->bind(':receiver_address_id',  $datos["recipient_address_id"]);
+    $db->bind(':admin_discount',  $datos["admin_discount"]);
     $db->bind(':agency',  $datos["agency"]);
     $db->bind(':origin_off',  $datos["origin_off"]);
     $db->bind(':order_package',  $datos["order_package"]);

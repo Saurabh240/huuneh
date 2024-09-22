@@ -124,6 +124,7 @@ if (empty($errors)) {
         'charge' => !empty($_POST['charge']) ? cdp_sanitize($_POST['charge']) : 0.00,
         'no_of_rx' => !empty($_POST['no_of_rx']) ? cdp_sanitize($_POST['no_of_rx']) : 0,
         'notes_for_driver' => cdp_sanitize($_POST['notes_for_driver']),
+		'admin_discount' =>  !empty($_POST['admin_discount']) ? $_POST['admin_discount'] : 0.00,
         'tags' => !empty($_POST['tags']) && is_array($_POST['tags']) ? json_encode($_POST['tags']) : json_encode([])
     );
 
@@ -254,7 +255,8 @@ if (empty($errors)) {
             'total_weight' =>  floatval($total_peso),
             'total_order' =>  floatval($total_envio),
             'delivery_type' => $_POST['delivery_type'],
-            'distance' => $_POST['distance']
+            'distance' => $_POST['distance'],
+            'admin_discount' => $_POST['admin_discount'],
         );
 
         $update = cdp_updateCourierShipmentTotals($dataShipmentUpdateTotals);
