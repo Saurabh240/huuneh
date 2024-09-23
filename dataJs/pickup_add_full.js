@@ -1939,6 +1939,14 @@ function calculateAndDisplayDistance(origin, destination, deliveryType, sender_i
       localStorage.setItem('shipmentfee', data.shipmentfee)
       getTariffs();
 	  $('#loadingIcon').hide();
+	 if (typeof data.msg !== 'undefined') {
+	   Swal.fire({
+            type: 'warning',
+            text: data.msg,
+            icon: 'warning',
+            confirmButtonColor: '#336aea'
+          });
+	 }
     },
     error: function () {
 		$('#loadingIcon').hide();

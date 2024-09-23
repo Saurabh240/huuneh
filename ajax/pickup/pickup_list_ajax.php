@@ -54,7 +54,7 @@ $offset = ($page - 1) * $per_page;
 
 
 $sql = "SELECT  a.is_consolidate, a.notes_for_driver, a.delivery_type,a.sub_total, a.distance, a.order_incomplete, a.status_invoice, a.is_pickup, a.total_order, a.order_id, a.order_prefix, a.order_no, a.order_date, a.sender_id, a.receiver_id, a.order_courier, a.order_pay_mode, a.status_courier, a.driver_id, a.order_service_options, a.total_order,  b.mod_style, b.color, 
-			 u.username, u.fname, u.lname, addrs.recipient_address FROM
+			 u.username, u.fname, u.lname, addrs.recipient_address,a.notes FROM
 			 cdb_add_order as a
 			 LEFT JOIN cdb_users as u ON a.sender_id = u.id
 			 INNER JOIN cdb_address_shipments as addrs ON addrs.order_id = a.order_id
@@ -80,7 +80,8 @@ $sql = "SELECT  a.is_consolidate, a.notes_for_driver, a.delivery_type,a.sub_tota
 				u.username,
 				u.fname,
 				u.lname,
-				addrs.recipient_address
+				addrs.recipient_address,
+				a.notes
 			 order by order_id desc
 			 ";
 
@@ -182,7 +183,7 @@ if ($numrows > 0) { ?>
 
 							<td class="text-center"><?php echo $address_order->sender_address; ?></td>
 							<td class="text-center"><?php echo $row->recipient_address; ?></td>
-							<td class="text-center"><?php echo $row->notes_for_driver; ?></td>
+							<td class="text-center"><?php echo $row->notes_for_driver!=''?$row->notes_for_driver:$row->notes; ?></td>
 							<td class="text-center">
 								<?php echo $row->distance; ?>
 							</td>

@@ -99,6 +99,14 @@ function calculateAndDisplayDistance(origin, destination, deliveryType) {
       localStorage.setItem('shipmentfee', data.shipmentfee)
       calculateFinalTotal();
       $('#loadingIcon').hide();
+	   if (typeof data.msg !== 'undefined') {
+	   Swal.fire({
+            type: 'warning',
+            text: data.msg,
+            icon: 'warning',
+            confirmButtonColor: '#336aea'
+          });
+	 }
     },
     error: function () {
 	$('#loadingIcon').hide();

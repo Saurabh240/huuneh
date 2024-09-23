@@ -361,7 +361,9 @@ if (empty($errors)) {
             } elseif ($check_mail == 'SMTP') {
 
                 //PHPMAILER PHP
-                $destinatario = $sender_data->email;
+               $destinatario = $sender_data->email;
+               
+               
 
                 $mail = new PHPMailer();
                 $mail->IsSMTP();
@@ -379,7 +381,9 @@ if (empty($errors)) {
                 $mail->From = $site_email; // Email desde donde envío el correo.
                 $mail->FromName = $names_info;
                 $mail->AddAddress($destinatario); // Esta es la dirección a donde enviamos los datos del formulario
-                $mail->addCC($site_email);
+				if($userData->userlevel!=9){
+					$mail->addCC($site_email);
+				}
 
 
                 $mail->Subject = $subject; // Este es el titulo del email.

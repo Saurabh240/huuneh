@@ -44,7 +44,7 @@ if (isset($_POST["origin"]) && isset($_POST["destination"]) && isset($_POST["del
 		if($business_type=="special" && $originCity!='' && $destinationCity!='' && $flag!='' && $flag>=0){
 			   $courier=getPrices($originCity,$destinationCity);
 			   $courier['distance']=$distance_bw;
-				if(isset($courier['baseRate'])){ echo json_encode($courier); }
+				if(isset($courier['baseRate'])){ echo json_encode($courier); }else{ $courier['msg']= "Your request is outside of the Range provided our pricing program. Pricing will be to our Default KM pricing. For any questions please contact our dispatch office."; }
 			  
 		}
 		if(($business_type=="special" && !isset($courier['baseRate'])) ||  $business_type!="special"){
