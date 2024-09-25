@@ -5127,6 +5127,106 @@ function cdp_insertTariffs($datos)
     return  $db->cdp_execute();
 }
 
+
+
+// ===========================================================
+// Update FLAT Price
+// ===========================================================
+
+function cdp_updateFlatPrice($datos,$id)
+{
+
+    $db = new Conexion;
+
+    $db->cdp_query('UPDATE cdb_flat_price_lists SET
+    
+            user_id =:user_id,
+            business_type =:business_type,
+            sender_city =:sender_city,
+            recipient_city =:recipient_city,
+            price =:price,
+            price_with_tax =:price_with_tax,
+            active =:active
+			
+            where id = :id
+        ');
+
+    $db->bind(':user_id', $datos['user_id']);
+    $db->bind(':business_type', $datos['business_type']);
+    $db->bind(':sender_city', $datos['sender_city']);
+    $db->bind(':recipient_city', $datos['recipient_city']);
+    $db->bind(':price', $datos['price']);
+    $db->bind(':price_with_tax', $datos['price_with_tax']);
+    $db->bind(':active', $datos['active']);				
+    $db->bind(':id', $id);				
+
+    return $db->cdp_execute();
+}
+
+// ===========================================================
+// GET FLAT Price
+// ===========================================================
+
+function cdp_getFlatPrice($business_type,$sender_city,$recipient_city)
+{
+
+    $db = new Conexion;
+
+    $db->cdp_query("SELECT id FROM cdb_flat_price_lists WHERE  business_type=:business_type && sender_city=:sender_city && recipient_city=:recipient_city");
+    $db->bind(':business_type', $business_type);
+    $db->bind(':sender_city', $sender_city);
+    $db->bind(':recipient_city', $recipient_city);
+    $db->cdp_execute();
+    $result = $db->cdp_rowCount();
+
+    if ($result == 1) {
+
+         $data = $db->cdp_registro();
+		 return $data->id;
+    } else {
+
+        return false;
+    }
+}
+
+// ===========================================================
+//  Flat Price
+// ===========================================================
+
+function cdp_insertFlatPrice($datos)
+{
+    $db = new Conexion;
+
+    $db->cdp_query('INSERT INTO cdb_flat_price_lists  
+    (
+        user_id,
+        business_type,
+        sender_city,
+        recipient_city,
+        price,
+        price_with_tax,
+		active
+    )
+    VALUES (
+        :user_id,
+        :business_type,
+        :sender_city,
+        :recipient_city,
+        :price,
+        :price_with_tax,
+        :active
+    )');
+
+    $db->bind(':user_id', $datos['user_id']);
+    $db->bind(':business_type', $datos['business_type']);
+    $db->bind(':sender_city', $datos['sender_city']);
+    $db->bind(':recipient_city', $datos['recipient_city']);
+    $db->bind(':price', $datos['price']);
+    $db->bind(':price_with_tax', $datos['price_with_tax']);
+    $db->bind(':active', $datos['active']);												
+    return  $db->cdp_execute();
+}
+
 function cdp_verifyRangeTariffsExist($origin, $destiny, $initial_range, $final_range, $id = null)
 {
     $db = new Conexion;
@@ -5209,6 +5309,19 @@ function cdp_deleteTariffs($id)
     $db = new Conexion;
 
     $db->cdp_query('DELETE  FROM cdb_shipping_fees WHERE id=:id');
+    $db->bind(':id', $id);
+
+    return $db->cdp_execute();
+}
+
+// ===========================================================
+//  Delete FLAT Price
+// ===========================================================
+function cdp_deleteFlatPrice($id)
+{ 
+    $db = new Conexion;
+
+    $db->cdp_query('DELETE  FROM cdb_flat_price_lists WHERE id=:id');
     $db->bind(':id', $id);
 
     return $db->cdp_execute();

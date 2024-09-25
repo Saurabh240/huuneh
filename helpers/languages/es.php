@@ -689,6 +689,8 @@ $lang = array(
 	"left-menu-sidebar-61"  => "Ayuda",
 	"left-menu-sidebar-62"  => "Mis destinatarios",
 	"left-menu-sidebar-63"	=> "Ver Perfíl",
+	"left-menu-sidebar-64" => "Precio fijo",
+	
 	"dash-general-1"		=> "envíos",
 	"dash-general-2"		=> "Recogidas",
 	"dash-general-220"		=> "Entregadas",

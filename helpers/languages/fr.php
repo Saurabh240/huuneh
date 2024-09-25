@@ -687,6 +687,7 @@ $lang = array(
 	"left-menu-sidebar-61" => "Aide",
 	"left-menu-sidebar-62" => "Mes destinataires",
 	"left-menu-sidebar-63" => "Voir le profil",
+	"left-menu-sidebar-64" => "Prix forfaitaire",
 
 
 

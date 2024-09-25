@@ -414,6 +414,16 @@
 							</li>
 
 							<!-- AND Module generalconfiguracion  -->
+							
+							<!-- Module Flat Price  -->
+							<li class="sidebar-item">
+								<a class="sidebar-link waves-effect waves-dark" href="flat_price_list.php" aria-expanded="false">
+									<i class="mdi mdi-cash"></i>
+									<span class="hide-menu"> <?php echo $lang['left-menu-sidebar-64'] ?> </span>
+								</a>
+							</li>
+
+							<!-- AND Module Flat Price  -->
 
 							<!-- Module logistic configuracion  -->
 							<li class="sidebar-item">

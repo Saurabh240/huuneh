@@ -249,6 +249,8 @@
     var message_error_form102 = "<?php echo $lang["messagesform69"]; ?>"
     var message_error_form103 = "<?php echo $lang["messagesform70"]; ?>"
     var message_error_form104 = "<?php echo $lang["messagesform99"]; ?>"
+    var message_error_form105 = "<?php echo $lang["flat-price-6"]; ?>"
+    var message_error_form106 = "<?php echo $lang["flat-price-7"]; ?>"
 
 
 

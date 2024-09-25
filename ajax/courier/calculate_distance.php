@@ -1,8 +1,9 @@
 <?php
 require_once("../../loader.php");
 session_start();
+/*
 require '../../vendor/autoload.php';
-use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\IOFactory;*/
 $db = new Conexion;
 
 if ( isset( $_POST['sender_id'] ) )  {
@@ -42,8 +43,14 @@ if (isset($_POST["origin"]) && isset($_POST["destination"]) && isset($_POST["del
     if ($courier['distance'] !== false) {
 		$flag = array_search ($deliveryType, $check_deliveryType);
 		if($business_type=="special" && $originCity!='' && $destinationCity!='' && $flag!='' && $flag>=0){
-			   $courier=getPrices($originCity,$destinationCity);
-			   $courier['distance']=$distance_bw;
+			   //$courier=getPrices($originCity,$destinationCity);
+			   $db->cdp_query("SELECT * FROM   cdb_flat_price_lists WHERE business_type= '".$business_type."' && sender_city= '".$originCity."' && recipient_city= '".$destinationCity."'"); 	
+				$db->cdp_execute();
+				$flat_price_data = $db->cdp_registro();
+				$courier['baseRate'] = $flat_price_data->price??'';
+				$courier['shipmentfee'] = $flat_price_data->price??'';
+				$courier['taxfee'] = $flat_price_data->price_with_tax??'';
+				$courier['distance']=$distance_bw;
 				if(isset($courier['baseRate'])){ echo json_encode($courier); }else{ $courier['msg']= "Your request is outside of the Range provided our pricing program. Pricing will be to our Default KM pricing. For any questions please contact our dispatch office."; }
 			  
 		}
@@ -67,7 +74,7 @@ if (isset($_POST["origin"]) && isset($_POST["destination"]) && isset($_POST["del
 } else {
     echo "<p>Please fill in all fields.</p>";
 }
-
+/*
 function getPrices($pickcity,$dropcity){
     // Load the Excel file
 	$csvFile = "../../assets/city_Price_List.xlsx";
@@ -102,54 +109,7 @@ function getPrices($pickcity,$dropcity){
 	}
 	return($data);
 }
-
-function extractCityName($address, $apiKey) {
-    $baseUrl = "https://maps.googleapis.com/maps/api/geocode/json";
-    $params = http_build_query([
-        'address' =>  $address,
-        'key' => $apiKey
-    ]);
-    $url = "$baseUrl?$params";
-    
-    $response = file_get_contents($url);
-    if ($response === FALSE) {
-        return NULL;
-    }
-
-    $data = json_decode($response, true);
-    if ($data['status'] != 'OK') {
-        return NULL;
-    }
-
-    $addressComponents = $data['results'][0]['address_components'];
-    $details = [];
-	$details['city']='';
-    foreach ($addressComponents as $component) {
-		if($details['city']==''){
-			if (in_array('sublocality', $component['types'])) {
-                $details['city'] = $component['long_name'];
-            } 
-			if (in_array('locality', $component['types'])) {
-                $details['city'] = $component['long_name'];
-            }
-			/*if (in_array('neighborhood', $component['types'])) {
-                $details['city'] = $component['long_name'];
-            }*/
-		}
-      
-        if (in_array('administrative_area_level_1', $component['types'])) {
-            $details['state'] = $component['long_name'];
-        }
-        if (in_array('postal_code', $component['types'])) {
-            $details['zip_code'] = $component['long_name'];
-        }
-        if (in_array('country', $component['types'])) {
-            $details['country'] = $component['long_name'];
-        }
-    }
-
-    return $details['city'];
-}
+*/
 
 // Function to calculate distance between two coordinates
 function calculateDistance($origin, $destination, $apiKey) {

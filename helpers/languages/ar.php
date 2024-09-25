@@ -688,6 +688,7 @@ $lang = array(
     "left-menu-sidebar-61" => "يساعد",
     "left-menu-sidebar-62" => "مستلموي",
     "left-menu-sidebar-63" => "عرض الصفحة الشخصية",
+	"left-menu-sidebar-64" => "سعر ثابت",
 
 
 
