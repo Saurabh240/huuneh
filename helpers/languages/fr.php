@@ -3406,4 +3406,17 @@ $lang = array(
 	"ws-add-text27" => "Modèles de notification",
 	"ws-add-text28" => "E-mail",
 	"ws-add-text29" => "WhatsApp",
+	
+	"flat-price-1" => "Importation à prix forfaitaire",
+	"flat-price-2" => "Liste de prix forfaitaire",
+	"flat-price-3" => "Importer",
+	"flat-price-4" => "Type d'entreprise",
+	"flat-price-5" => "Fichier Excel (uniquement au format .xls, .xlsx)",
+	"flat-price-6" => "Sélectionner le type d'entreprise",
+	"flat-price-7" => "Choisissez le fichier Excel à prix forfaitaire.",
+	"flat-price-8" => "Le fichier est trop volumineux.",
+	"flat-price-9" => "Une erreur s'est produite lors du téléchargement de votre fichier.",
+	"flat-price-10" => "Type de fichier invalide. Seuls les fichiers .xls et .xlsx sont autorisés.",
+	"flat-price-11" => "Données importées avec succès",
+	"flat-price-12" => "Prix avec taxes",
 );

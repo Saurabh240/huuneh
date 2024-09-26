@@ -48,9 +48,11 @@ if (isset($_POST["origin"]) && isset($_POST["destination"]) && isset($_POST["del
 			   $db->cdp_query("SELECT * FROM   cdb_flat_price_lists WHERE business_type= '".$business_type."' && sender_city= '".$originCity."' && recipient_city= '".$destinationCity."'"); 	
 				$db->cdp_execute();
 				$flat_price_data = $db->cdp_registro();
+				 if ($flat_price_data && isset($flat_price_data->price)) {
 				$courier['baseRate'] = $flat_price_data->price??'';
 				$courier['shipmentfee'] = $flat_price_data->price??'';
 				$courier['taxfee'] = $flat_price_data->price_with_tax??'';
+				 }
 				$courier['distance']=$distance_bw;
 				if(isset($courier['baseRate'])){ echo json_encode($courier); }else{ $courier['msg']= "Your request is outside of the Range provided our pricing program. Pricing will be to our Default KM pricing. For any questions please contact our dispatch office."; }
 			  

@@ -3685,4 +3685,18 @@ $lang = array(
 	"ws-add-text27" => "Plantillas de notificación",
 	"ws-add-text28" => "Correo electrónico",
 	"ws-add-text29" => "WhatsApp",
+	
+	"flat-price-1" => "Importación de precio fijo",
+	"flat-price-2" => "Lista de precios fijos",
+	"flat-price-3" => "Importar",
+	"flat-price-4" => "Tipo de negocio",
+	"flat-price-5" => "Archivo Excel (solo formato .xls, .xlsx)",
+	"flat-price-6" => "Seleccione tipo de negocio",
+	"flat-price-7" => "Elija el archivo Excel de precio fijo.",
+	"flat-price-8" => "El archivo es demasiado grande.",
+	"flat-price-9" => "Hubo un error al cargar su archivo.",
+	"flat-price-10" => "Tipo de archivo no válido. Sólo se permiten archivos .xls y .xlsx.",
+	"flat-price-11" => "Datos importados correctamente",
+	"flat-price-12" => "Precio con impuestos",
+	
 );
