@@ -38,12 +38,13 @@ if (isset($_POST["origin"]) && isset($_POST["destination"]) && isset($_POST["del
 		$destinationCityName = $db->cdp_registro();
 		$destinationCity = $destinationCityName->name??'';
 	}
-	
+	$flat_price_approverd_for=array('flat_1','flat_2','special');
     $distance_bw = $courier['distance']= calculateDistance($origin, $destination, $apiKey);
     if ($courier['distance'] !== false) {
 		$flag = array_search ($deliveryType, $check_deliveryType);
-		if($business_type=="special" && $originCity!='' && $destinationCity!='' && $flag!='' && $flag>=0){
-			   //$courier=getPrices($originCity,$destinationCity);
+		
+		if(in_array($business_type,$flat_price_approverd_for)  && $originCity!='' && $destinationCity!='' && $flag!='' && $flag>=0){
+			  
 			   $db->cdp_query("SELECT * FROM   cdb_flat_price_lists WHERE business_type= '".$business_type."' && sender_city= '".$originCity."' && recipient_city= '".$destinationCity."'"); 	
 				$db->cdp_execute();
 				$flat_price_data = $db->cdp_registro();
@@ -54,7 +55,7 @@ if (isset($_POST["origin"]) && isset($_POST["destination"]) && isset($_POST["del
 				if(isset($courier['baseRate'])){ echo json_encode($courier); }else{ $courier['msg']= "Your request is outside of the Range provided our pricing program. Pricing will be to our Default KM pricing. For any questions please contact our dispatch office."; }
 			  
 		}
-		if(($business_type=="special" && !isset($courier['baseRate'])) ||  $business_type!="special"){
+		if((in_array($business_type,$flat_price_approverd_for) && !isset($courier['baseRate'])) ||  !in_array($business_type,$flat_price_approverd_for)){
 			// Calculate shipping price based on distance and delivery type
 			$rates = getRatesByDeliveryTypeAndBusinessType($deliveryType, $business_type);
 			if ($rates) {
@@ -74,42 +75,6 @@ if (isset($_POST["origin"]) && isset($_POST["destination"]) && isset($_POST["del
 } else {
     echo "<p>Please fill in all fields.</p>";
 }
-/*
-function getPrices($pickcity,$dropcity){
-    // Load the Excel file
-	$csvFile = "../../assets/city_Price_List.xlsx";
-	
-    $drop=ucwords($dropcity);
-	$pick=ucwords($pickcity);
-    $spreadsheet = IOFactory::load($csvFile);
-
-    $sheetNames = $spreadsheet->getSheetNames();
-	$data=array();
-	if(count($sheetNames)>0){
-		$key_ind = array_search($pick.' UPDATE', $sheetNames);
-		if($key_ind!='' && $key_ind>=0){
-		  $spreadsheet->setActiveSheetIndexByName($sheetNames[$key_ind]);
-		  $sheet = $spreadsheet->getActiveSheet();
-	      $highestColumn = $sheet->getHighestColumn();
-	
-    for ($row = 9; $row <= 34; $row++) {
-        $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row, NULL, TRUE, FALSE);
-                // Check if the cell contains the search text
-                if (isset($rowData[0])){
-					$key = array_search ($drop, $rowData[0]);
-                    if($key!='' && $key>=0){
-						$data['baseRate'] = $rowData[0][$key+1]??'';
-						$data['shipmentfee'] = $rowData[0][$key+1]??'';
-						$data['taxfee'] = $rowData[0][$key+2]??'';
-						break;
-					}
-                }
-    }
-	}
-	}
-	return($data);
-}
-*/
 
 // Function to calculate distance between two coordinates
 function calculateDistance($origin, $destination, $apiKey) {

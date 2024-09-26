@@ -69,10 +69,11 @@ if ($numrows > 0) { ?>
 	<table id="file_export" class="table border table-striped table-bordered display dataTable" aria-describedby="file_export_info">
 		<thead>
 			<tr>
-				<th><b><?php echo $lang['leftorder292'] ?></b></th>
+				<th><b><?php echo $lang['flat-price-4'] ?></b></th>
 				<th><b><?php echo $lang['lorigin'] ?></b></th>
 				<th><b><?php echo $lang['ldestination'] ?></b></th>
-				<th><b><?php echo $lang['flat-price-4'] ?></b></th>
+				<th><b><?php echo $lang['leftorder292'] ?></b></th>
+				
 				<th><b><?php echo $lang['flat-price-12'] ?></b></th>
 				<th><b><?php echo $lang['left367'] ?></b></th>
 			</tr>
