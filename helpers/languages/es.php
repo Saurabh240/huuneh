@@ -3699,4 +3699,5 @@ $lang = array(
 	"flat-price-11" => "Datos importados correctamente",
 	"flat-price-12" => "Precio con impuestos",
 	
+	"email_title_1" => "Nuevo pedido",
 );

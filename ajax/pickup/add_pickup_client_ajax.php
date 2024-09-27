@@ -262,7 +262,7 @@ if (empty($errors)) {
 
         $newbody = cdp_cleanOut($body);
 
-        //SENDMAIL PHP
+          //SENDMAIL PHP to the user
         if($userData->email_subscription){
             if ($check_mail == 'PHP') {
 
@@ -281,9 +281,7 @@ if (empty($errors)) {
 
                 //PHPMAILER PHP
                 $destinatario = $sender_data->email;
-              
-
-                $mail = new PHPMailer();
+				$mail = new PHPMailer();
                 $mail->IsSMTP();
                 $mail->SMTPAuth = true;
                 $mail->Port = $smtpport;
@@ -299,8 +297,6 @@ if (empty($errors)) {
                 $mail->From = $site_email; // Email desde donde envío el correo.
                 $mail->FromName = $names_info;
                 $mail->AddAddress($destinatario); // Esta es la dirección a donde enviamos los datos del formulario
-                $mail->addCC($site_email);
-                
 
 
                 $mail->Subject = $subject; // Este es el titulo del email.
@@ -328,6 +324,121 @@ if (empty($errors)) {
                 }
             }
         }
+		
+		//Send Email to the ADMIN
+		$sender_address_data = cdp_getSenderAddress(intval($_POST["sender_address_id"]));
+        $sender_country = $sender_address_data->country;
+        $sender_state = $sender_address_data->state;
+        $sender_city = $sender_address_data->city;
+        $sender_zip_code = $sender_address_data->zip_code;
+        $sender_address = $sender_address_data->address;
+		
+		$recipient_address_data = cdp_getRecipientAddress(intval($_POST["recipient_address_id"]));
+
+        $recipient_address = $recipient_address_data->address;
+        $recipient_country = $recipient_address_data->country;
+        $recipient_city = $recipient_address_data->city;
+        $recipient_state = $recipient_address_data->state;
+        $recipient_zip_code = $recipient_address_data->zip_code;
+		
+		$email_template = cdp_getEmailTemplatesdg1i4(27);
+		
+         $body = str_replace(
+            array(
+                '[NAME]',
+                '[sender_name]',
+                '[TRACKING]',
+                '[DELIVERY_TIME]',
+                '[URL]',
+                '[URL_LINK]',
+                '[SITE_NAME]',
+                '[URL_SHIP]',
+                '[sender_address]',
+                '[recipient_name]',
+                '[recipient_address]',
+                '[order_price]',
+                '[order_type]'
+            ),
+            array(
+                'Admin',
+                $sender_data->fname . ' ' . $sender_data->lname,
+                $fullshipment,
+                $date_ship,
+                $msite_url,
+                $mlogo,
+                $msnames,
+                $app_url,
+				$sender_address . ', ' . $sender_city. ', ' . $sender_state. ', ' . $sender_country. ' ' . $sender_zip_code,
+                $receiver_data->fname . ' ' . $receiver_data->lname,
+                $recipient_address . ', ' . $recipient_city. ', ' . $recipient_state. ', ' . $recipient_country. ' ' . $recipient_zip_code,
+                '$' . floatval($_POST["total_order"]),
+                $_POST['delivery_type']
+            ),
+            $email_template->body
+        );
+
+        $newbody = cdp_cleanOut($body);
+		if ($check_mail == 'PHP') {
+
+                $message = $newbody;
+                $to = $site_email;
+                $from = $site_email;
+
+                $header = "MIME-Version: 1.0\r\n";
+                $header .= "Content-type: text/html; charset=UTF-8 \r\n";
+                $header .= "From: " . $from . " \r\n";
+                try {
+                    mail($to, $subject, $message, $header);
+                } catch (Exception $e) {
+                }
+            } elseif ($check_mail == 'SMTP') {
+
+                //PHPMAILER PHP
+                $destinatario = $site_email;
+
+                $mail = new PHPMailer();
+                $mail->IsSMTP();
+                $mail->SMTPAuth = true;
+                $mail->Port = $smtpport;
+                $mail->IsHTML(true);
+                $mail->CharSet = 'UTF-8';
+
+                // Datos de la cuenta de correo utilizada para enviar vía SMTP
+                $mail->Host = $smtphoste;       // Dominio alternativo brindado en el email de alta
+                $mail->Username = $smtpuser;    // Mi cuenta de correo
+                $mail->Password = $smtppass;    //Mi contraseña
+
+
+                $mail->From = $site_email; // Email desde donde envío el correo.
+                $mail->FromName = $names_info;
+                $mail->AddAddress($destinatario); // Esta es la dirección a donde enviamos los datos del formulario
+
+
+				$subject = $lang['email_title_1'].' - '. $sender_data->business_name;
+                $mail->Subject = $subject; // Este es el titulo del email.
+                $mail->Body = "
+                        <html> 
+                        <body> 
+                        <p>{$newbody}</p>
+                        </body> 
+                        </html>
+                        <br />"; // Texto del email en formato HTML
+
+                $mail->SMTPOptions = array(
+                    'ssl' => array(
+                        'verify_peer' => false,
+                        'verify_peer_name' => false,
+                        'allow_self_signed' => true
+                    )
+                );
+
+                try {
+                    $estadoEnvio = $mail->Send();
+                    // echo "El correo fue enviado correctamente.";
+                } catch (Exception $e) {
+                    // echo "Ocurrió un error inesperado.";
+                }
+            }
 
         $dataHistory = array(
             'user_id' =>  $_SESSION['userid'],
@@ -365,12 +476,8 @@ if (empty($errors)) {
         //NOTIFICATION TO CUSTOMER
         cdp_insertNotificationsUsers($notification_id, intval($_POST['sender_id']));
 
-        $sender_address_data = cdp_getSenderAddress(intval($_POST["sender_address_id"]));
-        $sender_country = $sender_address_data->country;
-        $sender_state = $sender_address_data->state;
-        $sender_city = $sender_address_data->city;
-        $sender_zip_code = $sender_address_data->zip_code;
-        $sender_address = $sender_address_data->address;
+        
+
 
         $_sender_country = cdp_getCountry($sender_country);
         $final_sender_country = $_sender_country['data'];
@@ -382,14 +489,7 @@ if (empty($errors)) {
         $final_sender_city = $sender_city['data'];
 
 
-        $recipient_address_data = cdp_getRecipientAddress(intval($_POST["recipient_address_id"]));
-
-        $recipient_address = $recipient_address_data->address;
-        $recipient_country = $recipient_address_data->country;
-        $recipient_city = $recipient_address_data->city;
-        $recipient_state = $recipient_address_data->state;
-        $recipient_zip_code = $recipient_address_data->zip_code;
-
+        
         $_recipient_country = cdp_getCountry($recipient_country);
         $final_recipient_country = $_recipient_country['data'];
 

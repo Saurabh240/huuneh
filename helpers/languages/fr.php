@@ -3419,4 +3419,6 @@ $lang = array(
 	"flat-price-10" => "Type de fichier invalide. Seuls les fichiers .xls et .xlsx sont autorisés.",
 	"flat-price-11" => "Données importées avec succès",
 	"flat-price-12" => "Prix avec taxes",
+	
+	"email_title_1" => "Nouvelle commande",
 );

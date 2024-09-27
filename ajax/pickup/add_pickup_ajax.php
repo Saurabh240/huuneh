@@ -343,7 +343,7 @@ if (empty($errors)) {
 
         $newbody = cdp_cleanOut($body);
 
-        //SENDMAIL PHP
+        //SENDMAIL PHP to the user
         if($userData->email_subscription){
             if ($check_mail == 'PHP') {
 
@@ -362,9 +362,7 @@ if (empty($errors)) {
 
                 //PHPMAILER PHP
                $destinatario = $sender_data->email;
-               
-               
-
+                      
                 $mail = new PHPMailer();
                 $mail->IsSMTP();
                 $mail->SMTPAuth = true;
