@@ -3,7 +3,6 @@
 
 $("#driver_update").on('submit', function (event) {
     var parametros = $(this).serialize();
-
     $.ajax({
         type: "POST",
         url: "ajax/courier/courier_update_driver_ajax.php",

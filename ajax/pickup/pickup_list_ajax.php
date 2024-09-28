@@ -29,8 +29,28 @@ $core = new Core;
 $userData = $user->cdp_getUserData();
 
 $search = cdp_sanitize($_REQUEST['search']);
+$status_courier = intval($_REQUEST['status_courier']);
+$range = cdp_sanitize($_REQUEST['daterange']);
 
 $sWhere = "";
+
+if ($status_courier > 0) {
+
+	$sWhere .= " and  a.status_courier = '" . $status_courier . "'";
+}
+
+if (!empty($range)) {
+
+	$fecha =  explode(" - ", $range);
+	$fecha = str_replace('/', '-', $fecha);
+
+	$fecha_inicio = date('Y-m-d', strtotime($fecha[0]));
+	$fecha_fin = date('Y-m-d', strtotime($fecha[1]));
+
+
+	$sWhere .= " and  a.order_date between '" . $fecha_inicio . "'  and '" . $fecha_fin . "'";
+}
+
 
 if ($userData->userlevel == 3) {
 
