@@ -5588,7 +5588,7 @@ function cdp_updateCourierShipmentFromCustomer($datos)
         status_invoice=:status_invoice,
         order_incomplete=:order_incomplete,
         notes=:notes,
-        distance =:distance,
+        distance =:distance
 	
 
         WHERE
