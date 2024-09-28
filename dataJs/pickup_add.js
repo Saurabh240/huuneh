@@ -693,6 +693,21 @@ function loading_calculation() {
   $("#calculate_invoice").attr("disabled", true);
 }
 
+function pieces_check() {
+	var pieces=$("#pieces").val();
+	if(pieces>4){
+		Swal.fire({
+		  type: 'warning',
+		  title: 'opps..',
+		  text: message_error_form107,
+		  icon: 'warning',
+		  confirmButtonColor: '#336aea'
+		});
+		$("#pieces").val(3);
+	}
+	calculateFinalTotal();
+}
+
 function calculateFinalTotal(element = null) {
   if (element) {
     if (!element.value) {
@@ -812,12 +827,20 @@ function calculateFinalTotal(element = null) {
   //$("#insurance").html(total_seguro.toFixed(2));
   //$("#total_impuesto_aduanero").html(total_impuesto_aduanero.toFixed(2));
   var shipmentfee = localStorage.getItem('shipmentfee');
-  $("#total_before_tax").html(Number(shipmentfee).toFixed(2));
+   $("#total_before_tax").html(Number(shipmentfee).toFixed(2));
+   var no_pieces = $("#pieces").val();
+   if(no_pieces!=''){
+		shipmentfee = parseFloat(shipmentfee) + (parseFloat(no_pieces) * 3);
+
+	}
+	
+ 
   var total_tax_value = parseFloat(parseFloat(shipmentfee) + (parseFloat(shipmentfee) * (13 / 100)));
   $("#total_after_tax").html(total_tax_value.toFixed(2));
   var tax = 0.00;
   tax = parseFloat(total_tax_value) - parseFloat(shipmentfee);
   $("#tax_13").html(tax.toFixed(2));
+  $("#total_tax_val").val(tax.toFixed(2));
   // alert(parseFloat(shipmentfee));
   // alert(parseFloat(total_envio.toFixed(2)));
   // parseInt(shipmentfee.toFixed(2))
@@ -887,8 +910,19 @@ $("#invoice_form").on("submit", function (event) {
   var no_of_rx = "";
   var notes_for_driver = "";
 
+  var no_of_pieces = 0;
+
   // Get business type
   var business_type = $("#businessType").val();
+
+  if (business_type === "flower_shop" || business_type === "flat_1" || business_type === "flat_2") {
+    // Collect checked checkbox values
+    $('input[name="tags[]"]:checked').each(function() {
+      tags.push($(this).val());
+    });
+	  no_of_pieces = $("#pieces").val();
+	  //notes_for_driver = $("#notesForDriver_flower").val();
+  }
 
   if (business_type && business_type === "pharmacy" || business_type === "pharmacy_2" || business_type === "pharmacy_3") {
     // Collect checked checkbox values
@@ -1014,7 +1048,10 @@ $("#invoice_form").on("submit", function (event) {
 
   var sub_total = $("#total_before_tax").text();
   data.append("sub_total", sub_total);
-
+  data.append("no_of_pieces", no_of_pieces); 
+    var total_tax_val = $("#total_tax_val").val();
+  data.append("total_tax", parseFloat(total_tax_val)); 
+  
   var total_file = document.getElementById("filesMultiple").files.length;
 
   for (var i = 0; i < total_file; i++) {

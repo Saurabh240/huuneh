@@ -3700,4 +3700,5 @@ $lang = array(
 	"flat-price-12" => "Precio con impuestos",
 	
 	"email_title_1" => "Nuevo pedido",
+	"pieces_check_msg" => "Comuníquese con nuestra oficina de despacho para conocer los precios y confirmar este pedido si es más de 4 piezas. Gracias",
 );

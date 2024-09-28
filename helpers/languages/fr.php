@@ -3421,4 +3421,5 @@ $lang = array(
 	"flat-price-12" => "Prix avec taxes",
 	
 	"email_title_1" => "Nouvelle commande",
+	"pieces_check_msg" => "Veuillez contacter notre bureau d'expédition pour connaître les prix et confirmer cette commande si elle est supérieure à 4 pièces. Merci.",
 );

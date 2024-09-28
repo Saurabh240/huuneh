@@ -125,6 +125,8 @@ if (empty($errors)) {
         'no_of_rx' => !empty($_POST['no_of_rx']) ? cdp_sanitize($_POST['no_of_rx']) : 0,
         'notes_for_driver' => cdp_sanitize($_POST['notes_for_driver']),
 		'admin_discount' =>  !empty($_POST['admin_discount']) ? $_POST['admin_discount'] : 0.00,
+		'no_of_pieces' =>  !empty($_POST['no_of_pieces']) ? $_POST['no_of_pieces'] : 0,
+		'total_tax' =>  !empty($_POST['total_tax']) ? $_POST['total_tax'] : 0,
         'tags' => !empty($_POST['tags']) && is_array($_POST['tags']) ? json_encode($_POST['tags']) : json_encode([])
     );
 

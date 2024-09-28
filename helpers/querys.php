@@ -5492,7 +5492,9 @@ function cdp_insertCourierPickupFromCustomer($datos)
         charge,
         no_of_rx,
         notes_for_driver,
-        tags              
+        tags,
+		no_of_pieces,
+		total_tax		
         )
     VALUES
         (
@@ -5518,7 +5520,9 @@ function cdp_insertCourierPickupFromCustomer($datos)
         :charge,
         :no_of_rx,
         :notes_for_driver,
-        :tags
+        :tags,
+		:no_of_pieces,
+		:total_tax
         )
 ");
 
@@ -5547,6 +5551,10 @@ function cdp_insertCourierPickupFromCustomer($datos)
     $db->bind(':no_of_rx',   $datos["no_of_rx"]);
     $db->bind(':notes_for_driver',   $datos["notes_for_driver"]);
     $db->bind(':tags',   $datos["tags"]);
+    $db->bind(':no_of_pieces',   $datos["no_of_pieces"]);
+	$db->bind(':total_tax',   $datos["total_tax"]);
+
+	
 
     $db->cdp_execute();
     
@@ -5580,7 +5588,8 @@ function cdp_updateCourierShipmentFromCustomer($datos)
         status_invoice=:status_invoice,
         order_incomplete=:order_incomplete,
         notes=:notes,
-        distance =:distance
+        distance =:distance,
+	
 
         WHERE
         order_id=:order_id
@@ -5608,6 +5617,7 @@ function cdp_updateCourierShipmentFromCustomer($datos)
     $db->bind(':status_invoice',   $datos["status_invoice"]);
     $db->bind(':notes',   $datos["notes"]);
     $db->bind(':distance',   $datos["distance"]);
+  
 
     return $db->cdp_execute();
 }

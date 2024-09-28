@@ -521,6 +521,45 @@ $order_prefix = $settings->prefix;
                         </div> -->
                     </div>
                 </div>
+				
+				<div class="card" id="flowerBusinessCard" style="display: none;">
+                    <div class="card-body">
+                        <!-- Charge and Rx Number Row -->
+                        
+                        
+                        <!-- Tags Section -->
+                        <div class="mb-3">
+                            <label class="form-label">Tags</label>
+                            <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="wreath" name="tags[]" value="Wreath">
+                            <label class="form-check-label" for="wreath">Wreath</label>
+                            </div>
+                            <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="standing_casket_spray" name="tags[]" value="Standing/Casket Spray">
+                            <label class="form-check-label" for="standing_casket_spray">Standing/Casket Spray</label>
+                            </div>
+                            
+                        </div>
+
+                        <div class="mb-3 row" id="piece_div">
+                            <div class="col-md-6">
+                            <label for="pieces" class="form-label">Pieces</label>
+                            <input type="number" class="form-control" name="pieces" id="pieces" placeholder="No of pieces" min=0 onchange="pieces_check()">
+							 <div class="form-text">Each piece is to be $3</div>
+                            </div>
+                            
+                        </div>
+						
+                        <!-- Notes Section -->
+                        <div class="mb-3">
+                            <label for="notes" class="form-label">Notes</label>
+                            <textarea class="form-control" id="notesForDriver_flower" name="notes_for_driver" rows="3" placeholder="Please be brief"></textarea>
+                            <div class="form-text">Add any special instruction notes for the driver</div>
+                        </div>
+                        
+                       
+                    </div>
+                </div>
 
 
                     <div class="row">
@@ -917,6 +956,7 @@ $order_prefix = $settings->prefix;
                             <input type="hidden" value="<?php echo '13' ?>" name="tax_value" id="tax_value">
                             <input type="hidden" value="<?php echo $core->declared_tax; ?>" name="declared_value_tax" id="declared_value_tax">
                             <input type="hidden" value="0" name="reexpedicion_value" id="reexpedicion_value">
+                            <input type="hidden" value="0" name="total_tax_val" id="total_tax_val">
 
                             <input type="hidden" name="core_meter" id="core_meter" value="<?php echo $core->meter; ?>" />
                             <input type="hidden" name="core_min_cost_tax" id="core_min_cost_tax" value="<?php echo $core->min_cost_tax; ?>" />

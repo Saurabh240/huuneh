@@ -51,6 +51,19 @@ $receiver_data = $db->cdp_registro();
 $db->cdp_query("SELECT * FROM cdb_address_shipments where order_track='" . $row_order->order_prefix . $row_order->order_no . "'");
 $address_order = $db->cdp_registro();
 
+$tags = $db->getAllTags();
+
+$rowTags = [];
+if(($sender_data->business_type == 'pharmacy' || $sender_data->business_type == 'pharmacy_2' || $sender_data->business_type == 'pharmacy_3') && !empty($row_order->tags)){
+    $rowTags = json_decode($row_order->tags, TRUE);
+}
+
+$rowTagsFlower = [];
+if(($sender_data->business_type == 'flower_shop' || $sender_data->business_type == 'flat_1' || $sender_data->business_type == 'flat_2') && !empty($row_order->tags)){
+    $rowTagsFlower = json_decode($row_order->tags, TRUE);
+}
+
+$tagsFlower = ['Wreath','Standing/Casket Spray'];
 ?>
 <!DOCTYPE html>
 <html dir="<?php echo $direction_layout; ?>" lang="en">
@@ -473,8 +486,7 @@ $address_order = $db->cdp_registro();
                                             </div>
                                         </div>
                                        
-                                     <?php
-                                        } ?>
+                                    
 									
 										<div class="col-md-2">
 										 <label for="admin_discount" class="control-label col-form-label">Discount (in $)</label>
@@ -483,7 +495,9 @@ $address_order = $db->cdp_registro();
 											   <input type="hidden" id="total_price">
 											</div>
 										</div>
+										<?php } ?>
                                     </div>
+								
 								
 
 
@@ -504,6 +518,100 @@ $address_order = $db->cdp_registro();
                         </div>
                     </div>
 
+
+<?php if ($userData->userlevel==9){ ?>
+								 <?php  if( $sender_data->business_type == "flower_shop" || $sender_data->business_type == "flat_1" || $sender_data->business_type == "flat_2" ) { ?>
+				 <div class="row">
+                    <div class="col-lg-12 col-xl-12 col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                
+                                <div class="mb-3">
+                                <h5> &nbsp;<b>Tags</b></h5>
+                                    <?php foreach ($tagsFlower as $tag){ ?>
+                                    <div class="form-check">
+                                        <p class="text-muted  m-l-5">
+                                            <input class="form-check-input" type="checkbox" id="<?php echo strtolower(str_replace(' ', '', $tag)); ?>" name="tags[]" value="<?php echo htmlspecialchars($tag); ?>" <?php if (isTagChecked($tag, $rowTagsFlower)) echo 'checked'; ?> disabled>
+                                            <label class="form-check-label" for="<?php echo strtolower(str_replace(' ', '', $tag)); ?>"><?php echo htmlspecialchars($tag); ?></label>
+                                        </p>
+                                    </div>
+                                    <?php } ?>
+                                </div>
+
+                                <div class="row">
+                                    <div class=" col-sm-12 col-md-4 mb-2">
+                                        <div class="">
+                                            <h5> &nbsp;<b>Pieces</b></h5>
+                                            <input type="number" class="form-control" name="pieces" id="pieces" placeholder="No of pieces" min=1 value="<?php echo $row_order->no_of_pieces; ?>" disabled>
+											
+                                        </div>
+                                    </div>
+
+                              
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="notes" class="form-label">Notes</label>
+                                    <textarea class="form-control" id="notesForDriver" name="notes_for_driver" rows="3" placeholder="Please be brief" readonly><?php echo $row_order->notes_for_driver ?></textarea>
+                                    <div class="form-text"></div>
+                                </div>
+                              
+                            </div>
+                        </div>
+                    </div>
+                </div>
+				
+				
+				
+				
+				<?php } ?>
+                <?php  if( $sender_data->business_type == "pharmacy" || $sender_data->business_type == "pharmacy_2" || $sender_data->business_type == "pharmacy_3" ) { ?>
+                <div class="row">
+                    <div class="col-lg-12 col-xl-12 col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class=" col-sm-12 col-md-4 mb-2">
+                                        <div class="">
+                                            <h5> &nbsp;<b>Charge</b></h5>
+                                            <p class="text-muted  m-l-5"><?php echo $row_order->charge; ?></p>
+                                        </div>
+                                    </div>
+
+                                    <div class=" col-sm-12 col-md-4 mb-2">
+                                        <div class="">
+                                            <h5> &nbsp;<b>No of Rx</b></h5>
+                                            <p class="text-muted  m-l-5"><?php echo $row_order->no_of_rx; ?></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                <h5> &nbsp;<b>Tags</b></h5>
+                                    <?php foreach ($tags as $tag){ ?>
+                                    <div class="form-check">
+                                        <p class="text-muted  m-l-5">
+                                            <input class="form-check-input" type="checkbox" id="<?php echo strtolower(str_replace(' ', '', $tag)); ?>" name="tags[]" value="<?php echo htmlspecialchars($tag); ?>" <?php if (isTagChecked($tag, $rowTags)) echo 'checked'; ?> disabled>
+                                            <label class="form-check-label" for="<?php echo strtolower(str_replace(' ', '', $tag)); ?>"><?php echo htmlspecialchars($tag); ?></label>
+                                        </p>
+                                    </div>
+                                    <?php } ?>
+                                </div>
+
+                                
+                                <div class="mb-3">
+                                    <label for="notes" class="form-label">Notes</label>
+                                    <textarea class="form-control" id="notesForDriver" name="notes_for_driver" rows="3" placeholder="Please be brief" readonly><?php echo $row_order->notes_for_driver ?></textarea>
+                                    <div class="form-text"></div>
+                                </div>
+                              
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php  } ?>
+								<?php } ?>
+								
                     <div class="row">
                     <div class="col-lg-4 h-70">
                             <div style="height: 26rem;" class=" card">
@@ -931,6 +1039,7 @@ $address_order = $db->cdp_registro();
                             <input type="hidden" value="13" name="tax_value" id="tax_value">
                             <input type="hidden" value="3" name="declared_value_tax" id="declared_value_tax">
                             <input type="hidden" value="0" name="reexpedicion_value" id="reexpedicion_value">
+							 <input type="hidden" value="0" name="total_tax_val" id="total_tax_val">
 
                             <input type="hidden" name="core_meter" id="core_meter" value="500">
                             <input type="hidden" name="core_min_cost_tax" id="core_min_cost_tax" value="300">

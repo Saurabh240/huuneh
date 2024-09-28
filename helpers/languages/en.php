@@ -3467,6 +3467,7 @@ $lang = array(
 	"flat-price-12" => "Price with tax",
 	
 	"email_title_1" => "New Order",
+	"pieces_check_msg" => "Please contact our Dispatch office to obtain pricing and confirm this order if larger than 4 pieces. Thank you.",
 
 
 );

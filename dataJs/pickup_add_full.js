@@ -53,6 +53,21 @@ $(function () {
   cdp_select2_init_recipient();
 });
 
+function pieces_check() {
+	var pieces=$("#pieces").val();
+	if(pieces>4){
+		Swal.fire({
+		  type: 'warning',
+		  title: 'opps..',
+		  text: message_error_form107,
+		  icon: 'warning',
+		  confirmButtonColor: '#336aea'
+		});
+		$("#pieces").val(3);
+	}
+	calculateFinalTotal();
+}
+
 function cdp_load_countries(modal) {
   $("#country" + modal)
     .select2({
@@ -172,6 +187,7 @@ $("#admin_discount").on("change", function () {
 		var total_tax_value = parseFloat(parseFloat(total_price) + tax);
 		$("#total_after_tax").html(total_tax_value.toFixed(2));
 		$("#tax_13").html(tax.toFixed(2));
+		$("#total_tax_val").val(tax.toFixed(2));
 	}else{
 		
 	    calculateFinalTotal();
@@ -558,17 +574,24 @@ function calculateFinalTotal(element = null) {
 	//alert(admin_discount);
    var shipmentfee_after_discount=parseFloat(shipmentfee);
    if(admin_discount!=''){
-  var shipmentfee_after_discount=parseFloat(shipmentfee)-parseFloat(admin_discount);
+		var shipmentfee_after_discount=parseFloat(shipmentfee)-parseFloat(admin_discount);
    }
+   var no_pieces = $("#pieces").val();
+   if(no_pieces!=''){
+		shipmentfee_after_discount = parseFloat(shipmentfee_after_discount) + (parseFloat(no_pieces) * 3);
+	}
+ 
   var total_tax_value = parseFloat(shipmentfee_after_discount + (parseFloat(shipmentfee_after_discount) * (13 / 100)));
-   $("#total_price").val(parseFloat(shipmentfee).toFixed(2));
-   $("#discount_div").html(shipmentfee_after_discount.toFixed(2));
-  
+  $("#total_price").val(parseFloat(shipmentfee).toFixed(2));
+  $("#discount_div").html(shipmentfee_after_discount.toFixed(2));
+   
+ 
   $("#total_after_tax").html(total_tax_value.toFixed(2));
-   var tax = 0.00;
+  var tax = 0.00;
   tax = parseFloat(total_tax_value) - parseFloat(shipmentfee_after_discount);
  
   $("#tax_13").html(tax.toFixed(2));
+  $("#total_tax_val").val(tax.toFixed(2));
   // alert(parseFloat(shipmentfee));
   // alert(parseFloat(total_envio.toFixed(2)));
   // parseInt(shipmentfee.toFixed(2))
@@ -759,11 +782,21 @@ $("#invoice_form").on("submit", function (event) {
   var charge = "";
   var no_of_rx = "";
   var notes_for_driver = "";
+  var no_of_pieces = 0;
 
   // Get business type
   var business_type = $("#businessType").val();
 
-  if (business_type && business_type === "pharmacy" || business_type === "pharmacy_2" || business_type === "pharmacy_3") {
+  if (business_type === "flower_shop" || business_type === "flat_1" || business_type === "flat_2") {
+    // Collect checked checkbox values
+    $('input[name="tags[]"]:checked').each(function() {
+      tags.push($(this).val());
+    });
+	  no_of_pieces = $("#pieces").val();
+	  notes_for_driver = $("#notesForDriver_flower").val();
+  }
+  
+   if (business_type && business_type === "pharmacy" || business_type === "pharmacy_2" || business_type === "pharmacy_3") {
     // Collect checked checkbox values
     $('input[name="tags[]"]:checked').each(function() {
       tags.push($(this).val());
@@ -904,6 +937,9 @@ $("#invoice_form").on("submit", function (event) {
   data.append('sub_total', sub_total);
   var admin_discount = $("#admin_discount").val();
   data.append("admin_discount", admin_discount); 
+  data.append("no_of_pieces", no_of_pieces); 
+  var total_tax_val = $("#total_tax_val").val();
+  data.append("total_tax", parseFloat(total_tax_val)); 
   
   var total_file = document.getElementById("filesMultiple").files.length;
    
@@ -1243,6 +1279,11 @@ function cdp_select2_init_sender() {
         $("#specialBusinessCard").css("display", "flex");
     } else {
         $("#specialBusinessCard").css("display", "none");
+    }
+	if (businessType == "flower_shop" || businessType == "flat_1" || businessType == "flat_2") {
+        $("#flowerBusinessCard").css("display", "flex");
+    } else {
+        $("#flowerBusinessCard").css("display", "none");
     }
 
       $("#sender_address_id").attr("disabled", true);

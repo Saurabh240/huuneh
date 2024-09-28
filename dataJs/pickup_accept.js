@@ -755,6 +755,10 @@ function calculateFinalTotal(element = null) {
    if(admin_discount!=''){
   var shipmentfee_after_discount=parseFloat(shipmentfee)-parseFloat(admin_discount);
    }
+    var no_pieces = $("#pieces").val();
+   if(no_pieces!=''){
+		shipmentfee_after_discount = shipmentfee_after_discount + (parseFloat(no_pieces) * 3);
+	}
   var total_tax_value = parseFloat(shipmentfee_after_discount + (parseFloat(shipmentfee_after_discount) * (13 / 100)));
    $("#total_price").val(parseFloat(shipmentfee).toFixed(2));
    $("#discount_div").html(shipmentfee_after_discount.toFixed(2));
