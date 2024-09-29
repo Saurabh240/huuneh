@@ -828,11 +828,15 @@ function calculateFinalTotal(element = null) {
   //$("#total_impuesto_aduanero").html(total_impuesto_aduanero.toFixed(2));
   var shipmentfee = localStorage.getItem('shipmentfee');
    $("#total_before_tax").html(Number(shipmentfee).toFixed(2));
-   var no_pieces = $("#pieces").val();
-   if(no_pieces!=''){
-		shipmentfee = parseFloat(shipmentfee) + (parseFloat(no_pieces) * 3);
+   var business_type = $("#businessType").val();
+     if (business_type === "flower_shop" || business_type === "flat_1" || business_type === "flat_2") {
+	   var no_pieces = $("#pieces").val();
+	  
+	   if(no_pieces!=''){
+			shipmentfee = parseFloat(shipmentfee) + (parseFloat(no_pieces) * 3);
 
-	}
+		}
+	 }
 	
  
   var total_tax_value = parseFloat(parseFloat(shipmentfee) + (parseFloat(shipmentfee) * (13 / 100)));
