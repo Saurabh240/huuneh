@@ -62,7 +62,7 @@ $file = $_FILES['excel_file'];
 					$sheetCount = $spreadsheet->getSheetCount();
 					
 					$data=array();
-					
+					$update = cdp_inactiveFlatPrice(0,$_POST['business_type']);
 							for ($sheetIndex = 0; $sheetIndex < $sheetCount; $sheetIndex++) {
 								 $sheet = $spreadsheet->getSheet($sheetIndex);
 								  $sheetTitle = $sheet->getTitle();
@@ -71,7 +71,7 @@ $file = $_FILES['excel_file'];
 							  
 							   $highestColumn = $sheet->getHighestColumn();
 					
-						for ($row = 9; $row <= 34; $row++) {
+						for ($row = 9; $row <= 40; $row++) {
 							$rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row, NULL, TRUE, FALSE);
 									if (isset($rowData[0])){
 										for($l=0;$l<=count($rowData[0]);$l=$l+4){
@@ -85,20 +85,18 @@ $file = $_FILES['excel_file'];
 													'price_with_tax' => $rowData[0][$l+2]??'',
 													'active' => 1
 												);
-											$flat_price_id = cdp_getFlatPrice($_POST['business_type'],$sender_city,$rowData[0][$l]);
-											if($flat_price_id>=1){
-												$insert = cdp_updateFlatPrice($data,$flat_price_id);
-											}else{
+											
 												$insert = cdp_insertFlatPrice($data);
-											}
+										
 										}										
 										}
-																					
 								}
 						}
 						$response['status']= "success";
 						$response['msg']= $lang['flat-price-11'];
+						
 					}
+					$delete = cdp_deleteAllFlatPrice(0,$_POST['business_type']);
             } else {
                  $errors['excel_file']= $lang['flat-price-8'];
             }

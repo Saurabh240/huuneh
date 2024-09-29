@@ -5164,6 +5164,41 @@ function cdp_updateFlatPrice($datos,$id)
 }
 
 // ===========================================================
+// Inactive Business type all flat Price
+// ===========================================================
+
+function cdp_inactiveFlatPrice($active,$business_type)
+{
+
+    $db = new Conexion;
+
+    $db->cdp_query('UPDATE cdb_flat_price_lists SET
+            active =:active
+            where business_type = :business_type
+        ');
+
+    $db->bind(':active', $active);				
+    $db->bind(':business_type', $business_type);				
+
+    return $db->cdp_execute();
+}
+
+
+// ===========================================================
+// Delete Business type all flat Price
+// ===========================================================
+
+function cdp_deleteAllFlatPrice($active,$business_type)
+{
+
+    $db = new Conexion;
+    $db->cdp_query('DELETE FROM cdb_flat_price_lists WHERE active =:active and business_type =:business_type ');
+    $db->bind(':active', $active);				
+    $db->bind(':business_type', $business_type);				
+    return $db->cdp_execute();
+}
+
+// ===========================================================
 // GET FLAT Price
 // ===========================================================
 
