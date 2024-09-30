@@ -1037,7 +1037,8 @@ $tagsFlower = ['Wreath','Standing/Casket Spray'];
                             <input type="hidden" name="core_min_cost_declared_tax" id="core_min_cost_declared_tax" value="250">
                             <input type="hidden" name="total_cost" id="total_cost" value="0" />
                             <input type="hidden" name="subtotal" id="subtotal" value="0" />                                        
-
+                            <input type="hidden" name="businessType" id="businessType" value="<?php echo $sender_data->business_type; ?>" />                                        
+                
                     </div> 
                     </div>
 

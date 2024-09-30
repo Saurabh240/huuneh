@@ -757,11 +757,17 @@ function calculateFinalTotal(element = null) {
    if(admin_discount!=''){
   var shipmentfee_after_discount=parseFloat(shipmentfee)-parseFloat(admin_discount);
    }
-    var no_pieces = $("#pieces").val();
-   if(no_pieces!=''){
-		shipmentfee_after_discount = shipmentfee_after_discount + (parseFloat(no_pieces) * 3);
-	}
-	$("#total_before_tax").html(parseFloat(shipmentfee_after_discount).toFixed(2));
+   
+    var business_type = $("#businessType").val();
+
+  if (business_type === "flower_shop" || business_type === "flat_1" || business_type === "flat_2") {
+		var no_pieces = $("#pieces").val();
+
+	   if(no_pieces!=''){
+			shipmentfee_after_discount = shipmentfee_after_discount + (parseFloat(no_pieces) * 3);
+		}
+  }
+	$("#total_before_tax").html(Number(shipmentfee_after_discount).toFixed(2));
    var total_tax_value = parseFloat(shipmentfee_after_discount + (parseFloat(shipmentfee_after_discount) * (13 / 100)));
    $("#total_price").val(parseFloat(shipmentfee_after_discount).toFixed(2));
    //$("#discount_div").html(shipmentfee_after_discount.toFixed(2));
