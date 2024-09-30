@@ -74,7 +74,7 @@ $offset = ($page - 1) * $per_page;
 
 
 $sql = "SELECT  a.is_consolidate, a.notes_for_driver, a.delivery_type,a.sub_total, a.distance, a.order_incomplete, a.status_invoice, a.is_pickup, a.total_order, a.order_id, a.order_prefix, a.order_no, a.order_date, a.sender_id, a.receiver_id, a.order_courier, a.order_pay_mode, a.status_courier, a.driver_id, a.order_service_options, a.total_order,  b.mod_style, b.color, 
-			 u.username, u.fname, u.lname, addrs.recipient_address,a.notes,a.tags FROM
+			 u.username, u.fname, u.lname, addrs.recipient_address,a.notes,a.tags,a.no_of_pieces FROM
 			 cdb_add_order as a
 			 LEFT JOIN cdb_users as u ON a.sender_id = u.id
 			 INNER JOIN cdb_address_shipments as addrs ON addrs.order_id = a.order_id
@@ -132,6 +132,7 @@ if ($numrows > 0) { ?>
 					<th class="text-center"><b><?php echo $lang['ldestination'] ?></b></th>
 					<th class="text-center"><b>Notes for driver</b></th>
 					<th class="text-center"><b>Tags</b></th>
+					<th class="text-center"><b>Pieces</b></th>
 					<th class="text-center"><b>Total KM</b></th>
 					<th class="text-center"><b>Subtotal</b></th>
 					<th class="text-center"><b><?php echo $lang['lstatusshipment'] ?></b></th> 
@@ -208,10 +209,13 @@ if ($numrows > 0) { ?>
 							<td class="text-center">
 								<?php echo implode(',',json_decode($row->tags,TRUE)); ?>
 							</td>
+							
+							<td class="text-center">
+								<?php echo $row->no_of_pieces>0?$row->no_of_pieces:''; ?>
+							</td>
 							<td class="text-center">
 								<?php echo $row->distance; ?>
 							</td>
-
 							<td class="text-center">
 								$ <?php echo $row->sub_total; ?>
 							</td>

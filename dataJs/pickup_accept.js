@@ -331,7 +331,7 @@ $("#clean_file_button").on("click", function () {
 
 $("#admin_discount").on("change", function () {
 	var total_price = $("#total_price").val();
-	if($("#admin_discount").val()>parseFloat(total_price)){
+	/*if($("#admin_discount").val()>parseFloat(total_price)){
 		 Swal.fire({
 		  type: 'Error!',
 		  title: 'Oops...',
@@ -349,7 +349,9 @@ $("#admin_discount").on("change", function () {
 		$("#tax_13").html(tax.toFixed(2));
 	}else{
 	    calculateFinalTotal();
-	}
+	    
+	}*/
+	calculateFinalTotal();
 });
 $("input[type=file]").on("change", function () {
   deleted_file_ids = [];
@@ -749,7 +751,7 @@ function calculateFinalTotal(element = null) {
   $("#total_distance").html(distanceHtml);
  
   var shipmentfee = localStorage.getItem('shipmentfee');
-  $("#total_before_tax").html(Number(shipmentfee).toFixed(2));
+  
   var admin_discount = $("#admin_discount").val();
   var shipmentfee_after_discount=parseFloat(shipmentfee);
    if(admin_discount!=''){
@@ -759,15 +761,14 @@ function calculateFinalTotal(element = null) {
    if(no_pieces!=''){
 		shipmentfee_after_discount = shipmentfee_after_discount + (parseFloat(no_pieces) * 3);
 	}
-  var total_tax_value = parseFloat(shipmentfee_after_discount + (parseFloat(shipmentfee_after_discount) * (13 / 100)));
-   $("#total_price").val(parseFloat(shipmentfee).toFixed(2));
-   $("#discount_div").html(shipmentfee_after_discount.toFixed(2));
+	$("#total_before_tax").html(parseFloat(shipmentfee_after_discount).toFixed(2));
+   var total_tax_value = parseFloat(shipmentfee_after_discount + (parseFloat(shipmentfee_after_discount) * (13 / 100)));
+   $("#total_price").val(parseFloat(shipmentfee_after_discount).toFixed(2));
+   //$("#discount_div").html(shipmentfee_after_discount.toFixed(2));
   
   $("#total_after_tax").html(total_tax_value.toFixed(2));
 
   $("#total_envio_ajax").val(shipmentfee);
-
- 
   $("#total_fixed").html(max_fixed_charge.toFixed(2));
  
   var tax = 0.00;

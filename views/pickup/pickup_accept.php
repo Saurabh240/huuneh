@@ -842,16 +842,7 @@ $tagsFlower = ['Wreath','Standing/Casket Spray'];
                                                                  <input type="hidden" name="total_envio_ajax" id="total_envio_ajax" value="">
                                                             </div>
                                                  </div>
-												 <div class="col-sm-12 col-md-4 col-lg-2">
-                                                     <div class="form-group">
-                                                            <label for="discount_div">After Discount</label>
-                                                                
-                                                                
-                                                            <b> $ </b>
-                                                            <span id="discount_div">NaN</span>
-                                                                
-                                                            </div>
-                                                 </div>
+												
                                                  <div class="col-sm-12 col-md-4 col-lg-2">
                                                      <div class="form-group">
                                                             <label for="tax_13">TaxL (13%)</label>

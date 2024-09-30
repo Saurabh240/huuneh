@@ -170,7 +170,7 @@ function cdp_load_cities(modal) {
 }
 
 $("#admin_discount").on("change", function () {
-	var total_price = $("#total_price").val();
+	var total_price = $("#total_price").val();/*
 	if($("#admin_discount").val()>parseFloat(total_price)){
 		 Swal.fire({
 		  type: 'Error!',
@@ -181,7 +181,7 @@ $("#admin_discount").on("change", function () {
 		});
 		$("#admin_discount").val('');
 		$("#admin_discount").focus();
-		$("#discount_div").html(total_price);
+		//$("#discount_div").html(total_price);
 		var tax = 0.00;
 		tax = (parseFloat(total_price) * (13 / 100));
 		var total_tax_value = parseFloat(parseFloat(total_price) + tax);
@@ -191,7 +191,8 @@ $("#admin_discount").on("change", function () {
 	}else{
 		
 	    calculateFinalTotal();
-	}
+	}*/
+	 calculateFinalTotal();
 });
 
 function loadPackages() {
@@ -569,21 +570,24 @@ function calculateFinalTotal(element = null) {
   //$("#insurance").html(total_seguro.toFixed(2));
   //$("#total_impuesto_aduanero").html(total_impuesto_aduanero.toFixed(2));
   var shipmentfee = localStorage.getItem('shipmentfee');
-  $("#total_before_tax").html(Number(shipmentfee).toFixed(2));
-    var admin_discount = $("#admin_discount").val();
-	//alert(admin_discount);
-   var shipmentfee_after_discount=parseFloat(shipmentfee);
-   if(admin_discount!=''){
+  var shipmentfee_after_discount=parseFloat(shipmentfee);
+  var admin_discount = $("#admin_discount").val();
+  
+  if(admin_discount!=''){
 		var shipmentfee_after_discount=parseFloat(shipmentfee)-parseFloat(admin_discount);
    }
+
+  
    var no_pieces = $("#pieces").val();
    if(no_pieces!=''){
 		shipmentfee_after_discount = parseFloat(shipmentfee_after_discount) + (parseFloat(no_pieces) * 3);
 	}
- 
+  
+   
+ $("#total_before_tax").html(Number(shipmentfee_after_discount).toFixed(2));
   var total_tax_value = parseFloat(shipmentfee_after_discount + (parseFloat(shipmentfee_after_discount) * (13 / 100)));
-  $("#total_price").val(parseFloat(shipmentfee).toFixed(2));
-  $("#discount_div").html(shipmentfee_after_discount.toFixed(2));
+  $("#total_price").val(parseFloat(shipmentfee_after_discount).toFixed(2));
+  //$("#discount_div").html(shipmentfee_after_discount.toFixed(2));
    
  
   $("#total_after_tax").html(total_tax_value.toFixed(2));

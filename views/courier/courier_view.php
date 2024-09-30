@@ -1498,7 +1498,6 @@ $tagsFlower = ['Wreath','Standing/Casket Spray'];
                                                 <!-- <th><b><?php echo $lang['leftorder1878'] ?></b></th>
                                                 <th><b><?php echo $lang['langs_048'] ?></b></th> -->
                                                 <th><b><?php echo $lang['left240'] ?></th>
-												<th><b>Discount</b></th>
                                                 <th><b><?php echo $lang['leftorder67'] ?> (13%) </b></th>
 												
                                                 <th><b><?php echo $lang['leftorder2020'] ?></b></th>
@@ -1514,14 +1513,11 @@ $tagsFlower = ['Wreath','Standing/Casket Spray'];
                                                 <!-- <td class="text-center" id="reexp"><?php echo $sumador_fixed_charge; ?></td>
                                                 <td class="text-center" id="reexp"><?php echo "$ " . cdb_money_format($row_order->total_reexp); ?></td> -->
                                                 <td class="text-left" id="total_envio"><b><?php echo "$ " . cdb_money_format_bar(floatval($row_order->sub_total)); ?></b></td>
-												<td><?php echo "$ " . cdb_money_format_bar($row_order->admin_discount); ?></td>
+												
                                                 <td class="text-left" id="impuesto"><?php 
 												
-                                                    if (floatval($row_order->total_tax) && $row_order->total_tax>0) { 
-														
-                                                        echo "$ " . cdb_money_format_bar($row_order->total_tax);
-                                                    } else  if (floatval($row_order->total_order)) { 
-															$tax = floatval($row_order->total_order) - (floatval($row_order->sub_total) - floatval($row_order->admin_discount) + (floatval($row_order->no_of_pieces) * 3));
+                                                     if (floatval($row_order->total_order)) { 
+															$tax = floatval($row_order->total_order) - floatval($row_order->sub_total);
 															echo "$ " . cdb_money_format_bar($tax);
 													}else{
                                                         echo "$ 0.00";

@@ -879,24 +879,12 @@ $order_prefix = $settings->prefix;
                                                             
                                                         </div>
                                                 </div>
-												 <div class="col-sm-12 col-md-4 col-lg-2">
-                                                     <div class="form-group">
-                                                            <label for="discount_div">After Discount</label>
-                                                                
-                                                                
-                                                            <b> $ </b>
-                                                            <span id="discount_div">NaN</span>
-                                                                
-                                                            </div>
-                                                 </div>
+												
                                                  <div class="col-sm-12 col-md-4 col-lg-2">
                                                      <div class="form-group">
                                                             <label for="tax_13">TaxL (13%)</label>
-                                                                
-                                                                
                                                             <b> $ </b>
                                                             <span id="tax_13">NaN</span>
-                                                                
                                                             </div>
                                                  </div>
                                                 <div class="col-sm-12 col-md-4 col-lg-2">

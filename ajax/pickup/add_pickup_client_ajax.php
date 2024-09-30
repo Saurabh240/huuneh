@@ -160,7 +160,7 @@ if (empty($errors)) {
         $dataShipmentUpdateTotals = array(
             'order_id' =>  $shipment_id,
             'value_weight' =>  floatval($price_lb),
-            'sub_total' =>  $_POST["pickuptotal"],
+            'sub_total' =>  floatval($_POST["sub_total"]),
             'tax_discount' =>  floatval($discount_value),
             'total_insured_value' => floatval($insured_value),
             'tax_insurance_value' => floatval($insurance_value),
