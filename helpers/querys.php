@@ -6772,3 +6772,290 @@ function cdp_saveRecipientAddress($data)
     
     return $customer_address;
 }
+
+function cdp_getSenderByUsername($username)
+{
+    $db = new Conexion;
+
+    $db->cdp_query('SELECT * FROM cdb_users WHERE username=:username');
+
+    $db->bind(':username', $username);
+
+    $db->cdp_execute();
+
+    return $db->cdp_registro();
+}
+
+// ===========================================================
+// USERS
+// ===========================================================
+
+
+function cdp_insertUserImportOrder($datos)
+{
+
+    $db = new Conexion;
+
+    $db->cdp_query('INSERT INTO cdb_users
+        (
+            username,
+            name_off,
+            password,
+            userlevel,
+            email,
+            fname,
+            lname,
+            created,
+            notes,
+            phone,
+            gender,
+            newsletter,
+            active,
+			business_type
+            
+        )
+
+        VALUES (
+            :username,
+            :branch_office,
+            :password,
+            :userlevel,
+            :email,
+            :fname,
+            :lname,
+            :created,
+            :notes,
+            :phone,
+            :gender,
+            :newsletter,
+            :active,
+			:business_type
+        )');
+
+
+    $db->bind(':username', $datos['username']);
+    $db->bind(':branch_office', $datos['branch_office']);
+    $db->bind(':password', $datos['password']);
+    $db->bind(':userlevel', $datos['userlevel']);
+    $db->bind(':email', $datos['email']);
+    $db->bind(':fname', $datos['fname']);
+    $db->bind(':lname', $datos['lname']);
+    $db->bind(':created', $datos['created']);
+    $db->bind(':notes', $datos['notes']);
+    $db->bind(':phone', $datos['phone']);
+    $db->bind(':gender', $datos['gender']);
+    $db->bind(':newsletter', $datos['newsletter']);
+    $db->bind(':active', $datos['active']);
+    $db->bind(':business_type', $datos['business_type']);
+    return $db->cdp_execute();
+}
+
+
+function cdp_getSenderAddressData($data)
+{
+    $db = new Conexion;
+
+    $db->cdp_query('SELECT * FROM cdb_senders_addresses WHERE id_addresses=:id');
+
+    $db->bind(':id', $id);
+
+    $db->cdp_execute();
+
+    return  $db->cdp_registro();
+}
+
+//Get State ID By Country id and State Name
+function cdp_stateIdByNameCountry($name, $cid = null)
+{
+    $db = new Conexion;
+    $where = '';
+	if ($cid != null) {
+
+        $where = "and country_id='$cid'";
+    }
+    $db->cdp_query("SELECT * FROM cdb_states WHERE  name=:name $where");
+    $db->bind(':name', $name);
+    $db->cdp_execute();
+	 return  $db->cdp_registro();
+}
+
+//Get City ID By state id and City Name
+function cdp_cityIdByNameState($name, $sid = null)
+{
+    $db = new Conexion;
+    $where = '';
+	if ($sid != null) {
+
+        $where = "and state_id='$sid'";
+    }
+    $db->cdp_query("SELECT * FROM  cdb_cities  WHERE  name=:name $where");
+    $db->bind(':name', $name);
+    $db->cdp_execute();
+	 return  $db->cdp_registro();
+}
+
+// Get Sender Address ID using address,city,state,country,zip and user_id
+
+function cdp_getSenderAddressWithAll($data)
+{
+    $db = new Conexion;
+	$where = '';
+	if ($data['country'] != '') {
+        $where .= " and country= '".$data['country']."' ";
+    }
+	if ($data['state'] != '') {
+        $where .= " and state= '".$data['state']."' ";
+    }
+	if ($data['city'] != '') {
+        $where .= " and city= '".$data['city']."' ";
+    }
+	if ($data['postal'] != '') {
+        $where .= " and zip_code= '".$data['postal']."' ";
+    }
+	if ($data['user_id'] != '') {
+        $where .= " and user_id= ".$data['user_id']." ";
+    }
+    $db->cdp_query("SELECT * FROM cdb_senders_addresses WHERE address=:address $where");
+	$db->bind(':address', $data['address']);
+	
+    $db->cdp_execute();
+
+    return  $db->cdp_registro();
+} 
+
+// Get Recipient Address ID using address,city,state,country,zip and user_id
+
+function cdp_getRecipientAddressWithAll($data)
+{
+    $db = new Conexion;
+	$where = '';
+	if ($data['country'] != '') {
+        $where .= " and country= '".$data['country']."' ";
+    }
+	if ($data['state'] != '') {
+        $where .= " and state= '".$data['state']."' ";
+    }
+	if ($data['city'] != '') {
+        $where .= " and city= '".$data['city']."' ";
+    }
+	if ($data['postal'] != '') {
+        $where .= " and zip_code= '".$data['postal']."' ";
+    }
+	if ($data['recipient_id'] != '') {
+        $where .= " and recipient_id= ".$data['recipient_id']." ";
+    }
+	
+    $db->cdp_query("SELECT * FROM cdb_recipients_addresses WHERE address=:address $where");
+	$db->bind(':address', $data['address']);
+	
+    $db->cdp_execute();
+
+    return  $db->cdp_registro();
+} 
+
+
+function cdp_insertOrderImport($datos)
+{
+    $db = new Conexion;
+    $db->cdp_query("
+    INSERT INTO cdb_add_order 
+    (
+        user_id,
+        order_prefix,
+        order_no,
+        order_date,
+        sender_id,
+        sender_address_id,
+        receiver_id,                
+        receiver_address_id,
+        volumetric_percentage,
+		admin_discount,
+        order_datetime,
+        order_item_category, 
+        order_package,
+        status_courier,
+        is_pickup,
+        due_date,
+        notes,
+        status_invoice,
+        order_incomplete,
+        charge,
+        no_of_rx,
+        notes_for_driver,
+        tags,
+		no_of_pieces,
+		total_tax,
+		distance,
+		sub_total,
+	    total_order,
+		tax_value,
+		delivery_type
+        )
+    VALUES
+        (
+        :user_id,
+        :order_prefix,
+        :order_no,
+        :order_date,
+        :sender_id,
+        :sender_address_id,
+        :receiver_id,       
+        :receiver_address_id,    
+        :volumetric_percentage,
+		:admin_discount,
+        :order_datetime,
+        :order_item_category, 
+        :order_package,
+        :status_courier,
+        :is_pickup,
+        :due_date,
+        :notes,
+        :status_invoice,
+        :order_incomplete,
+        :charge,
+        :no_of_rx,
+        :notes_for_driver,
+        :tags,
+		:no_of_pieces,
+		:total_tax,
+		:distance,
+		:sub_total,
+		:total_order,
+		:tax_value,
+		:delivery_type
+        )
+");
+    $db->bind(':user_id',  $datos['user_id']);
+    $db->bind(':order_prefix',  $datos['order_prefix']);
+    $db->bind(':order_incomplete',  $datos['order_incomplete']);
+    $db->bind(':is_pickup',  $datos['is_pickup']);
+    $db->bind(':order_no', $datos["order_no"]);
+    $db->bind(':admin_discount', $datos["admin_discount"]);
+    $db->bind(':order_datetime',  $datos['order_datetime']);
+    $db->bind(':sender_id',  $datos["sender_id"]);
+    $db->bind(':receiver_id',  $datos["recipient_id"]);
+    $db->bind(':sender_address_id',  $datos["sender_address_id"]);
+    $db->bind(':receiver_address_id',  $datos["recipient_address_id"]);
+    $db->bind(':order_date',  $datos['order_date']);
+    $db->bind(':order_package',  $datos["order_package"]);
+    $db->bind(':order_item_category',  $datos["order_item_category"]);
+    $db->bind(':status_courier',  $datos["status_courier"]);
+    $db->bind(':due_date',   $datos["due_date"]);
+    $db->bind(':status_invoice',   $datos["status_invoice"]);
+    $db->bind(':volumetric_percentage',   $datos["volumetric_percentage"]);
+    $db->bind(':notes',   $datos["notes"]);
+    $db->bind(':charge',   $datos["charge"]);
+    $db->bind(':no_of_rx',   $datos["no_of_rx"]);
+    $db->bind(':notes_for_driver',   $datos["notes_for_driver"]);
+    $db->bind(':tags',   $datos["tags"]);
+    $db->bind(':no_of_pieces',   $datos["no_of_pieces"]);
+	$db->bind(':total_tax',   $datos["total_tax"]);
+	$db->bind(':distance',   $datos["distance"]);
+	$db->bind(':sub_total',   $datos["sub_total"]);
+	$db->bind(':total_order',   $datos["total_order"]);
+	$db->bind(':tax_value',   $datos["tax_value"]);
+	$db->bind(':delivery_type',   $datos["delivery_type"]);
+
+    $db->cdp_execute();
+    return $db->dbh->lastInsertId();
+}

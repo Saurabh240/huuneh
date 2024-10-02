@@ -224,6 +224,13 @@
 									<span class="hide-menu"> <?php echo $lang['left-menu-sidebar-21'] ?> </span>
 								</a>
 							</li>
+							<!-- Module Order Import  -->
+							<li class="sidebar-item">
+								<a class="sidebar-link waves-effect waves-dark" href="order_import.php" aria-expanded="false">
+									<i class="mdi mdi-upload"></i>
+									<span class="hide-menu"> <?php echo $lang['order-import-1'] ?> </span>
+								</a>
+							</li>
 						</ul>
 					</li>
 
@@ -422,6 +429,8 @@
 									<span class="hide-menu"> <?php echo $lang['left-menu-sidebar-64'] ?> </span>
 								</a>
 							</li>
+							
+							
 
 							<!-- AND Module Flat Price  -->
 

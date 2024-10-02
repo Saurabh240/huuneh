@@ -3422,4 +3422,5 @@ $lang = array(
 	
 	"email_title_1" => "Nouvelle commande",
 	"pieces_check_msg" => "Veuillez contacter notre bureau d'expédition pour connaître les prix et confirmer cette commande si elle est supérieure à 4 pièces. Merci.",
+	"order-import-1" => "Importation de commande",
 );

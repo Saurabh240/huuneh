@@ -3468,6 +3468,7 @@ $lang = array(
 	
 	"email_title_1" => "New Order",
 	"pieces_check_msg" => "Please contact our Dispatch office to obtain pricing and confirm this order if larger than 4 pieces. Thank you.",
-
+	"order-import-1" => "Order Import",
+	
 
 );
