@@ -766,7 +766,7 @@ $order_prefix = $settings->prefix;
                                                     <?php echo $lang['leftorder15']; ?>
                                                 </label>
                                             </div>
-                                            <input class="custom-file-input" id="filesMultiple" name="filesMultiple[]" multiple="multiple" type="file" style="display: none;" onchange="cdp_validateZiseFiles(); cdp_preview_images();" />
+                                            <input class="custom-file-input" id="filesMultiple" name="filesMultiple[]" multiple type="file" style="display: none;" onchange="cdp_validateZiseFiles(); cdp_preview_images();" accept="image/jpeg, image/jpg" />
                                             <button type="button" id="openMultiFile" class="btn btn-default  pull-left  mb-4">
                                                 <i class='fa fa-paperclip' id="openMultiFile" style="font-size:18px; cursor:pointer;"></i>
                                                 <?php echo $lang['leftorder16']; ?>
@@ -890,8 +890,7 @@ $order_prefix = $settings->prefix;
                                                 <div class="col-sm-12 col-md-4 col-lg-2">
                                                     <div class="form-group">
                                                         <label for="emailAddress1"><?php echo $lang['leftorder1882'] ?> (<?php echo '13%';//echo $core->tax; ?>)</label>
-                                                            
-                                                            
+                                                        
                                                             <?php
                                                             if ($core->for_symbol !== null) {
                                                             ?>
