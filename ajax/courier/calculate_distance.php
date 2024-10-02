@@ -1,4 +1,5 @@
 <?php
+
 require_once("../../loader.php");
 session_start();
 /*
@@ -54,7 +55,7 @@ if (isset($_POST["origin"]) && isset($_POST["destination"]) && isset($_POST["del
 				$courier['taxfee'] = $flat_price_data->price_with_tax??'';
 				 }
 				$courier['distance']=$distance_bw;
-				if(isset($courier['baseRate'])){ echo json_encode($courier); }else{ $courier['msg']= "Your request is outside of the Range provided our pricing program. Pricing will be to our Default KM pricing. For any questions please contact our dispatch office."; }
+				if(isset($courier['baseRate'])){ echo json_encode($courier); }else{ $courier['msg']= "The city you selected to deliver this order to is not covered in our flat pricing program. Therefore, the price for this particular order will be reverted back to our regular KM pricing. Feel free to call our dispatch team at 647-217-9918 should you have any questions. We look forward to completing this order for you. Thank you!"; }
 			  
 		}
 		if((in_array($business_type,$flat_price_approverd_for) && !isset($courier['baseRate'])) ||  !in_array($business_type,$flat_price_approverd_for)){
