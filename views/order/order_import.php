@@ -94,15 +94,15 @@ $file = $_FILES['excel_file'];
 							$next_order = $core->cdp_order_track();
 							$min_cost_tax = $core->min_cost_tax;
 							$min_cost_declared_tax = $core->min_cost_declared_tax;
-							if($order_data['Sender Country']=='' || $order_data['Sender Address']=='' || $order_data['Sender City']=='' || $order_data['Sender State']=='' || $order_data['Sender Postal Code']=='' || $order_data['Recipient Country']=='' || $order_data['Recipient Address']=='' || $order_data['Recipient State']=='' || $order_data['Recipient City']=='' || $order_data['Recipient Postal Code']=='' || $order_data['Sender Username']=='' || $order_data['Recipient Username']==''){
+							if($order_data['Sender Country*']=='' || $order_data['Sender Address*']=='' || $order_data['Sender City*']=='' || $order_data['Sender State*']=='' || $order_data['Sender Postal Code*']=='' || $order_data['Recipient Country*']=='' || $order_data['Recipient Address*']=='' || $order_data['Recipient State*']=='' || $order_data['Recipient City*']=='' || $order_data['Recipient Postal Code*']=='' || $order_data['Sender Username*']=='' || $order_data['Recipient Username*']==''){
 								//send_email
-								$error_msg[]= "These fields data are mandatory: Sender Username, Sender Address, Sender City, Sender State, Sender Country, Sender Postal Code,Recipient Username, Recipient Address, Recipient City, Recipient State,Recipient Country, Recipient Postal Code.";
+								$error_msg[]= "These fields data are mandatory: Sender Username*, Sender Address*, Sender City*, Sender State*, Sender Country*, Sender Postal Code*,Recipient Username*, Recipient Address*, Recipient City*, Recipient State*,Recipient Country*, Recipient Postal Code*.";
 							}else{
 								//GET Sender id
-								$sender_data=cdp_getSenderByUsername($order_data['Sender Username']);
+								$sender_data=cdp_getSenderByUsername($order_data['Sender Username*']);
 								if(empty($sender_data)){
 									 $data = array(
-											'username' => cdp_sanitize($order_data['Sender Username']),
+											'username' => cdp_sanitize($order_data['Sender Username*']),
 											'branch_office' => '',
 											'email' => $order_data['Sender Email']?cdp_sanitize($order_data['Sender Email']):'',
 											'fname' => $order_data['Sender Fname']?cdp_sanitize($order_data['Sender Fname']):'',
@@ -123,10 +123,10 @@ $file = $_FILES['excel_file'];
 									$sender_id=$sender_data->id;
 								}
 								//Get Recipient ID
-								$recipient_data=cdp_getSenderByUsername($order_data['Recipient Username']);
+								$recipient_data=cdp_getSenderByUsername($order_data['Recipient Username*']);
 								if(empty($recipient_data)){
 								$data = array(
-											'username' => cdp_sanitize($order_data['Recipient Username']),
+											'username' => cdp_sanitize($order_data['Recipient Username*']),
 											'branch_office' => '',
 											'email' => $order_data['Recipient Email']?cdp_sanitize($order_data['Recipient Email']):'',
 											'fname' => $order_data['Recipient Fname']?cdp_sanitize($order_data['Recipient Fname']):'',
@@ -149,27 +149,27 @@ $file = $_FILES['excel_file'];
 							        
 									//Get Address id
 									
-									$Sender_country = cdp_getCountryByName($order_data['Sender Country']);
+									$Sender_country = cdp_getCountryByName($order_data['Sender Country*']);
 									if(empty($Sender_country)){
 										//send Mail 
-										$error_msg[]='Sender Country "'.$order_data['Sender Country'].'" did not found into database';
+										$error_msg[]='Sender Country* "'.$order_data['Sender Country*'].'" did not found into database';
 									}else{
-										$Sender_state = cdp_stateIdByNameCountry($order_data['Sender State'],$Sender_country->id);
+										$Sender_state = cdp_stateIdByNameCountry($order_data['Sender State*'],$Sender_country->id);
 										if(empty($Sender_state)){
 											//send Mail 
-											$error_msg[]='Sender State "'.$order_data['Sender State'].'" did not found into database';
+											$error_msg[]='Sender State* "'.$order_data['Sender State*'].'" did not found into database';
 										}else{
-											$Sender_city = cdp_cityIdByNameState($order_data['Sender City'],$Sender_state->id);
+											$Sender_city = cdp_cityIdByNameState($order_data['Sender City*'],$Sender_state->id);
 											if(empty($Sender_city)){
 											//send Mail 
-											$error_msg[]='Sender City "'.$order_data['Sender City'].'" did not found into database';
+											$error_msg[]='Sender City* "'.$order_data['Sender City*'].'" did not found into database';
 											}else{
 												$sender_array=array();
 												$sender_array['country']=$Sender_country->id;
 												$sender_array['state']=$Sender_state->id;
 												$sender_array['city']=$Sender_city->id;
-												$sender_array['postal']=$order_data['Sender Postal Code'];
-												$sender_array['address']=$order_data['Sender Address'];
+												$sender_array['postal']=$order_data['Sender Postal Code*'];
+												$sender_array['address']=$order_data['Sender Address*'];
 												$sender_array['user_id']=$sender_id;
 													
 												 $sender_address=cdp_getSenderAddressWithAll($sender_array);
@@ -180,27 +180,27 @@ $file = $_FILES['excel_file'];
 													 $sender_address_id = $sender_address->id_addresses;
 												 }
 												 
-												 $Recipient_country= cdp_getCountryByName($order_data['Recipient Country']);
+												 $Recipient_country= cdp_getCountryByName($order_data['Recipient Country*']);
 									if(empty($Recipient_country)){
 										//send Mail 
-										$error_msg[]='Recipient Country "'.$order_data['Recipient Country'].'" did not found into database';
+										$error_msg[]='Recipient Country* "'.$order_data['Recipient Country*'].'" did not found into database';
 									}else{
-										$Recipient_state = cdp_stateIdByNameCountry($order_data['Recipient State'],$Recipient_country->id);
+										$Recipient_state = cdp_stateIdByNameCountry($order_data['Recipient State*'],$Recipient_country->id);
 										if(empty($Recipient_state)){
 											//send Mail 
-											$error_msg[]='Recipient State "'.$order_data['Recipient State'].'" did not found into database';
+											$error_msg[]='Recipient State* "'.$order_data['Recipient State*'].'" did not found into database';
 										}else{
-											$Recipient_city = cdp_cityIdByNameState($order_data['Recipient City'],$Recipient_state->id);
+											$Recipient_city = cdp_cityIdByNameState($order_data['Recipient City*'],$Recipient_state->id);
 											if(empty($Recipient_city)){
 											//send Mail 
-											$error_msg[]='Recipient City "'.$order_data['Recipient City'].'" did not found into database';
+											$error_msg[]='Recipient City* "'.$order_data['Recipient City*'].'" did not found into database';
 											}else{
 												$recipient_array=array();
 												$recipient_array['country']=$Recipient_country->id;
 												$recipient_array['state']=$Recipient_state->id;
 												$recipient_array['city']=$Recipient_city->id;
-												$recipient_array['postal']=$order_data['Recipient Postal Code'];
-												$recipient_array['address']=$order_data['Recipient Address'];
+												$recipient_array['postal']=$order_data['Recipient Postal Code*'];
+												$recipient_array['address']=$order_data['Recipient Address*'];
 												$recipient_array['recipient_id']=$recipient_id;
 													
 												 $recipient_data=cdp_getRecipientAddressWithAll($recipient_array);
@@ -214,11 +214,11 @@ $file = $_FILES['excel_file'];
 										
 												//Calculate Price and distance
 												
-													$url = 'https://huuneh.com/ajax/courier/calculate_distance.php';
+													$url = 'https://huuneh.com/dashboard/ajax/courier/calculate_distance.php';
 													//$url = 'http://localhost:8081/huuneh/ajax/courier/calculate_distance.php';
-													$origin=$order_data['Sender Address'].', '.$order_data['Sender City'].', '.$order_data['Sender State'].', '.$order_data['Sender Country'].', '.$order_data['Sender Postal Code'];
-													$destination=$order_data['Recipient Address'].', '.$order_data['Recipient City'].', '.$order_data['Recipient State'].', '.$order_data['Recipient Country'].', '.$order_data['Recipient Postal Code'];
-													$data = ['origin'=>$order_data['Sender Address'], 'destination'=>$order_data['Recipient Address'], 'deliveryType'=> $order_data['Delivery Type'], 'sender_id'=> $sender_id,'send_sender_id'=>$sender_id,'send_recipient_id'=> $recipient_id, 'origin_id'=> $sender_address_id, 'destination_id'=> $recipient_address_id];
+													$origin=$order_data['Sender Address*'].', '.$order_data['Sender City*'].', '.$order_data['Sender State*'].', '.$order_data['Sender Country*'].', '.$order_data['Sender Postal Code*'];
+													$destination=$order_data['Recipient Address*'].', '.$order_data['Recipient City*'].', '.$order_data['Recipient State*'].', '.$order_data['Recipient Country*'].', '.$order_data['Recipient Postal Code*'];
+													$data = ['origin'=>$order_data['Sender Address*'], 'destination'=>$order_data['Recipient Address*'], 'deliveryType'=> $order_data['Delivery Type*'], 'sender_id'=> $sender_id,'send_sender_id'=>$sender_id,'send_recipient_id'=> $recipient_id, 'origin_id'=> $sender_address_id, 'destination_id'=> $recipient_address_id];
 											
 													$ch = curl_init();
 													curl_setopt($ch, CURLOPT_URL, $url);
@@ -286,7 +286,7 @@ $file = $_FILES['excel_file'];
 													'sub_total' => $subtotal??'',
 													'total_order' => $total_order??'',
 													'tax_value' => $tax_value??'',
-													'delivery_type' => $order_data['Delivery Type']?cdp_sanitize($order_data['Delivery Type']):'',
+													'delivery_type' => $order_data['Delivery Type*']?cdp_sanitize($order_data['Delivery Type*']):'',
 												);
 												
 
@@ -296,16 +296,16 @@ $file = $_FILES['excel_file'];
 												$dataAddresses = array(
 													'order_id' =>   $insert,
 													'order_track' =>  $order_prefix . $next_order,
-													'sender_country' =>  $order_data['Sender Country'],
-													'sender_state' =>   $order_data['Sender State'],
-													'sender_city' =>   $order_data['Sender City'],
-													'sender_zip_code' =>   $order_data['Sender Postal Code'],
-													'sender_address' =>   $order_data['Sender Address'],
-													'recipient_country' =>  $order_data['Recipient Country'],
-													'recipient_state' =>   $order_data['Recipient State'],
-													'recipient_city' =>   $order_data['Recipient City'],
-													'recipient_zip_code' =>   $order_data['Recipient Postal Code'],
-													'recipient_address' =>   $order_data['Recipient Address']
+													'sender_country' =>  $order_data['Sender Country*'],
+													'sender_state' =>   $order_data['Sender State*'],
+													'sender_city' =>   $order_data['Sender City*'],
+													'sender_zip_code' =>   $order_data['Sender Postal Code*'],
+													'sender_address' =>   $order_data['Sender Address*'],
+													'recipient_country' =>  $order_data['Recipient Country*'],
+													'recipient_state' =>   $order_data['Recipient State*'],
+													'recipient_city' =>   $order_data['Recipient City*'],
+													'recipient_zip_code' =>   $order_data['Recipient Postal Code*'],
+													'recipient_address' =>   $order_data['Recipient Address*']
 												);
 												cdp_insertCourierShipmentAddresses($dataAddresses);
 												
