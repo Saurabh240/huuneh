@@ -170,7 +170,8 @@ function cdp_load_cities(modal) {
 }
 
 $("#admin_discount").on("change", function () {
-	var total_price = $("#total_price").val();/*
+	var total_price = $("#total_price").val();
+	/*
 	if($("#admin_discount").val()>parseFloat(total_price)){
 		 Swal.fire({
 		  type: 'Error!',
@@ -728,7 +729,13 @@ function calculateFinalTotal(element = null) {
 
 $("#invoice_form").on("submit", function (event) {
   if (cdp_validateZiseFiles() == true) {
-    alert("error files");
+    Swal.fire({
+		  type: 'Error!',
+		  title: 'Oops...',
+		  text: validation_files_size,
+		  icon: 'error',
+		  confirmButtonColor: '#336aea'
+		});
     return false;
   }
   
@@ -1094,41 +1101,59 @@ function isNumberKey(evt, element) {
 
 function cdp_preview_images() {
   $("#image_preview").html("");
-
+  var flag=0;
   var total_file = document.getElementById("filesMultiple").files.length;
 
   for (var i = 0; i < total_file; i++) {
-    var mime_type = event.target.files[i].type.split("/");
-    var src = "";
-    if (mime_type[0] == "image") {
-      src = URL.createObjectURL(event.target.files[i]);
-    } else {
-      src = "assets/images/no-preview.jpeg";
-    }
+	var filetype = event.target.files[i].type;
+	if (filetype == 'image/jpeg' || filetype == 'image/jpg') {		
+		var mime_type = event.target.files[i].type.split("/");
+		var src = "";
+		if (mime_type[0] == "image") {
+		  src = URL.createObjectURL(event.target.files[i]);
+		} else {
+		  src = "assets/images/no-preview.jpeg";
+		}
 
-    $("#image_preview").append(
-      '<div class="col-md-3" id="image_' +
-      i +
-      '">' +
-      '<img style="width: 180px; height: 180px;" class="img-thumbnail" src="' +
-      src +
-      '">' +
-      '<div class="row">' +
-      '<div class=" col-md-12 mt-2 mb-2">' +
-      "<span>" +
-      event.target.files[i].name +
-      "</span>" +
-      "</div>" +
-      "</div>" +
-      '<div class="row">' +
-      '<div class="  mb-2">' +
-      '<button type="button" class="btn btn-danger btn-sm pull-left" onclick="cdp_deletePreviewImage(' +
-      i +
-      ');"><i class="fa fa-trash"></i></button>' +
-      "</div>" +
-      "</div>" +
-      "</div>"
-    );
+		$("#image_preview").append(
+		  '<div class="col-md-3" id="image_' +
+		  i +
+		  '">' +
+		  '<img style="width: 180px; height: 180px;" class="img-thumbnail" src="' +
+		  src +
+		  '">' +
+		  '<div class="row">' +
+		  '<div class=" col-md-12 mt-2 mb-2">' +
+		  "<span>" +
+		  event.target.files[i].name +
+		  "</span>" +
+		  "</div>" +
+		  "</div>" +
+		  '<div class="row">' +
+		  '<div class="  mb-2">' +
+		  '<button type="button" class="btn btn-danger btn-sm pull-left" onclick="cdp_deletePreviewImage(' +
+		  i +
+		  ');"><i class="fa fa-trash"></i></button>' +
+		  "</div>" +
+		  "</div>" +
+		  "</div>"
+		);
+	}else{
+		flag=1;
+	
+	}
+  }
+  if(flag==1){
+	  	
+	Swal.fire({
+		  type: 'warning',
+		  title: 'opps..',
+		  text: 'Only jpeg and jpg image format allows.',
+		  icon: 'warning',
+		  confirmButtonColor: '#336aea'
+		});
+		
+	
   }
 }
 
@@ -1159,13 +1184,13 @@ function cdp_deletePreviewImage(index) {
 function cdp_validateZiseFiles() {
   var inputFile = document.getElementById("filesMultiple");
   var file = inputFile.files;
-
   var size = 0;
 
   for (var i = 0; i < file.length; i++) {
     var filesSize = file[i].size;
-
-    if (size > 5242880) {
+    var filetype = file[i].type;
+	if (filetype == 'image/jpeg' || filetype == 'image/jpg') {
+	if (size > 5242880) {
       $(".resultados_file").html(
         "<div class='alert alert-danger'>" +
         "<button type='button' class='close' data-dismiss='alert'>&times;</button>" +
@@ -1174,7 +1199,6 @@ function cdp_validateZiseFiles() {
         " </strong>" +
         "</div>"
       );
-
       $("#filesMultiple").val("");
       $("#clean_files").addClass("hide");
       $("#image_preview").html("");
@@ -1182,8 +1206,8 @@ function cdp_validateZiseFiles() {
     } else {
       $(".resultados_file").html("");
     }
-
     size += filesSize;
+	}
   }
 
   if (size > 5242880) {
@@ -1229,7 +1253,10 @@ $("input[type=file]").on("change", function () {
   var file = inputFile.files;
   var contador = 0;
   for (var i = 0; i < file.length; i++) {
-    contador++;
+	   var filetype = file[i].type;
+	if (filetype == 'image/jpeg' || filetype == 'image/jpg') {
+		contador++;
+	}
   }
   $("#total_item_files").val(contador);
 

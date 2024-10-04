@@ -366,7 +366,98 @@ $tagsFlower = ['Wreath','Standing/Casket Spray'];
                     </div>
                     <!-- Row -->
 
+					<?php if ($userData->userlevel==9){ 
+  if( $sender_data->business_type == "flower_shop" || $sender_data->business_type == "flat_1" || $sender_data->business_type == "flat_2" ) { ?>
+				 <div class="row">
+                    <div class="col-lg-12 col-xl-12 col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                
+                                <div class="mb-3">
+                                <h5> &nbsp;<b>Tags</b></h5>
+                                    <?php foreach ($tagsFlower as $tag){ ?>
+                                    <div class="form-check">
+                                        <p class="text-muted  m-l-5">
+                                            <input class="form-check-input" type="checkbox" id="<?php echo strtolower(str_replace(' ', '', $tag)); ?>" name="tags[]" value="<?php echo htmlspecialchars($tag); ?>" <?php if (isTagChecked($tag, $rowTagsFlower)) echo 'checked'; ?> disabled>
+                                            <label class="form-check-label" for="<?php echo strtolower(str_replace(' ', '', $tag)); ?>"><?php echo htmlspecialchars($tag); ?></label>
+                                        </p>
+                                    </div>
+                                    <?php } ?>
+                                </div>
 
+                                <div class="row">
+                                    <div class=" col-sm-12 col-md-4 mb-2">
+                                        <div class="">
+                                            <h5> &nbsp;<b>Pieces</b></h5>
+                                            <input type="number" class="form-control" name="pieces" id="pieces" placeholder="No of pieces" min=1 value="<?php echo $row_order->no_of_pieces; ?>" disabled>
+											
+                                        </div>
+                                    </div>
+
+                              
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="notes" class="form-label">Notes</label>
+                                    <textarea class="form-control" id="notesForDriver" name="notes_for_driver" rows="3" placeholder="Please be brief" readonly><?php echo $row_order->notes_for_driver ?></textarea>
+                                    <div class="form-text"></div>
+                                </div>
+                              
+                            </div>
+                        </div>
+                    </div>
+                </div>
+				
+				
+				
+				
+				<?php }elseif( $sender_data->business_type == "pharmacy" || $sender_data->business_type == "pharmacy_2" || $sender_data->business_type == "pharmacy_3" ) { ?>
+                <div class="row">
+                    <div class="col-lg-12 col-xl-12 col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class=" col-sm-12 col-md-4 mb-2">
+                                        <div class="">
+                                            <h5> &nbsp;<b>Charge</b></h5>
+                                            <p class="text-muted  m-l-5"><?php echo $row_order->charge; ?></p>
+                                        </div>
+                                    </div>
+
+                                    <div class=" col-sm-12 col-md-4 mb-2">
+                                        <div class="">
+                                            <h5> &nbsp;<b>No of Rx</b></h5>
+                                            <p class="text-muted  m-l-5"><?php echo $row_order->no_of_rx; ?></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                <h5> &nbsp;<b>Tags</b></h5>
+                                    <?php foreach ($tags as $tag){ ?>
+                                    <div class="form-check">
+                                        <p class="text-muted  m-l-5">
+                                            <input class="form-check-input" type="checkbox" id="<?php echo strtolower(str_replace(' ', '', $tag)); ?>" name="tags[]" value="<?php echo htmlspecialchars($tag); ?>" <?php if (isTagChecked($tag, $rowTags)) echo 'checked'; ?> disabled>
+                                            <label class="form-check-label" for="<?php echo strtolower(str_replace(' ', '', $tag)); ?>"><?php echo htmlspecialchars($tag); ?></label>
+                                        </p>
+                                    </div>
+                                    <?php } ?>
+                                </div>
+
+                                
+                                <div class="mb-3">
+                                    <label for="notes" class="form-label">Notes</label>
+                                    <textarea class="form-control" id="notesForDriver" name="notes_for_driver" rows="3" placeholder="Please be brief" readonly><?php echo $row_order->notes_for_driver ?></textarea>
+                                    <div class="form-text"></div>
+                                </div>
+                              
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php  }  } ?>
+								
+								
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="card">
@@ -519,98 +610,7 @@ $tagsFlower = ['Wreath','Standing/Casket Spray'];
                     </div>
 
 
-<?php if ($userData->userlevel==9){ ?>
-								 <?php  if( $sender_data->business_type == "flower_shop" || $sender_data->business_type == "flat_1" || $sender_data->business_type == "flat_2" ) { ?>
-				 <div class="row">
-                    <div class="col-lg-12 col-xl-12 col-md-12">
-                        <div class="card">
-                            <div class="card-body">
-                                
-                                <div class="mb-3">
-                                <h5> &nbsp;<b>Tags</b></h5>
-                                    <?php foreach ($tagsFlower as $tag){ ?>
-                                    <div class="form-check">
-                                        <p class="text-muted  m-l-5">
-                                            <input class="form-check-input" type="checkbox" id="<?php echo strtolower(str_replace(' ', '', $tag)); ?>" name="tags[]" value="<?php echo htmlspecialchars($tag); ?>" <?php if (isTagChecked($tag, $rowTagsFlower)) echo 'checked'; ?> disabled>
-                                            <label class="form-check-label" for="<?php echo strtolower(str_replace(' ', '', $tag)); ?>"><?php echo htmlspecialchars($tag); ?></label>
-                                        </p>
-                                    </div>
-                                    <?php } ?>
-                                </div>
 
-                                <div class="row">
-                                    <div class=" col-sm-12 col-md-4 mb-2">
-                                        <div class="">
-                                            <h5> &nbsp;<b>Pieces</b></h5>
-                                            <input type="number" class="form-control" name="pieces" id="pieces" placeholder="No of pieces" min=1 value="<?php echo $row_order->no_of_pieces; ?>" disabled>
-											
-                                        </div>
-                                    </div>
-
-                              
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <label for="notes" class="form-label">Notes</label>
-                                    <textarea class="form-control" id="notesForDriver" name="notes_for_driver" rows="3" placeholder="Please be brief" readonly><?php echo $row_order->notes_for_driver ?></textarea>
-                                    <div class="form-text"></div>
-                                </div>
-                              
-                            </div>
-                        </div>
-                    </div>
-                </div>
-				
-				
-				
-				
-				<?php } ?>
-                <?php  if( $sender_data->business_type == "pharmacy" || $sender_data->business_type == "pharmacy_2" || $sender_data->business_type == "pharmacy_3" ) { ?>
-                <div class="row">
-                    <div class="col-lg-12 col-xl-12 col-md-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class=" col-sm-12 col-md-4 mb-2">
-                                        <div class="">
-                                            <h5> &nbsp;<b>Charge</b></h5>
-                                            <p class="text-muted  m-l-5"><?php echo $row_order->charge; ?></p>
-                                        </div>
-                                    </div>
-
-                                    <div class=" col-sm-12 col-md-4 mb-2">
-                                        <div class="">
-                                            <h5> &nbsp;<b>No of Rx</b></h5>
-                                            <p class="text-muted  m-l-5"><?php echo $row_order->no_of_rx; ?></p>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="mb-3">
-                                <h5> &nbsp;<b>Tags</b></h5>
-                                    <?php foreach ($tags as $tag){ ?>
-                                    <div class="form-check">
-                                        <p class="text-muted  m-l-5">
-                                            <input class="form-check-input" type="checkbox" id="<?php echo strtolower(str_replace(' ', '', $tag)); ?>" name="tags[]" value="<?php echo htmlspecialchars($tag); ?>" <?php if (isTagChecked($tag, $rowTags)) echo 'checked'; ?> disabled>
-                                            <label class="form-check-label" for="<?php echo strtolower(str_replace(' ', '', $tag)); ?>"><?php echo htmlspecialchars($tag); ?></label>
-                                        </p>
-                                    </div>
-                                    <?php } ?>
-                                </div>
-
-                                
-                                <div class="mb-3">
-                                    <label for="notes" class="form-label">Notes</label>
-                                    <textarea class="form-control" id="notesForDriver" name="notes_for_driver" rows="3" placeholder="Please be brief" readonly><?php echo $row_order->notes_for_driver ?></textarea>
-                                    <div class="form-text"></div>
-                                </div>
-                              
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            <?php  } ?>
-								<?php } ?>
 								
                     <div class="row">
                     <div class="col-lg-4 h-70">
@@ -687,7 +687,7 @@ $tagsFlower = ['Wreath','Standing/Casket Spray'];
                                         <div class="row">
                                             <div class="col-md-8">
                                                 <div>
-                                                    <label class="control-label" id="selectItem"> Delivery Notes</label>
+                                                    <label class="control-label"> Delivery Notes</label>
                                                 </div>
                                                 <textarea class="form-control" name="delivery_notes" id="delivery_notes" rows="4" cols="50" placeholder="-Unit and Buzzer (If applicable) 
 -Package Description 
@@ -703,10 +703,10 @@ $tagsFlower = ['Wreath','Standing/Casket Spray'];
                                                     <label class="control-label" id="selectItem"> Attach Files</label>
                                                 </div>
 
-                                                <input class="custom-file-input" id="filesMultiple" name="filesMultiple[]" multiple type="file" style="display: none;" onchange="cdp_validateZiseFiles(); cdp_preview_images();" accept="image/jpeg, image/jpg">
+                                                <input class="custom-file-input" id="filesMultiple" name="filesMultiple[]" multiple type="file" style="display: none;" onchange="cdp_preview_images();" accept="image/jpeg, image/jpg">
 
 
-                                                <button type="button" id="openMultiFile" class="btn btn-default  pull-left  mb-4"> <i class="fa fa-paperclip" id="openMultiFile" style="font-size:18px; cursor:pointer;"></i> Upload files </button>
+                                                <button type="button" id="openMultiFile" class="btn btn-default pull-left  mb-4"> <i class="fa fa-paperclip" id="openMultiFile" style="font-size:18px; cursor:pointer;"></i> Upload files </button>
 
 
                                             </div>
@@ -722,19 +722,14 @@ $tagsFlower = ['Wreath','Standing/Casket Spray'];
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="resultados_file col-md-4 pull-right mt-4">
+                                            <!--div class="resultados_file col-md-4 pull-right mt-4">
 
 
-                                            </div>
+                                            </div-->
                                         </div>
 
 
-                                        <div class="row">
-
-                                            <div class="resultados_file col-md-4 pull-right mt-4">
-
-                                            </div>
-                                        </div>
+                                        
 
                                 </div>
                             </div>

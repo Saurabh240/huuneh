@@ -276,19 +276,20 @@ if (empty($errors)) {
             foreach ($_FILES["filesMultiple"]['tmp_name'] as $key => $tmp_name) {
 
                 if (!in_array($key, $deleted_file_ids)) {
-                    $image_name = $order_track .  date("Y-m-d") . "_" . basename($_FILES["filesMultiple"]["name"][$key]);
-                    $target_file = $target_dir . $image_name;
-                    $imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
-                    $imageFileZise = $_FILES["filesMultiple"]["size"][$key];
+					$image_name = $order_track .  date("Y-m-d") . "_" . basename($_FILES["filesMultiple"]["name"][$key]);
+					$target_file = $target_dir . $image_name;
+					 $imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
+					 $imageFileZise = $_FILES["filesMultiple"]["size"][$key];
+					if ($imageFileType == 'jpeg' || $imageFileType == 'jpg' || $imageFileType == 'JPEG' || $imageFileType == 'JPG') {
+							if ($imageFileZise > 0) {
+								move_uploaded_file($_FILES["filesMultiple"]["tmp_name"][$key], $target_file);
+								$imagen = basename($_FILES["filesMultiple"]["name"][$key]);
+							}
 
-                    if ($imageFileZise > 0) {
-                        move_uploaded_file($_FILES["filesMultiple"]["tmp_name"][$key], $target_file);
-                        $imagen = basename($_FILES["filesMultiple"]["name"][$key]);
-                    }
-
-                    $target_file_db = "order_files/" . $image_name;
-                    cdp_insertOrdersFiles($shipment_id, $target_file_db, $image_name, date("Y-m-d H:i:s"), '0', $imageFileType);
-                }
+							$target_file_db = "order_files/" . $image_name;
+							cdp_insertOrdersFiles($shipment_id, $target_file_db, $image_name, date("Y-m-d H:i:s"), '0', $imageFileType);
+					}
+				}
             }
         }
         $sender_data = cdp_getSenderCourier(intval($_POST["sender_id"]));

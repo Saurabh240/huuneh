@@ -321,15 +321,16 @@ if (empty($errors)) {
                     $target_file = $target_dir . $image_name;
                     $imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
                     $imageFileZise = $_FILES["filesMultiple"]["size"][$key];
+					if ($imageFileType == 'jpeg' || $imageFileType == 'jpg' || $imageFileType == 'JPEG' || $imageFileType == 'JPG') {
+						if ($imageFileZise > 0) {
+							move_uploaded_file($_FILES["filesMultiple"]["tmp_name"][$key], $target_file);
+							$imagen = basename($_FILES["filesMultiple"]["name"][$key]);
+						}
 
-                    if ($imageFileZise > 0) {
-                        move_uploaded_file($_FILES["filesMultiple"]["tmp_name"][$key], $target_file);
-                        $imagen = basename($_FILES["filesMultiple"]["name"][$key]);
-                    }
-
-                    $target_file_db = "order_files/" . $image_name;
-                    cdp_insertOrdersFiles($shipment_id, $target_file_db, $image_name, date("Y-m-d H:i:s"), '0', $imageFileType);
-                }
+						$target_file_db = "order_files/" . $image_name;
+						cdp_insertOrdersFiles($shipment_id, $target_file_db, $image_name, date("Y-m-d H:i:s"), '0', $imageFileType);
+					}
+				}
             }
         }
 

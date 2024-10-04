@@ -210,7 +210,10 @@ function cdp_deleteImgAttached(id) {
 function cdp_preview_images() {
   $("#image_preview").html("");
   var total_file = document.getElementById("filesMultiple").files.length;
+  var flag=0;
   for (var i = 0; i < total_file; i++) {
+	  var filetype = event.target.files[i].type;
+	if (filetype == 'image/jpeg' || filetype == 'image/jpg') {		
     var mime_type = event.target.files[i].type.split("/");
     var src = "";
     if (mime_type[0] == "image") {
@@ -218,7 +221,7 @@ function cdp_preview_images() {
     } else {
       src = "assets/images/no-preview.jpeg";
     }
-
+    
     $("#image_preview").append(
       '<div class="col-md-3" id="image_' +
       i +
@@ -242,6 +245,22 @@ function cdp_preview_images() {
       "</div>" +
       "</div>"
     );
+  }else{
+		flag=1;
+	
+	}
+  }
+  if(flag==1){
+	  	
+	Swal.fire({
+		  type: 'warning',
+		  title: 'opps..',
+		  text: 'Only jpeg and jpg image format allows.',
+		  icon: 'warning',
+		  confirmButtonColor: '#336aea'
+		});
+		
+	
   }
 }
 
@@ -276,6 +295,8 @@ function cdp_validateZiseFiles() {
 
   for (var i = 0; i < file.length; i++) {
     var filesSize = file[i].size;
+	 var filetype = file[i].type;
+	if (filetype == 'image/jpeg' || filetype == 'image/jpg') {
     if (size > 5242880) {
       $(".resultados_file").html(
         "<div class='alert alert-danger'>" +
@@ -294,6 +315,7 @@ function cdp_validateZiseFiles() {
     }
 
     size += filesSize;
+  }
   }
 
   if (size > 5242880) {
@@ -359,7 +381,10 @@ $("input[type=file]").on("change", function () {
   var file = inputFile.files;
   var contador = 0;
   for (var i = 0; i < file.length; i++) {
-    contador++;
+	   var filetype = file[i].type;
+	if (filetype == 'image/jpeg' || filetype == 'image/jpg') {
+		contador++;
+	}
   }
   $("#total_item_files").val(contador);
 
@@ -762,7 +787,6 @@ function calculateFinalTotal(element = null) {
 
   if (business_type === "flower_shop" || business_type === "flat_1" || business_type === "flat_2") {
 		var no_pieces = $("#pieces").val();
-
 	   if(no_pieces!=''){
 			shipmentfee_after_discount = shipmentfee_after_discount + (parseFloat(no_pieces) * 3);
 		}
@@ -786,7 +810,13 @@ function calculateFinalTotal(element = null) {
 
 $("#invoice_form").on("submit", function (event) {
   if (cdp_validateZiseFiles() == true) {
-    alert("error files");
+	Swal.fire({
+		  type: 'Error!',
+		  title: 'Oops...',
+		  text: validation_files_size,
+		  icon: 'error',
+		  confirmButtonColor: '#336aea'
+		});
     return false;
   }
 
@@ -2278,7 +2308,7 @@ function getTariffs() {
 }
 
 
-$("#calculate_invoice").css({ opacity: 0, height: 0, width: 0, padding: 0 });
+$("#calculate_invoice").css({ opacity: 0, height: 0, width: 0, padding: 0, display:'none' });
 
 $("#calculate_invoice").on("click", getTariffs);
 
