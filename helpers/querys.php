@@ -3277,6 +3277,45 @@ function cdp_insertOrdersFiles($order_id, $target_file, $image_name, $date, $is_
 }
 
 
+function cdp_insertDeliverFiles($order_id, $target_file, $image_name, $date, $is_consolidate, $imageFileType)
+{
+
+    $db = new Conexion;
+
+    $db->cdp_query("
+            INSERT INTO cdb_deliver_files  
+            (
+                url,
+                order_id,
+                date_file,
+                name,
+                is_consolidate,
+                file_type                   
+            )
+            VALUES
+                (
+                :url,
+                :order_id,
+                :date_file,
+                :name,
+                :is_consolidate,
+                :file_type                                     
+                )
+        ");
+
+
+
+    $db->bind(':order_id',  $order_id);
+    $db->bind(':url', $target_file);
+    $db->bind(':name', $image_name);
+    $db->bind(':is_consolidate', $is_consolidate);
+    $db->bind(':date_file', $date);
+    $db->bind(':file_type', $imageFileType);
+
+    return $db->cdp_execute();
+}
+
+
 function cdp_getCourierTrack($order_track)
 {
 
