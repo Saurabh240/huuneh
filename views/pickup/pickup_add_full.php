@@ -766,7 +766,8 @@ $order_prefix = $settings->prefix;
                                                     <?php echo $lang['leftorder15']; ?>
                                                 </label>
                                             </div>
-                                            <input class="custom-file-input" id="filesMultiple" name="filesMultiple[]" multiple type="file" style="display: none;" onchange="cdp_preview_images();" accept=".jpeg, .jpg" />
+                                            <input class="custom-file-input" id="filesMultiple" name="filesMultiple[]" multiple type="file" style="display: none;" onchange="cdp_preview_images();" accept="image/jpeg, image/jpg, image/png, image/gif">
+
                                             <button type="button" id="openMultiFile" class="btn btn-default  pull-left mb-4">
                                                 <i class='fa fa-paperclip' id="openMultiFile" style="font-size:18px; cursor:pointer;"></i>
                                                 <?php echo $lang['leftorder16']; ?>

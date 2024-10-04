@@ -280,7 +280,7 @@ if (empty($errors)) {
 					$target_file = $target_dir . $image_name;
 					 $imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
 					 $imageFileZise = $_FILES["filesMultiple"]["size"][$key];
-					if ($imageFileType == 'jpeg' || $imageFileType == 'jpg' || $imageFileType == 'JPEG' || $imageFileType == 'JPG') {
+					if ($imageFileType == 'jpeg' || $imageFileType == 'jpg' || $imageFileType == 'JPEG' || $imageFileType == 'JPG' || $imageFileType == 'png' || $imageFileType == 'PNG' || $imageFileType == 'gif' || $imageFileType == 'GIF') {
 							if ($imageFileZise > 0) {
 								move_uploaded_file($_FILES["filesMultiple"]["tmp_name"][$key], $target_file);
 								$imagen = basename($_FILES["filesMultiple"]["name"][$key]);

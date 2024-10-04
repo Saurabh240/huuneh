@@ -213,7 +213,7 @@ function cdp_preview_images() {
   var flag=0;
   for (var i = 0; i < total_file; i++) {
 	  var filetype = event.target.files[i].type;
-	if (filetype == 'image/jpeg' || filetype == 'image/jpg') {		
+	if (filetype == 'image/jpeg' || filetype == 'image/jpg' || filetype == 'image/png' || filetype == 'image/gif') {		
     var mime_type = event.target.files[i].type.split("/");
     var src = "";
     if (mime_type[0] == "image") {
@@ -255,7 +255,7 @@ function cdp_preview_images() {
 	Swal.fire({
 		  type: 'warning',
 		  title: 'opps..',
-		  text: 'Only jpeg and jpg image format allows.',
+		  text: 'Only jpeg,jpg,png,gif image format allows.',
 		  icon: 'warning',
 		  confirmButtonColor: '#336aea'
 		});
@@ -296,7 +296,7 @@ function cdp_validateZiseFiles() {
   for (var i = 0; i < file.length; i++) {
     var filesSize = file[i].size;
 	 var filetype = file[i].type;
-	if (filetype == 'image/jpeg' || filetype == 'image/jpg') {
+	if (filetype == 'image/jpeg' || filetype == 'image/jpg'  || filetype == 'image/png' || filetype == 'image/gif') {
     if (size > 5242880) {
       $(".resultados_file").html(
         "<div class='alert alert-danger'>" +
@@ -382,7 +382,7 @@ $("input[type=file]").on("change", function () {
   var contador = 0;
   for (var i = 0; i < file.length; i++) {
 	   var filetype = file[i].type;
-	if (filetype == 'image/jpeg' || filetype == 'image/jpg') {
+	if (filetype == 'image/jpeg' || filetype == 'image/jpg'  || filetype == 'image/png' || filetype == 'image/gif') {
 		contador++;
 	}
   }

@@ -703,7 +703,7 @@ $tagsFlower = ['Wreath','Standing/Casket Spray'];
                                                     <label class="control-label" id="selectItem"> Attach Files</label>
                                                 </div>
 
-                                                <input class="custom-file-input" id="filesMultiple" name="filesMultiple[]" multiple type="file" style="display: none;" onchange="cdp_preview_images();" accept="image/jpeg, image/jpg">
+                                                <input class="custom-file-input" id="filesMultiple" name="filesMultiple[]" multiple type="file" style="display: none;" onchange="cdp_preview_images();" accept="image/jpeg, image/jpg, image/png, image/gif">
 
 
                                                 <button type="button" id="openMultiFile" class="btn btn-default pull-left  mb-4"> <i class="fa fa-paperclip" id="openMultiFile" style="font-size:18px; cursor:pointer;"></i> Upload files </button>
@@ -1068,6 +1068,7 @@ $tagsFlower = ['Wreath','Standing/Casket Spray'];
                                                     $file->file_type == 'jpg' ||
                                                     $file->file_type == 'jpeg' ||
                                                     $file->file_type == 'png' ||
+                                                    $file->file_type == 'gif' ||
                                                     $file->file_type == 'ico'
                                                 ) {
 
