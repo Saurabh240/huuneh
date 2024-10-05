@@ -449,8 +449,9 @@ $("#invoice_form").on("submit", function (event) {
       });
     },
     success: function (data) {
+
       if (data.success) {
-        cdp_showSuccess(data.messages);
+        cdp_showSuccess(data.messages, shipment_id);
       } else {
         cdp_showError(data.errors);
       }
@@ -480,7 +481,7 @@ function cdp_showError(errors) {
   });
 }
 
-function cdp_showSuccess(messages) {
+function cdp_showSuccess(messages, shipment_id) {
   Swal.fire({
     title: messages,
     icon: "success",
@@ -488,7 +489,9 @@ function cdp_showSuccess(messages) {
     confirmButtonText: "Ok",
   }).then((result) => {
     if (result.isConfirmed) {
-      $("#invoice_form").trigger("reset");
+      setTimeout(function () {
+        window.location = "courier_view.php?id=" + shipment_id;
+      }, 2000);
     }
   });
 }

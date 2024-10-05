@@ -1303,6 +1303,71 @@ $tagsFlower = ['Wreath','Standing/Casket Spray'];
                     </div>
                 <?php
                 } ?>
+					
+					 <?php
+
+                $db->cdp_query("SELECT * FROM cdb_deliver_files where order_id='" . $_GET['id'] . "' ORDER BY date_file");
+                $files_order = $db->cdp_registros();
+                $numrows = $db->cdp_rowCount();
+
+                if ($numrows > 0) {
+                ?>
+                    <div class="row">
+                        <div class="col-lg-12 col-xl-12 col-md-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-md-flex align-items-center">
+                                        <div>
+                                            <h3 class="card-title"><span>Delivery Proof</span></h3>
+                                        </div>
+                                    </div>
+                                    <div><hr></div>
+                                    <div class="col-md-12 row">
+
+                                        <?php
+                                        $count = 0;
+                                        foreach ($files_order as $file) {
+
+                                            $date_add = date("Y-m-d h:i A", strtotime($file->date_file));
+
+                                            $src = 'assets/images/no-preview.jpeg';
+
+                                            if (
+                                                $file->file_type == 'jpg' ||
+                                                $file->file_type == 'jpeg' ||
+                                                $file->file_type == 'png' ||
+                                                $file->file_type == 'gif' ||
+                                                $file->file_type == 'ico'
+                                            ) {
+
+                                                $src = $file->url;
+                                            }
+
+                                            $count++;
+                                        ?>
+
+                                            <div class=" col-sm-12 col-md-3 mb-2">
+
+                                                <img style="width: 180px; height: 180px;" class="img-thumbnail" src="<?php echo $src; ?>">
+
+                                                <div class="row ">
+                                                    <div class=" col-md-12 mb-2 mt-2">
+                                                        <p class="text-justify"><a style="color:#7460ee;" target="_blank" href="<?php echo $file->url; ?>" class=""><?php echo $file->name; ?> </a></p>
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        <?php
+                                        } ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php
+                } ?>
+
 
                   <!-- Row Total Cost with commented shipping details  -->
                   <div class="row">
