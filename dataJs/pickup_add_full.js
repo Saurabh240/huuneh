@@ -2184,6 +2184,7 @@ function initAutocomplete() {
       fields: ["address_components", "geometry"],
       types: ["address"],
       strictBounds: false,
+	  componentRestrictions: { country: "CA" } // Restrict to Canada
     });
     address.focus();
    
