@@ -1913,53 +1913,39 @@ var autocomplete;
 var address_field;
 var country_field;
 var country_field_label;
+var autocompleteInstances = [];
 
-
+var address_fields = []; // Declare in outer scope
 
 function initAutocomplete() {
 
-  const address_fields = [document.querySelector("#address_modal_recipient_address"), document.querySelector("#address_modal_user_address"), document.querySelector("#address_modal_recipient")];
-  //var country_array = ["AFG","ALB","DZA","AND","AGO","ATG","ARG","ARM","AUS","AUT","AZE","BHS","BHR","BGD","BRB","BLR","BEL","BLZ","BEN","BMU","BTN","BOL","BIH","BWA","BRA","BRN","BGR","BFA","BDI","KHM","CMR","CAN","CPV","CAF","TCD","CHL","CHN","COL","COM","COG","COD","CRI","CIV","HRV","CUB","CYP","CZE","DNK","DJI","DMA","DOM","TLS","ECU","EGY","SLV","GNQ","ERI","EST","ETH","FJI","FIN","FRA","GAB","GMB","GEO","DEU","GHA","GRC","GRD","GTM","GIN","GNB","GUY","HTI","HND","HKG","HUN","ISL","IND","IDN","IRN","IRQ","IRL","ISR","ITA","JAM","JPN","JOR","KAZ","KEN","KIR","PRK","KOR","KWT","KGZ","LAO","LVA","LBN","LSO","LBR","LBY","LIE","LTU","LUX","MKD","MDG","MWI","MYS","MDV","MLI","MLT","MHL","MRT","MUS","MEX","FSM","MDA","MCO","MNG","MNE","MAR","MOZ","MMR","NAM","NRU","NPL","BES","NLD","NZL","NIC","NER","NGA","NOR","OMN","PAK","PLW","PAN","PNG","PRY","PER","PHL","POL","PRT","PRI","QAT","ROU","RUS","RWA","KNA","LCA","VCT","WSM","SMR","STP","SAU","SEN","SRB","SYC","SLE","SGP","SVK","SVN","SLB","SOM","ZAF","SSD","ESP","LKA","SDN","SUR","SWZ","SWE","CHE","SYR","TWN","TJK","TZA","THA","TGO","TON","TTO","TUN","TUR","TKM","TUV","UGA","UKR","ARE","GBR","USA","URY","UZB","VUT","VEN","VNM","VIR","YEM","ZMB","ZWE","XKX","test","HA","ISM","MAR","YU","YU"];
-
-  address_fields.forEach(address => {
+  address_fields = [document.querySelector("#address_modal_recipient_address"), document.querySelector("#address_modal_user_address"), document.querySelector("#address_modal_recipient")];
+  	
+	 address_fields.forEach((address, index) => {
     let autocomplete = new google.maps.places.Autocomplete(address, {
-      // componentRestrictions: { country: new_country_array },
       fields: ["address_components", "geometry"],
       types: ["address"],
       strictBounds: false,
     });
     address.focus();
-    // When the user selects an address from the drop-down, populate the
-    // address fields in the form.
-    autocomplete.addListener("place_changed", fillInAddress);
-  })
-  // Create the autocomplete object, restricting the search predictions to
-  // addresses in the US and Canada.
-  // autocomplete = new google.maps.places.Autocomplete(address_field, {
-  //   // componentRestrictions: { country: new_country_array },
-  //   fields: ["address_components", "geometry"],
-  //   types: ["address"],
-  //   strictBounds: false,
-  // });
-  // address_field.focus();
-  // // When the user selects an address from the drop-down, populate the
-  // // address fields in the form.
-  // autocomplete.addListener("place_changed", fillInAddress);
+   
+    autocompleteInstances[index] = autocomplete;
 
+    autocomplete.addListener("place_changed", function () {
+      fillInAddress(index);
+    });
+  });
+  
 }
 
-function fillInAddress() {
+function fillInAddress(index) {
   // Get the place details from the autocomplete object.
+  const autocomplete = autocompleteInstances[index];
   const place = autocomplete.getPlace();
   let address1 = "";
   let postcode = "";
 
-  // Get each component of the address from the place details,
-  // and then fill-in the corresponding field on the form.
-  // place.address_components are google.maps.GeocoderAddressComponent objects
-  // which are documented at http://goo.gle/3l5i5Mr
   for (const component of place.address_components) {
-    // @ts-ignore remove once typings fixed
     const componentType = component.types[0];
 
     switch (componentType) {
@@ -1974,9 +1960,13 @@ function fillInAddress() {
       }
 
     }
-
-    address_field.value = address1;
   }
+  const address_field = address_fields[index];
+	  if (address_field) {
+		address_field.value = address1; // Set the formatted address value
+		const event = new Event('change', { bubbles: true, cancelable: true });
+		address_field.dispatchEvent(event);
+	  }
 }
 
 window.initAutocomplete = initAutocomplete;
@@ -2136,7 +2126,8 @@ var iti = window.intlTelInput(input, {
       callback(countryCode);
     });
   },
-  initialCountry: "auto",
+  onlyCountries: ["ca"], // This restricts the country list to Canada
+  initialCountry: "ca", // Sets the default country to Canada
   nationalMode: true,
 
   separateDialCode: true,
@@ -2186,8 +2177,9 @@ var iti_recipient = window.intlTelInput(input_recipient, {
       callback(countryCode);
     });
   },
-  initialCountry: "auto",
   nationalMode: true,
+  onlyCountries: ["ca"], // This restricts the country list to Canada
+  initialCountry: "ca", // Sets the default country to Canada
 
   separateDialCode: true,
   utilsScript: "assets/template/assets/libs/intlTelInput/utils.js",
@@ -2480,11 +2472,15 @@ $(document).ready(function () {
   });
 });
 
-function loadStates(selectedCountryId, stateInput, cityInput, modelId)
+function loadStates(selectedCountryId, stateInput, cityInput, modelId,inputAddress)
 {
       // Select state
       if (stateInput) {
-        var $stateSelect = modelId ? $("#state_modal_recipient" + modelId) : $("#state_modal_recipient");
+		  if(inputAddress=='address_modal_user_address'){
+			 var $stateSelect = modelId ? $("#state_modal_user" + modelId) : $("#state_modal_user");
+		}else{
+			var $stateSelect = modelId ? $("#state_modal_recipient" + modelId) : $("#state_modal_recipient");
+		}
         $.ajax({
           url: "ajax/select2_states.php?id=" + selectedCountryId, // Your data source URL for states
           dataType: "json",
@@ -2512,19 +2508,24 @@ function loadStates(selectedCountryId, stateInput, cityInput, modelId)
             });
     
             // After state is selected, load cities
-            loadCities(selectedState.id, cityInput, modelId); // Assuming cdp_load_cities(modal) function exists
+            loadCities(selectedState.id, cityInput, modelId,inputAddress); // Assuming cdp_load_cities(modal) function exists
           }
         });
       }
     
 }
 
-function loadCities(selectedStateId, cityInput, modelId)
+function loadCities(selectedStateId, cityInput, modelId,inputAddress)
 {
 
       // Select city
       if (cityInput) {
+		  if(inputAddress=='address_modal_user_address'){
+			  var $citySelect = modelId ? $("#city_modal_user" + modelId) : $("#city_modal_user");
+			
+		}else{
         var $citySelect = modelId ? $("#city_modal_recipient" + modelId) : $("#city_modal_recipient");
+		}
         $.ajax({
           url: "ajax/select2_cities.php?id=" + selectedStateId, // Your data source URL for cities
           dataType: "json",
@@ -2555,7 +2556,7 @@ function loadCities(selectedStateId, cityInput, modelId)
       }
 }
 
-function loadCountries(fullAddress, modelId)
+function loadCountries(fullAddress, modelId,inputAddress)
 {
   if (!fullAddress) return;
 
@@ -2564,10 +2565,19 @@ function loadCountries(fullAddress, modelId)
     var cityInput = fullAddress.city;
     var selectedZip = fullAddress.zip_code;
     var $countrySelect;
-    modelId ? $("#postal_modal_recipient" + modelId).val(selectedZip) : $("#postal_modal_recipient").val(selectedZip);
+
+	if(inputAddress=='address_modal_user_address'){
+    modelId ? $("#postal_modal_user" + modelId).val(selectedZip) : $("#postal_modal_user").val(selectedZip);
+	}else{
+    modelId ? $("#postal_modal_recipient" + modelId).val(selectedZip) : $("#postal_modal_recipient").val(selectedZip); 
+	}
     // Select country
     if (countryInput) {
-      $countrySelect = modelId ? $countrySelect = $("#country_modal_recipient" + modelId) : $("#country_modal_recipient");
+		if(inputAddress=='address_modal_user_address'){
+			  $countrySelect = modelId ? $countrySelect = $("#country_modal_user" + modelId) : $("#country_modal_user");
+		}else{
+			$countrySelect = modelId ? $countrySelect = $("#country_modal_recipient" + modelId) : $("#country_modal_recipient");
+		}
       $.ajax({
         url: "ajax/select2_countries.php", // Your data source URL for countries
         dataType: "json",
@@ -2591,7 +2601,7 @@ function loadCountries(fullAddress, modelId)
           });
 
           // After country is selected, load states
-          loadStates(selectedCountry.id, stateInput, cityInput, modelId); 
+          loadStates(selectedCountry.id, stateInput, cityInput, modelId,inputAddress); 
         }
       });
     }
@@ -2612,7 +2622,7 @@ function getRecipientFullAddress(inputAddress, modelId)
     success: function (response) {
       if(response.status){
         var fullAddress = response.fullAddress;
-        loadCountries(fullAddress, modelId);
+        loadCountries(fullAddress, modelId,inputAddress);
       }else{
         // alert(response.message);
       }
@@ -2633,4 +2643,8 @@ $("#address_modal_recipient").on("change", function(){
 
 $("#address_modal_recipient_address").on("change", function(){
   getRecipientFullAddress("address_modal_recipient_address", "_address");
+});
+
+$("#address_modal_user_address").on("change", function(){
+  getRecipientFullAddress("address_modal_user_address", "_address");
 });

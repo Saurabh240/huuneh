@@ -1432,7 +1432,8 @@ var iti = window.intlTelInput(input, {
       callback(countryCode);
     });
   },
-  initialCountry: "auto",
+  onlyCountries: ["ca"], // This restricts the country list to Canada
+  initialCountry: "ca", // Sets the default country to Canada
   nationalMode: true,
 
   separateDialCode: true,
