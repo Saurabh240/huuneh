@@ -959,7 +959,7 @@ $order_prefix = $settings->prefix;
             <?php include('views/modals/modal_add_addresses_recipient.php'); ?>
 
         </div>
-        <?php include 'views/inc/footer.php'; ?>
+        <?php include('views/inc/footer.php'); ?>
 
     </div>
 
@@ -987,7 +987,7 @@ $order_prefix = $settings->prefix;
       defer
     ></script>
 
-    <script src="dataJs/address_autocomplete.js"></script>
+    <!--script src="dataJs/address_autocomplete.js"></script-->
 
 </body>
 
