@@ -27,26 +27,55 @@ if (isset($_POST["origin"]) && isset($_POST["destination"]) && isset($_POST["del
 	$destination = urlencode($_POST["destination"]);
     $deliveryType = $_POST["deliveryType"];
 	$check_deliveryType=array('SAMEDAY (BEFORE 7PM)','NEXT DAY (BEFORE 7PM)','SAMEDAY (BEFORE 9PM)');
+	$origin_full_address=$origin;
 	if(isset($_POST["origin_id"])){
 		$db->cdp_query('SELECT name FROM cdb_senders_addresses,cdb_cities WHERE cdb_cities.id=cdb_senders_addresses.city && id_addresses='.$_POST["origin_id"]);
 		$db->cdp_execute();
 		$originCityName = $db->cdp_registro();
 		$originCity = $originCityName->name??'';
+		
+		$db->cdp_query('SELECT name,zip_code,address FROM cdb_senders_addresses,cdb_states WHERE cdb_states.id=cdb_senders_addresses.state && id_addresses='.$_POST["origin_id"]); 	
+		$db->cdp_execute();		
+		$originStateName = $db->cdp_registro();
+		$originState = $originStateName->name??'';
+		$originPostal = $originStateName->zip_code??'';
+		$originAddress = $originStateName->address??'';
+		
+		$db->cdp_query('SELECT name FROM cdb_senders_addresses, cdb_countries WHERE cdb_countries.id=cdb_senders_addresses.country && id_addresses='.$_POST["origin_id"]); 	
+		$db->cdp_execute();		
+		$originCountryName = $db->cdp_registro();
+		$originCountry = $originCountryName->name??'';
+		$origin_full_address= urlencode($originAddress.', '.$originCity.', '.$originState.', '.$originCountry.', '.$originPostal);
 	}
+	$destination_full_address=$destination;
 	if(isset($_POST["destination_id"])){	
 		$db->cdp_query('SELECT name FROM  cdb_recipients_addresses,cdb_cities WHERE cdb_cities.id=cdb_recipients_addresses.city && id_addresses='.$_POST["destination_id"]); 	
 		$db->cdp_execute();		
 		$destinationCityName = $db->cdp_registro();
 		$destinationCity = $destinationCityName->name??'';
+		
+		$db->cdp_query('SELECT name,zip_code,address FROM cdb_recipients_addresses,cdb_states WHERE cdb_states.id=cdb_recipients_addresses.state && id_addresses='.$_POST["destination_id"]); 	
+		$db->cdp_execute();		
+		$destinationStateName = $db->cdp_registro();
+		$destinationState = $destinationStateName->name??'';
+		$destinationPostal = $destinationStateName->zip_code??'';
+		$destinationAddress = $destinationStateName->address??'';
+		
+		$db->cdp_query('SELECT name FROM cdb_recipients_addresses, cdb_countries WHERE cdb_countries.id=cdb_recipients_addresses.country && id_addresses='.$_POST["destination_id"]); 	
+		$db->cdp_execute();		
+		$destinationCountryName = $db->cdp_registro();
+		$destinationCountry = $destinationCountryName->name??'';
+		$destination_full_address= urlencode($destinationAddress.', '.$destinationCity.', '.$destinationState.', '.$destinationCountry.', '.$destinationPostal);
 	}
 	$flat_price_approverd_for=array('flat_1','flat_2','special');
-    $distance_bw = $courier['distance']= calculateDistance($origin, $destination, $apiKey);
+   // $distance_bw = $courier['distance']= calculateDistance($origin, $destination, $apiKey);
+    $distance_bw = $courier['distance']= calculateDistance($origin_full_address, $destination_full_address, $apiKey);
     if ($courier['distance'] !== false) {
 		$flag = array_search ($deliveryType, $check_deliveryType);
 		
 		if(in_array($business_type,$flat_price_approverd_for)  && $originCity!='' && $destinationCity!='' && $flag!='' && $flag>=0){
 			  
-			   $db->cdp_query("SELECT * FROM   cdb_flat_price_lists WHERE business_type= '".$business_type."' && sender_city= '".$originCity."' && recipient_city= '".$destinationCity."'"); 	
+			   $db->cdp_query("SELECT * FROM cdb_flat_price_lists WHERE business_type= '".$business_type."' && sender_city= '".$originCity."' && recipient_city= '".$destinationCity."'"); 	
 				$db->cdp_execute();
 				$flat_price_data = $db->cdp_registro();
 				 if ($flat_price_data && isset($flat_price_data->price)) {
