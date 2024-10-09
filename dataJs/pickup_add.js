@@ -1914,7 +1914,7 @@ var address_field;
 var country_field;
 var country_field_label;
 var autocompleteInstances = [];
-
+var full_address;
 var address_fields = []; // Declare in outer scope
 
 function initAutocomplete() {
@@ -1923,7 +1923,7 @@ function initAutocomplete() {
   	
 	 address_fields.forEach((address, index) => {
     let autocomplete = new google.maps.places.Autocomplete(address, {
-      fields: ["address_components", "geometry"],
+      fields: ["address_components", "geometry","formatted_address"],
       types: ["address"],
       strictBounds: false,
 	  componentRestrictions: { country: "CA" } // Restrict to Canada
@@ -1943,6 +1943,8 @@ function fillInAddress(index) {
   // Get the place details from the autocomplete object.
   const autocomplete = autocompleteInstances[index];
   const place = autocomplete.getPlace();
+  full_address = place.formatted_address;
+
   let address1 = "";
   let postcode = "";
 
@@ -2477,6 +2479,7 @@ function loadStates(selectedCountryId, stateInput, cityInput, modelId,inputAddre
 {
       // Select state
       if (stateInput) {
+		  
 		  if(inputAddress=='address_modal_user_address'){
 			 var $stateSelect = modelId ? $("#state_modal_user" + modelId) : $("#state_modal_user");
 		}else{
@@ -2493,7 +2496,15 @@ function loadStates(selectedCountryId, stateInput, cityInput, modelId,inputAddre
             var selectedState = statesData.find(function (state) {
               return state.text == stateInput;
             });
-    
+			if (selectedState === undefined) {
+				
+				 const normalizedStr2 = stateInput.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+				//console.log("normalizedStr2="+normalizedStr2);
+				var selectedState = statesData.find(function (state) {
+				  return state.text == normalizedStr2;
+				});
+			}
+   
             // Create a new option element
             var newStateOption = new Option(selectedState.text, selectedState.id, true, true);
     
@@ -2612,9 +2623,10 @@ function loadCountries(fullAddress, modelId,inputAddress)
 
 function getRecipientFullAddress(inputAddress, modelId)
 {
-  var recipientAddress = $("#" + inputAddress).val();
-  console.log(recipientAddress);
+ // var recipientAddress = $("#" + inputAddress).val();
 
+   var recipientAddress=full_address;
+ 
   $.ajax({
     type: 'POST',
     url: 'ajax/courier/address_details_api.php',
