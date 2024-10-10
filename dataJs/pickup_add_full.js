@@ -2171,7 +2171,7 @@ var autocomplete;
 var address_field;
 var country_field;
 var country_field_label;
-var full_address;
+var full_address='';
 var autocompleteInstances = [];
 
 var address_fields = []; // Declare in outer scope
@@ -2696,10 +2696,8 @@ function loadCountries(fullAddress, modelId,inputAddress)
 
 function getRecipientFullAddress(inputAddress, modelId)
 {
-  //var recipientAddress = $("#" + inputAddress).val();
-  
-  var recipientAddress=full_address;
-  console.log("full_address="+full_address);
+
+   var recipientAddress=full_address;
   $.ajax({
     type: 'POST',
     url: 'ajax/courier/address_details_api.php',
@@ -2722,19 +2720,60 @@ function getRecipientFullAddress(inputAddress, modelId)
   
 }
 
-$("#address_modal_recipient").on("change", function(){
+$("#address_modal_recipient").on("change paste", function(){
+	if(event.type==='paste'){
+		setTimeout(function() {
+        full_address = $("#address_modal_recipient").val();
+		var abc = full_address.split(","); 
+		if (typeof abc[0] !== "undefined") {
+		$("#address_modal_recipient").val(abc[0]); }
+    }, 0);
+	
+	}else{
   getRecipientFullAddress("address_modal_recipient", "");
+	}
 });
 
 
-$("#address_modal_recipient_address").on("change", function(){
+$("#address_modal_recipient_address").on("change paste", function(){
+	if(event.type==='paste'){
+		setTimeout(function() {
+        full_address = $("#address_modal_recipient_address").val();
+		var abc = full_address.split(","); 
+		if (typeof abc[0] !== "undefined") {
+		$("#address_modal_recipient_address").val(abc[0]); }
+    }, 0);
+	
+	}else{
   getRecipientFullAddress("address_modal_recipient_address", "_address");
+	}
 });
 
-$("#address_modal_user_address").on("change", function(){
-  getRecipientFullAddress("address_modal_user_address", "_address");
+$("#address_modal_user_address").on("change paste", function(){
+	if(event.type==='paste'){
+		setTimeout(function() {
+        full_address = $("#address_modal_user_address").val();
+		var abc = full_address.split(","); 
+		if (typeof abc[0] !== "undefined") {
+		$("#address_modal_user_address").val(abc[0]); }
+    }, 0);
+	
+	}else{
+	getRecipientFullAddress("address_modal_user_address", "_address"); }
 });
 
-$("#address_modal_user").on("change", function(){
-  getRecipientFullAddress("address_modal_user", "");
+$("#address_modal_user").on("change paste", function(){
+	if(event.type==='paste'){
+		setTimeout(function() {
+        full_address = $("#address_modal_user").val();
+		var abc = full_address.split(","); 
+		if (typeof abc[0] !== "undefined") {
+		$("#address_modal_user").val(abc[0]); }
+    }, 0);
+	
+	}else{
+	getRecipientFullAddress("address_modal_user", ""); }
+  
 });
+
+

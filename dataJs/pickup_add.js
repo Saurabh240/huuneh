@@ -2649,15 +2649,42 @@ function getRecipientFullAddress(inputAddress, modelId)
   
 }
 
-$("#address_modal_recipient").on("change", function(){
-  getRecipientFullAddress("address_modal_recipient", "");
+$("#address_modal_recipient").on("change paste", function(){
+	if(event.type==='paste'){
+		setTimeout(function() {
+        full_address = $("#address_modal_recipient").val();
+		var abc = full_address.split(","); 
+		if (typeof abc[0] !== "undefined") {
+		$("#address_modal_recipient").val(abc[0]); }
+    }, 0);
+	
+	}else{
+	getRecipientFullAddress("address_modal_recipient", ""); }
 });
 
 
-$("#address_modal_recipient_address").on("change", function(){
-  getRecipientFullAddress("address_modal_recipient_address", "_address");
+$("#address_modal_recipient_address").on("change paste", function(){
+	if(event.type==='paste'){
+		setTimeout(function() {
+        full_address = $("#address_modal_recipient_address").val();
+		var abc = full_address.split(","); 
+		if (typeof abc[0] !== "undefined") {
+		$("#address_modal_recipient_address").val(abc[0]); }
+    }, 0);
+	
+	}else{
+	getRecipientFullAddress("address_modal_recipient_address", "_address"); }
 });
 
-$("#address_modal_user_address").on("change", function(){
-  getRecipientFullAddress("address_modal_user_address", "_address");
+$("#address_modal_user_address").on("change paste", function(){
+	if(event.type==='paste'){
+		setTimeout(function() {
+        full_address = $("#address_modal_user_address").val();
+		var abc = full_address.split(","); 
+		if (typeof abc[0] !== "undefined") {
+		$("#address_modal_user_address").val(abc[0]); }
+    }, 0);
+	
+	}else{
+	getRecipientFullAddress("address_modal_user_address", "_address"); }
 });

@@ -203,8 +203,8 @@ if ($numrows > 0) { ?>
 								<?php echo $receiver_data->fname; ?> <?php echo $receiver_data->lname; ?>
 							</td>
 
-							<td class="text-center"><?php echo $address_order->sender_address; ?></td>
-							<td class="text-center"><?php echo $row->recipient_address; ?></td>
+							<td class="text-center"><?php echo $address_order->sender_address.', '.$address_order->sender_city.', '.$address_order->sender_state; ?></td>
+							<td class="text-center"><?php echo $address_order->recipient_address.', '.$address_order->recipient_city.', '.$address_order->recipient_state; ?></td>
 							<td class="text-center"><?php echo $row->notes_for_driver!=''?$row->notes_for_driver:$row->notes; ?></td>
 							<td class="text-center">
 								<?php echo implode(',',json_decode($row->tags,TRUE)); ?>
