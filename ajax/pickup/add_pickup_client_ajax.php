@@ -335,6 +335,8 @@ if (empty($errors)) {
         $sender_zip_code = $sender_address_data->zip_code;
         $sender_address = $sender_address_data->address;
 		
+		
+		
 		$recipient_address_data = cdp_getRecipientAddress(intval($_POST["recipient_address_id"]));
 
         $recipient_address = $recipient_address_data->address;
@@ -342,6 +344,28 @@ if (empty($errors)) {
         $recipient_city = $recipient_address_data->city;
         $recipient_state = $recipient_address_data->state;
         $recipient_zip_code = $recipient_address_data->zip_code;
+		
+		
+		$_sender_country = cdp_getCountry($sender_country);
+        $final_sender_country = $_sender_country['data'];
+
+        $_sender_state = cdp_getState($sender_state);
+        $final_sender_state = $_sender_state['data'];
+
+        $sender_city = cdp_getCity($sender_city);
+        $final_sender_city = $sender_city['data'];
+
+
+        
+        $_recipient_country = cdp_getCountry($recipient_country);
+        $final_recipient_country = $_recipient_country['data'];
+
+        $_recipient_state = cdp_getState($recipient_state);
+        $final_recipient_state = $_recipient_state['data'];
+
+        $recipient_city = cdp_getCity($recipient_city);
+        $final_recipient_city = $recipient_city['data'];
+		
 		
 		$email_template = cdp_getEmailTemplatesdg1i4(27);
 		
@@ -370,15 +394,16 @@ if (empty($errors)) {
                 $mlogo,
                 $msnames,
                 $app_url,
-				$sender_address . ', ' . $sender_city. ', ' . $sender_state. ', ' . $sender_country. ' ' . $sender_zip_code,
+				$sender_address . ', ' . $final_sender_city->name . ', ' . $final_sender_state->name. ', ' . $final_sender_country->name. ' ' . $sender_zip_code,
                 $receiver_data->fname . ' ' . $receiver_data->lname,
-                $recipient_address . ', ' . $recipient_city. ', ' . $recipient_state. ', ' . $recipient_country. ' ' . $recipient_zip_code,
+                $recipient_address . ', ' . $final_recipient_city->name. ', ' . $final_recipient_state->name. ', ' . $final_recipient_country->name. ' ' . $recipient_zip_code,
                 '$' . floatval($_POST["total_order"]),
                 $_POST['delivery_type']
             ),
             $email_template->body
         );
 
+			
         $newbody = cdp_cleanOut($body);
 		if ($check_mail == 'PHP') {
 
@@ -396,7 +421,8 @@ if (empty($errors)) {
             } elseif ($check_mail == 'SMTP') {
 
                 //PHPMAILER PHP
-                $destinatario = $site_email;
+               $destinatario = $site_email;
+                
 
                 $mail = new PHPMailer();
                 $mail->IsSMTP();
@@ -481,25 +507,7 @@ if (empty($errors)) {
         
 
 
-        $_sender_country = cdp_getCountry($sender_country);
-        $final_sender_country = $_sender_country['data'];
-
-        $_sender_state = cdp_getState($sender_state);
-        $final_sender_state = $_sender_state['data'];
-
-        $sender_city = cdp_getCity($sender_city);
-        $final_sender_city = $sender_city['data'];
-
-
         
-        $_recipient_country = cdp_getCountry($recipient_country);
-        $final_recipient_country = $_recipient_country['data'];
-
-        $_recipient_state = cdp_getState($recipient_state);
-        $final_recipient_state = $_recipient_state['data'];
-
-        $recipient_city = cdp_getCity($recipient_city);
-        $final_recipient_city = $recipient_city['data'];
 
         // SAVE ADDRESS FOR Shipments
         $dataAddresses = array(
