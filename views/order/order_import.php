@@ -102,11 +102,13 @@ $file = $_FILES['excel_file'];
 							$highestColumn = $sheet->getHighestColumn();
 							$highestrow = $sheet->getHighestRow();
 							$header = $sheet->rangeToArray('A1:' . $highestColumn . '1', NULL, TRUE, FALSE);
-						    for ($row = 2; $row <= $highestrow; $row++) {
+						   // for ($row = 2; $row <= $highestrow; $row++) {
+						    for ($row = 5; $row <=6 ; $row++) {
 						    
 							$rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row, NULL, TRUE, FALSE);
 							
 							if(isset($rowData[0])){
+								
 							$order_data = array_combine($header[0], $rowData[0]);
 							
 							$error_msg=array();
@@ -392,9 +394,8 @@ $file = $_FILES['excel_file'];
 																			
 										
 								}
-							}
-						
-							if(!empty($error_msg) && count($error_msg)>0){
+								
+								if(!empty($error_msg) && count($error_msg)>0){
 								
 								//Sent Admin Email
 								
@@ -438,8 +439,8 @@ $file = $_FILES['excel_file'];
             } elseif ($check_mail == 'SMTP') {
 
                 //PHPMAILER PHP
-               //$destinatario = $site_email;
-               $destinatario = "kam.2391@gmail.com";
+               $destinatario = $site_email;
+              
                       
                 $mail = new PHPMailer();
                 $mail->IsSMTP();
@@ -476,12 +477,16 @@ $file = $_FILES['excel_file'];
                 );
 
                 try {
-                    $estadoEnvio = $mail->Send();
+                   // $estadoEnvio = $mail->Send();
                     // echo "El correo fue enviado correctamente.";
                 } catch (Exception $e) {
                     // echo "Ocurrió un error inesperado.";
                 }
             }
+			
+							}
+						
+							
         
 		
 		
