@@ -48,14 +48,10 @@ if ($customer_id > 0) {
 
 
 if (!empty($range)) {
-
 	$fecha =  explode(" - ", $range);
 	$fecha = str_replace('/', '-', $fecha);
-
 	$fecha_inicio = date('Y-m-d', strtotime($fecha[0]));
 	$fecha_fin = date('Y-m-d', strtotime($fecha[1]));
-
-
 	$sWhere .= " and  a.order_date between '" . $fecha_inicio . "'  and '" . $fecha_fin . "'";
 }
 
@@ -64,7 +60,6 @@ $sql = "SELECT a.total_declared_value, a.total_weight, a.total_tax_discount, a.s
 			 INNER JOIN cdb_styles as b ON a.status_courier = b.id
 			 $sWhere
 			  and a.is_pickup=1
-
 			 order by order_id asc 
 			 ";
 
@@ -191,7 +186,7 @@ if ($numrows > 0) { ?>
 								<?php echo $sender_data->fname; ?> <?php echo $sender_data->lname; ?>
 							</td>
 							<td class="text-center"><?php echo $address_order->sender_address.', '.$address_order->sender_city.', '.$address_order->sender_state.', '.$address_order->sender_country.', '.$address_order->sender_zip_code; ?></td>
-							<td class="text-center"><?php echo $address_order->recipient_address.', '.$address_order->recipient_country.', '.$address_order->recipient_state.', '.$address_order->recipient_country.', '.$address_order->recipient_zip_code; ?></td>
+							<td class="text-center"><?php echo $address_order->recipient_address.', '.$address_order->recipient_city.', '.$address_order->recipient_state.', '.$address_order->recipient_country.', '.$address_order->recipient_zip_code; ?></td>
 						
 							<td class="text-center">
 								<?php echo cdb_money_format($row->sub_total); ?>

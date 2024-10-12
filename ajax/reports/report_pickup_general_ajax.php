@@ -83,10 +83,8 @@ if (!empty($range)) {
 $sql = "SELECT a.total_declared_value, a.total_weight, a.total_tax_discount, a.sub_total, a.total_tax_insurance, a.total_tax_custom_tariffis, a.total_tax, a.status_invoice,  a.is_consolidate, a.is_pickup,  a.total_order, a.order_id, a.order_prefix, a.order_no, a.order_date, a.sender_id, a.order_courier,a.status_courier,  b.mod_style, b.color, a.delivery_type FROM
 			 cdb_add_order as a
 			 INNER JOIN cdb_styles as b ON a.status_courier = b.id
-			 
 			 $sWhere
 			  and a.is_pickup=1
-
 			 order by order_id asc 
 			 ";
 
@@ -213,7 +211,7 @@ if ($numrows > 0) { ?>
 								<?php echo $sender_data->fname; ?> <?php echo $sender_data->lname; ?>
 							</td>
 							<td class="text-center"><?php echo $address_order->sender_address.', '.$address_order->sender_city.', '.$address_order->sender_state.', '.$address_order->sender_country.', '.$address_order->sender_zip_code; ?></td>
-							<td class="text-center"><?php echo $address_order->recipient_address.', '.$address_order->recipient_country.', '.$address_order->recipient_state.', '.$address_order->recipient_country.', '.$address_order->recipient_zip_code; ?></td>
+							<td class="text-center"><?php echo $address_order->recipient_address.', '.$address_order->recipient_city.', '.$address_order->recipient_state.', '.$address_order->recipient_country.', '.$address_order->recipient_zip_code; ?></td>
 							<td class="text-center">
 								<?php echo cdb_money_format($row->sub_total); ?>
 
