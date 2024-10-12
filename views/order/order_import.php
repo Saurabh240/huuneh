@@ -22,7 +22,10 @@
 
 require 'helpers/querys.php';
 require 'vendor/autoload.php';
+require_once("helpers/phpmailer/class.phpmailer.php");
+require_once("helpers/phpmailer/class.smtp.php");
 use PhpOffice\PhpSpreadsheet\IOFactory;
+
 $errors = array();
 $response = array();
 
@@ -62,9 +65,24 @@ $file = $_FILES['excel_file'];
 					
 					$data=array();
 							$settings = cdp_getSettingsCourier();
-							
+
 							$order_prefix = $settings->prefix;
+							$site_email = $settings->email_address;
+							$check_mail = $settings->mailer;
+							$names_info = $settings->smtp_names;
+							$mlogo = $settings->logo;
+							$msite_url = $settings->site_url;
+							$msnames = $settings->site_name;
+							//SMTP
+							$smtphoste = $settings->smtp_host;
+							$smtpuser = $settings->smtp_user;
+							$smtppass = $settings->smtp_password;
+							$smtpport = $settings->smtp_port;
+							$smtpsecure = $settings->smtp_secure;
+							$value_weight = $settings->value_weight;
 							$meter = $settings->meter;
+							
+							
 							$date = date('Y-m-d');
 							$time = date("H:i:s");
 							$date = $date . ' ' . $time;
@@ -85,6 +103,7 @@ $file = $_FILES['excel_file'];
 							$highestrow = $sheet->getHighestRow();
 							$header = $sheet->rangeToArray('A1:' . $highestColumn . '1', NULL, TRUE, FALSE);
 						    for ($row = 2; $row <= $highestrow; $row++) {
+						    
 							$rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row, NULL, TRUE, FALSE);
 							
 							if(isset($rowData[0])){
@@ -94,15 +113,17 @@ $file = $_FILES['excel_file'];
 							$next_order = $core->cdp_order_track();
 							$min_cost_tax = $core->min_cost_tax;
 							$min_cost_declared_tax = $core->min_cost_declared_tax;
-							if($order_data['Sender Country*']=='' || $order_data['Sender Address*']=='' || $order_data['Sender City*']=='' || $order_data['Sender State*']=='' || $order_data['Sender Postal Code*']=='' || $order_data['Recipient Country*']=='' || $order_data['Recipient Address*']=='' || $order_data['Recipient State*']=='' || $order_data['Recipient City*']=='' || $order_data['Recipient Postal Code*']=='' || $order_data['Sender Username*']=='' || $order_data['Recipient Username*']==''){
+							if($order_data['Sender Country*']=='' || $order_data['Sender Address*']=='' || $order_data['Sender City*']=='' || $order_data['Sender State*']=='' || $order_data['Sender Postal Code*']=='' || $order_data['Recipient Country*']=='' || $order_data['Recipient Address*']=='' || $order_data['Recipient State*']=='' || $order_data['Recipient City*']=='' || $order_data['Recipient Postal Code*']==''){
 								//send_email
-								$error_msg[]= "These fields data are mandatory: Sender Username*, Sender Address*, Sender City*, Sender State*, Sender Country*, Sender Postal Code*,Recipient Username*, Recipient Address*, Recipient City*, Recipient State*,Recipient Country*, Recipient Postal Code*.";
+								$error_msg[]= "These fields data are mandatory: Sender Address*, Sender City*, Sender State*, Sender Country*, Sender Postal Code*, Recipient Address*, Recipient City*, Recipient State*,Recipient Country*, Recipient Postal Code*.";
 							}else{
 								//GET Sender id
-								$sender_data=cdp_getSenderByUsername($order_data['Sender Username*']);
+								$sender_data=array();
+								if($order_data['Sender Username']!=''){
+								$sender_data=cdp_getSenderByUsername($order_data['Sender Username']); }
 								if(empty($sender_data)){
 									 $data = array(
-											'username' => cdp_sanitize($order_data['Sender Username*']),
+											'username' => cdp_sanitize($order_data['Sender Username']),
 											'branch_office' => '',
 											'email' => $order_data['Sender Email']?cdp_sanitize($order_data['Sender Email']):'',
 											'fname' => $order_data['Sender Fname']?cdp_sanitize($order_data['Sender Fname']):'',
@@ -119,35 +140,24 @@ $file = $_FILES['excel_file'];
 										);
 										$a  = cdp_insertUserImportOrder($data);
 										$sender_id = $db->dbh->lastInsertId();
+										
 								}else{
 									$sender_id=$sender_data->id;
 								}
 								//Get Recipient ID
-								$recipient_data=cdp_getSenderByUsername($order_data['Recipient Username*']);
-								if(empty($recipient_data)){
 								$data = array(
-											'username' => cdp_sanitize($order_data['Recipient Username*']),
-											'branch_office' => '',
-											'email' => $order_data['Recipient Email']?cdp_sanitize($order_data['Recipient Email']):'',
-											'fname' => $order_data['Recipient Fname']?cdp_sanitize($order_data['Recipient Fname']):'',
-											'lname' => $order_data['Recipient Lname']?cdp_sanitize($order_data['Recipient Lname']):'',
-											'business_type' => $order_data['Recipient Business Type']?cdp_sanitize($order_data['Recipient Business Type']):'',
-											'newsletter' => 1,
-											'notes' => '',
-											'phone' => $order_data['Recipient Phone']?cdp_sanitize($order_data['Recipient Phone']):'',
-											'gender' => '',
-											'userlevel' => 1,
-											'active' => 1,
-											'password' => '',
-											'created' => date("Y-m-d H:i:s")
-										);
-										$b = cdp_insertUserImportOrder($data);
-										$recipient_id = $db->dbh->lastInsertId();
-									}else{
-										$recipient_id=$recipient_data->id;
-									}					
+										'lname' => cdp_sanitize($order_data['Recipient Lname']),
+										'fname' => cdp_sanitize($order_data['Recipient Fname']),
+										'phone' => cdp_sanitize($order_data['Recipient Phone']),
+										'email' => cdp_sanitize($order_data['Recipient Email']),
+										'sender_id' => $sender_id,
+									);
+
+									$recipient_id = cdp_insertRecipient($data);
+																
+													
 							        
-									//Get Address id
+									//Get Sender Address id
 									
 									$Sender_country = cdp_getCountryByName($order_data['Sender Country*']);
 									if(empty($Sender_country)){
@@ -290,11 +300,22 @@ $file = $_FILES['excel_file'];
 												);
 												
 
-												$insert = cdp_insertOrderImport($data);
+												$order_id = cdp_insertOrderImport($data);
+												if($order_id){
+													
+												//Add order item details
 												
+												$orderItem = array(
+														'order_id' =>  $order_id,
+														'qty' =>   1,
+														'description' =>  'package',
+													);
+
+													cdp_insertCourierShipmentPackages($orderItem);
+													
 												// SAVE ADDRESS FOR Shipments
 												$dataAddresses = array(
-													'order_id' =>   $insert,
+													'order_id' =>   $order_id,
 													'order_track' =>  $order_prefix . $next_order,
 													'sender_country' =>  $order_data['Sender Country*'],
 													'sender_state' =>   $order_data['Sender State*'],
@@ -309,6 +330,58 @@ $file = $_FILES['excel_file'];
 												);
 												cdp_insertCourierShipmentAddresses($dataAddresses);
 												
+												//Insert Courier Track
+												
+												 $dataTrack = array(
+													'user_id' =>  $_SESSION['userid'],
+													'order_id' =>  $order_id,
+													'order_track' =>  $order_prefix . $next_order,
+													't_date' =>  date("Y-m-d H:i:s"),
+													'status_courier' =>  cdp_sanitize(intval($status)),
+													'comments' => $lang['messagesform39'] . ' ' . $order_data['Sender Fname'] . ' ' . $order_data['Sender Lname'],
+													'office' =>  null,
+												); 
+
+												cdp_insertCourierShipmentTrack($dataTrack);
+												
+												// Add order User History
+												
+												 $dataHistory = array(
+													'user_id' =>  $_SESSION['userid'],
+													'order_id' =>  $order_id,
+													'action' =>  $lang['notification_shipment8'],
+													'date_history' =>  cdp_sanitize(date("Y-m-d H:i:s")),
+													'order_track' =>  $order_prefix . $next_order,
+												);
+
+												
+												cdp_insertCourierShipmentUserHistory($dataHistory);
+												
+												//Add Notification for order 
+												
+												$dataNotification = array(
+													'user_id' =>  $_SESSION['userid'],
+													'order_id' =>  $order_id,
+													'notification_description' => $lang['notification_shipment'],
+													'shipping_type' => '1',
+													'notification_date' =>  cdp_sanitize(date("Y-m-d H:i:s")),
+												);
+												// SAVE NOTIFICATION
+												cdp_insertNotification($dataNotification);
+												
+												$notification_id = $db->dbh->lastInsertId();
+
+													//NOTIFICATION TO ADMIN AND EMPLOYEES
+													$users_employees = cdp_getUsersAdminEmployees();
+
+													foreach ($users_employees as $key) {
+														cdp_insertNotificationsUsers($notification_id, $key->id);
+													}
+													//NOTIFICATION TO CUSTOMER
+													cdp_insertNotificationsUsers($notification_id, intval($sender_id));
+												}else{
+													$error_msg[]='Order not created!';
+												}
 												}
 										}
 									}
@@ -320,6 +393,100 @@ $file = $_FILES['excel_file'];
 										
 								}
 							}
+						
+							if(!empty($error_msg) && count($error_msg)>0){
+								
+								//Sent Admin Email
+								
+								$subject = "Import Order Failed";
+
+
+        $email_template = cdp_getEmailTemplatesdg1i4(28);
+
+        $body = str_replace(
+            array(
+                '[excel_no]',
+                '[Sender_Username]',
+                '[Sender_Fname]'
+                
+            ),
+            array(
+                $order_data['No'],
+                $order_data['Sender Username'],
+                $order_data['Sender Fname']
+            ),
+            $email_template->body
+        );
+
+        $newbody = cdp_cleanOut($body);
+
+        //SENDMAIL PHP to the user
+        
+            if ($check_mail == 'PHP') {
+
+                $message = $newbody;
+                $to = $site_email;
+                $from = $site_email;
+
+                $header = "MIME-Version: 1.0\r\n";
+                $header .= "Content-type: text/html; charset=UTF-8 \r\n";
+                $header .= "From: " . $from . " \r\n";
+                try {
+                    mail($to, $subject, $message, $header);
+                } catch (Exception $e) {
+                }
+            } elseif ($check_mail == 'SMTP') {
+
+                //PHPMAILER PHP
+               //$destinatario = $site_email;
+               $destinatario = "kam.2391@gmail.com";
+                      
+                $mail = new PHPMailer();
+                $mail->IsSMTP();
+                $mail->SMTPAuth = true;
+                $mail->Port = $smtpport;
+                $mail->IsHTML(true);
+                $mail->CharSet = 'UTF-8';
+
+                // Datos de la cuenta de correo utilizada para enviar vía SMTP
+                $mail->Host = $smtphoste;       // Dominio alternativo brindado en el email de alta
+                $mail->Username = $smtpuser;    // Mi cuenta de correo
+                $mail->Password = $smtppass;    //Mi contraseña
+
+
+                $mail->From = $site_email; // Email desde donde envío el correo.
+                $mail->FromName = $names_info;
+                $mail->AddAddress($destinatario); // Esta es la dirección a donde enviamos los datos del formulario
+				
+                $mail->Subject = $subject; // Este es el titulo del email.
+                $mail->Body = "
+                        <html> 
+                        <body> 
+                        <p>{$newbody}</p>
+                        </body> 
+                        </html>
+                        <br />"; // Texto del email en formato HTML
+
+                $mail->SMTPOptions = array(
+                    'ssl' => array(
+                        'verify_peer' => false,
+                        'verify_peer_name' => false,
+                        'allow_self_signed' => true
+                    )
+                );
+
+                try {
+                    $estadoEnvio = $mail->Send();
+                    // echo "El correo fue enviado correctamente.";
+                } catch (Exception $e) {
+                    // echo "Ocurrió un error inesperado.";
+                }
+            }
+        
+		
+		
+							}
+							
 						}
 						$response['status']= "success";
 						$response['msg']= $lang['flat-price-11'];
