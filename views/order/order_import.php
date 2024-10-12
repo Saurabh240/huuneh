@@ -102,8 +102,8 @@ $file = $_FILES['excel_file'];
 							$highestColumn = $sheet->getHighestColumn();
 							$highestrow = $sheet->getHighestRow();
 							$header = $sheet->rangeToArray('A1:' . $highestColumn . '1', NULL, TRUE, FALSE);
-						   // for ($row = 2; $row <= $highestrow; $row++) {
-						    for ($row = 5; $row <=6 ; $row++) {
+						   for ($row = 2; $row <= $highestrow; $row++) {
+						    
 						    
 							$rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row, NULL, TRUE, FALSE);
 							
