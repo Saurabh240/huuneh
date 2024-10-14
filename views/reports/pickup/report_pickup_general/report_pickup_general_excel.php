@@ -99,7 +99,7 @@ $sql = "SELECT a.total_declared_value, a.total_weight, a.total_tax_discount, a.s
 	  and a.is_pickup=1
 
 
-	 order by order_id desc 
+	 order by order_id asc 
 	 ";
 
 
