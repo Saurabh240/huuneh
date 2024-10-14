@@ -182,7 +182,7 @@ if ($numrows > 0) {
 		$html .= '<td>' . $row->mod_style . '</td>';
 		$html .= '<td>' . $sender_data->fname .' '.$sender_data->lname. '</td>';
 		$html .= '<td>' . $address_order->sender_address.', '.$address_order->sender_city.', '.$address_order->sender_state.', '.$address_order->sender_country.', '.$address_order->sender_zip_code . '</td>';
-		$html .= '<td>' . $address_order->recipient_address.', '.$address_order->recipient_country.', '.$address_order->recipient_state.', '.$address_order->recipient_country.', '.$address_order->recipient_zip_code . '</td>';
+		$html .= '<td>' . $address_order->recipient_address.', '.$address_order->recipient_city.', '.$address_order->recipient_state.', '.$address_order->recipient_country.', '.$address_order->recipient_zip_code . '</td>';
 		$html .= '<td>' . cdb_money_format_bar($row->sub_total) . '</td>';
 		$html .= '<td>' . cdb_money_format_bar($row->total_order) . '</td>';
 		$html .= '</tr>';
