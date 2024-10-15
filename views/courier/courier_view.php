@@ -299,11 +299,12 @@ $tagsFlower = ['Wreath','Standing/Casket Spray'];
 
                                                             <?php if ($row_order->status_courier != 21) { ?>
                                                                 <?php if ($row_order->status_courier != 12) { ?>
+																<?php if ($userData->userlevel != 3){ ?>
                                                                     <a class="dropdown-item" target="blank" href="print_inv_ship.php?id=<?php echo $_GET['id']; ?>">
                                                                         <i style="color:#343a40" class="ti-printer"></i>&nbsp;<?php echo $lang['toolprint'] ?></a>
 
                                                                     <a class="dropdown-item" href="print_label_ship.php?id=<?php echo $_GET['id']; ?>" target="_blank"> <i style="color:#343a40" class="ti-printer"></i>&nbsp;<?php echo $lang['toollabel'] ?> </a>
-
+																<?php } ?>
 
                                                                     <?php if ($userData->userlevel == 9 || $userData->userlevel == 3 || $userData->userlevel == 2) { ?>
 
@@ -313,8 +314,9 @@ $tagsFlower = ['Wreath','Standing/Casket Spray'];
                                                                                 <?php if ($row_order->status_courier != 21) { ?>
                                                                                     <?php if ($row_order->status_courier != 12) { ?>
 
-
+																						
                                                                                         <a class="dropdown-item" href="courier_shipment_tracking.php?id=<?php echo $_GET['id']; ?>" title="<?php echo $lang['toolupdate'] ?>"><i style="color:#20c997" class="ti-reload">&nbsp;</i><?php echo $lang['toolupdate'] ?></a>
+																						
 
                                                                                         <a class="dropdown-item" href="courier_deliver_shipment.php?id=<?php echo $row_order->order_id; ?>" title="<?php echo $lang['tooldeliver'] ?>"><i style="color:#2962FF" class="ti-package"></i>&nbsp;<?php echo $lang['tooldeliver'] ?></a>
                                                                                     <?php } ?>
@@ -1546,12 +1548,14 @@ $tagsFlower = ['Wreath','Standing/Casket Spray'];
                                 </div>
 
                                 <div><br></div> -->
+								  <?php if ($userData->userlevel != 3) { ?>
                                 <div class="d-md-flex align-items-center">
                                     <div>
                                         <h3 class="card-title"><span><?php echo $lang['messageerrorform30'] ?></span></h3>
                                     </div>
                                 </div>
                                 <div><hr></div>
+								
                                 <div class="table-responsive">
                                     <table class="table table-hover" id="tabla">
                                         <thead class="bg-inverse text-white">
@@ -1595,6 +1599,7 @@ $tagsFlower = ['Wreath','Standing/Casket Spray'];
                                         </tbody>
                                     </table>
                                 </div>
+								  <?php } ?>
                             </div>
                         </div>
                     </div>

@@ -708,6 +708,10 @@ $lang = array(
 	"left-menu-sidebar-62" => "All Recipients",
 	"left-menu-sidebar-63" => "My Profile",
 	"left-menu-sidebar-64" => "Flat Price",
+	
+	"left-menu-sidebar-65" => "My Pick Ups",
+	"left-menu-sidebar-66" => "My Drop Off",
+	"left-menu-sidebar-67" => "Completed Orders",
 
 
 	"dash-pending-orders" => "Pending Orders",

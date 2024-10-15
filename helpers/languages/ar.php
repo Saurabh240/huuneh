@@ -690,8 +690,10 @@ $lang = array(
     "left-menu-sidebar-63" => "عرض الصفحة الشخصية",
 	"left-menu-sidebar-64" => "سعر ثابت",
 
-
-
+	
+	"left-menu-sidebar-65" => "اختياراتي"،
+	"left-menu-sidebar-66" => "التوصيل الخاص بي"،
+	"left-menu-sidebar-67" => "الطلبات المكتملة"،
 
     "dash-general-1" => "شحنات",
     "dash-general-2" => "التقاطات",

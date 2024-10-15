@@ -1062,6 +1062,13 @@
 									<span class="hide-menu"> <?php echo $lang['left-menu-sidebar-21'] ?> </span>
 								</a>
 					</li>
+					<!-- Module Order Import  -->
+							<li class="sidebar-item">
+								<a class="sidebar-link waves-effect waves-dark" href="order_import.php" aria-expanded="false">
+									<i class="mdi mdi-upload"></i>
+									<span class="hide-menu"> <?php echo $lang['order-import-1'] ?> </span>
+								</a>
+							</li>
 					<!-- <li class="sidebar-item">
 						<a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-cube-send"></i>
 							<span class="hide-menu"> <?php echo $lang['left-menu-sidebar-18'] ?></span>
@@ -1213,10 +1220,10 @@
 					</li>
 
 
-					<li class="p-15 m-t-10">
+					<!--li class="p-15 m-t-10">
 						<a href="courier_add.php" class="btn btn-block create-btn text-white no-block d-flex align-items-center">
 							<i class="ti-package"></i> <span class="hide-menu m-l-5"> <?php echo $lang['left-menu-sidebar-1'] ?> </span> </a>
-					</li>
+					</li-->
 
 					<li class="sidebar-item">
 						<a class="sidebar-link waves-effect waves-dark" href="index.php" aria-expanded="false">
@@ -1224,8 +1231,36 @@
 							<span class="hide-menu"> <?php echo $lang['left-menu-sidebar-2'] ?> </span>
 						</a>
 					</li>
-
 					<li class="sidebar-item">
+						<a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
+							<i class="mdi mdi-cube-send"></i>
+							<span class="hide-menu"><?php echo $lang['left-menu-sidebar-18'] ?></span>
+						</a>
+						<ul aria-expanded="false" class="collapse  first-level">						
+
+							<li class="sidebar-item">
+									<a href="my_pickup.php" class="sidebar-link">
+										<i class="mdi mdi-cube-send" style="color:#f62d51"></i>
+										<span class="hide-menu"> <?php echo $lang['left-menu-sidebar-65'] ?> </span>
+									</a>
+								</li>			
+
+							<li class="sidebar-item">
+								<a href="my_drop_off.php" class="sidebar-link">
+									<i class="mdi mdi-adjust" style="color:#fc3f7"></i>
+									<span class="hide-menu"> <?php echo $lang['left-menu-sidebar-66'] ?> </span>
+								</a>
+							</li>
+							<li class="sidebar-item">
+								<a href="completed_orders.php" class="sidebar-link">
+									<i class="mdi mdi-adjust" style="color:#fc3f7"></i>
+									<span class="hide-menu"> <?php echo $lang['left-menu-sidebar-67'] ?> </span>
+								</a>
+							</li>
+						</ul>
+					</li>
+
+					<!--li class="sidebar-item">
 						<a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
 							<i class="mdi mdi-codepen"></i>
 							<span class="hide-menu"><?php echo $lang['left-menu-sidebar-5'] ?></span>
@@ -1312,7 +1347,7 @@
 						</a>
 						<ul aria-expanded="false" class="collapse  first-level">
 
-							<!-- Module consolidate-->
+							
 							<li class="sidebar-item">
 								<a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
 									<i class="fas fas fa-boxes"></i>
@@ -1331,7 +1366,7 @@
 							</li>
 
 
-							<!-- Module consolidate-->
+						
 							<li class="sidebar-item">
 								<a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
 									<i class="fas fas fa-boxes"></i>
@@ -1355,7 +1390,7 @@
 							<i class="mdi mdi-book-multiple" style="color:#fb8c00"></i>
 							<span class="hide-menu"> <?php echo $lang['left-menu-sidebar-26'] ?></span>
 						</a>
-
+					</li-->
 					<li class="sidebar-item">
 						<a class="sidebar-link waves-effect waves-dark" href="drivers_edit.php?user=<?php echo $userData->id; ?>" aria-expanded="false">
 							<i class="mdi mdi-account"></i>

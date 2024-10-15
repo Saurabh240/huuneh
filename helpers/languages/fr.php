@@ -689,6 +689,9 @@ $lang = array(
 	"left-menu-sidebar-63" => "Voir le profil",
 	"left-menu-sidebar-64" => "Prix forfaitaire",
 
+	"left-menu-sidebar-65" => "Mes récupérations",
+	"left-menu-sidebar-66" => "Mon dépôt",
+	"left-menu-sidebar-67" => "Commandes terminées",
 
 
 
