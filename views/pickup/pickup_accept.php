@@ -582,7 +582,7 @@ $tagsFlower = ['Wreath','Standing/Casket Spray'];
 										<div class="col-md-2">
 										 <label for="admin_discount" class="control-label col-form-label">Discount (in $)</label>
 										 <div class="input-group mb-3">
-											   <input type="number" id="admin_discount" name="admin_discount" step="1" value=<?php echo $row_order->admin_discount??''; ?> class="form-control">
+											   <input type="number" id="admin_discount" name="admin_discount" step="0.1" value=<?php echo $row_order->admin_discount??''; ?> class="form-control">
 											   <input type="hidden" id="total_price">
 											</div>
 										</div>
