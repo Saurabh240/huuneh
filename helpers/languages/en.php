@@ -529,7 +529,7 @@ $lang = array(
 	"notification_shipment28" => "Consolidation created",
 	"notification_shipment29" => "There is a new consolidated shipment, please check it",
 	"notification_shipment30" => "Updated Consolidation",
-	"notification_shipment31" => "Huuneh - Your order is picked up!",
+	"notification_shipment31" => "Huuneh - Update on your Order Status",
 	"notification_shipment32" => "Huuneh - Your order is delivered!",
 
 
