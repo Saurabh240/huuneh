@@ -836,6 +836,14 @@ function calculateFinalTotal(element = null) {
 
 		}
 	 }
+	 
+	  if (business_type === "warehouses") {
+		var no_pieces_warehouse = $("#pieces_warehouse").val();
+	    if(no_pieces_warehouse!=''){
+			shipmentfee = parseFloat(shipmentfee) + (parseFloat(no_pieces_warehouse) * 2);
+		}
+	  }
+	
 	  $("#total_before_tax").html(Number(shipmentfee).toFixed(2));
 	
  
@@ -927,7 +935,11 @@ $("#invoice_form").on("submit", function (event) {
 	  no_of_pieces = $("#pieces").val();
 	  //notes_for_driver = $("#notesForDriver_flower").val();
   }
-
+	
+	 if (business_type === "warehouses") {
+	  no_of_pieces = $("#pieces_warehouse").val();
+  }
+  
   if (business_type && business_type === "pharmacy" || business_type === "pharmacy_2" || business_type === "pharmacy_3") {
     // Collect checked checkbox values
     $('input[name="tags[]"]:checked').each(function() {

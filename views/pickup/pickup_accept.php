@@ -389,7 +389,7 @@ $tagsFlower = ['Wreath','Standing/Casket Spray'];
                                     <div class=" col-sm-12 col-md-4 mb-2">
                                         <div class="">
                                             <h5> &nbsp;<b>Pieces</b></h5>
-                                            <input type="number" class="form-control" name="pieces" id="pieces" placeholder="No of pieces" min=1 value="<?php echo $row_order->no_of_pieces; ?>" disabled>
+                                            <input type="number" class="form-control" name="pieces" id="pieces" placeholder="No of pieces" value="<?php echo $row_order->no_of_pieces; ?>" disabled>
 											
                                         </div>
                                     </div>
@@ -399,7 +399,7 @@ $tagsFlower = ['Wreath','Standing/Casket Spray'];
                                 
                                 <div class="mb-3">
                                     <label for="notes" class="form-label">Notes</label>
-                                    <textarea class="form-control" id="notesForDriver" name="notes_for_driver" rows="3" placeholder="Please be brief" readonly><?php echo $row_order->notes_for_driver ?></textarea>
+                                    <textarea class="form-control" id="notesForDriver" name="notes_for_driver" rows="3" min=0 placeholder="Please be brief" readonly><?php echo $row_order->notes_for_driver ?></textarea>
                                     <div class="form-text"></div>
                                 </div>
                               
@@ -409,8 +409,28 @@ $tagsFlower = ['Wreath','Standing/Casket Spray'];
                 </div>
 				
 				
-				
-				
+				<?php }elseif($sender_data->business_type == "warehouses") { ?>
+				<div class="row">
+                    <div class="col-lg-12 col-xl-12 col-md-12">
+				<div class="card" id="warehouseCard">
+                    <div class="card-body">
+                        <!-- Charge and Rx Number Row -->
+                                             
+
+                        <div class="mb-3 row" id="piece_div_warehouse">
+                            <div class="col-md-6">
+                            <label for="pieces_warehouse" class="form-label">Pieces</label>
+                            <input type="number" class="form-control" name="pieces" id="pieces_warehouse" placeholder="No of pieces" min=0 value="<?php echo $row_order->no_of_pieces; ?>" disabled>
+							 <div class="form-text">Each piece is to be $2</div>
+                            </div>
+                            
+                        </div>
+						
+                     
+                    </div>
+                </div>
+                </div>
+                </div>
 				<?php }elseif( $sender_data->business_type == "pharmacy" || $sender_data->business_type == "pharmacy_2" || $sender_data->business_type == "pharmacy_3" ) { ?>
                 <div class="row">
                     <div class="col-lg-12 col-xl-12 col-md-12">

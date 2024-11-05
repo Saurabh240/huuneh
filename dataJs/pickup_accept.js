@@ -791,6 +791,12 @@ function calculateFinalTotal(element = null) {
 			shipmentfee_after_discount = shipmentfee_after_discount + (parseFloat(no_pieces) * 3);
 		}
   }
+   if (business_type === "warehouses") {
+		var no_pieces = $("#pieces_warehouse").val();
+	   if(no_pieces!=''){
+			shipmentfee_after_discount = shipmentfee_after_discount + (parseFloat(no_pieces) * 2);
+		}
+  }
 	$("#total_before_tax").html(Number(shipmentfee_after_discount).toFixed(2));
    var total_tax_value = parseFloat(shipmentfee_after_discount + (parseFloat(shipmentfee_after_discount) * (13 / 100)));
    $("#total_price").val(parseFloat(shipmentfee_after_discount).toFixed(2));

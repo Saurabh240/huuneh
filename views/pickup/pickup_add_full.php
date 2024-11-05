@@ -561,7 +561,25 @@ $order_prefix = $settings->prefix;
                     </div>
                 </div>
 
+				<div class="card" id="warehouseCard" style="display: none;">
+                    <div class="card-body">
+                        <!-- Charge and Rx Number Row -->
+                                             
 
+                        <div class="mb-3 row" id="piece_div_warehouse">
+                            <div class="col-md-6">
+                            <label for="pieces_warehouse" class="form-label">Pieces</label>
+                            <input type="number" class="form-control" name="pieces" id="pieces_warehouse" placeholder="No of pieces" min=0 onchange="calculateFinalTotal()">
+							 <div class="form-text">Each piece is to be $2</div>
+                            </div>
+                            
+                        </div>
+						
+                     
+                    </div>
+                </div>
+				
+				
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="card">
