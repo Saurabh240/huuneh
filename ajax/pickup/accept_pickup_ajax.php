@@ -144,8 +144,11 @@ if (empty($errors)) {
         'status_invoice' =>  $status_invoice,
         'order_incomplete' => '1',
         'notes' => cdp_sanitize($_POST['notes']),
-        'distance' => $_POST['distance']
+        'distance' => $_POST['distance'],
+		'admin_discount' => $_POST['admin_discount'],
+        
     );
+	
 
     $updateShip = cdp_updateCourierShipmentFromCustomer($dataShipment);
 
@@ -292,7 +295,9 @@ if (empty($errors)) {
             'total_weight' =>  floatval($total_peso),
             'total_order' =>  floatval($_POST['total_order']),
             'delivery_type' => $_POST['delivery_type'],
-            'distance' => $_POST['distance']
+            'distance' => $_POST['distance'],
+            'admin_discount' => $_POST['admin_discount'],
+           
         );
 
         $update = cdp_updateCourierShipmentTotals($dataShipmentUpdateTotals);
@@ -316,15 +321,15 @@ if (empty($errors)) {
                     $target_file = $target_dir . $image_name;
                     $imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
                     $imageFileZise = $_FILES["filesMultiple"]["size"][$key];
-
-                    if ($imageFileZise > 0) {
-                        move_uploaded_file($_FILES["filesMultiple"]["tmp_name"][$key], $target_file);
-                        $imagen = basename($_FILES["filesMultiple"]["name"][$key]);
-                    }
-
-                    $target_file_db = "order_files/" . $image_name;
-                    cdp_insertOrdersFiles($shipment_id, $target_file_db, $image_name, date("Y-m-d H:i:s"), '0', $imageFileType);
-                }
+					if ($imageFileType == 'jpeg' || $imageFileType == 'jpg' || $imageFileType == 'JPEG' || $imageFileType == 'JPG' || $imageFileType == 'png' || $imageFileType == 'PNG' || $imageFileType == 'gif' || $imageFileType == 'GIF') {
+						if ($imageFileZise > 0) {
+							move_uploaded_file($_FILES["filesMultiple"]["tmp_name"][$key], $target_file);
+							$imagen = basename($_FILES["filesMultiple"]["name"][$key]);
+						}
+						$target_file_db = "order_files/" . $image_name;
+						cdp_insertOrdersFiles($shipment_id, $target_file_db, $image_name, date("Y-m-d H:i:s"), '0', $imageFileType);
+					}
+				}
             }
         }
 

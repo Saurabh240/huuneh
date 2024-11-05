@@ -688,9 +688,12 @@ $lang = array(
     "left-menu-sidebar-61" => "يساعد",
     "left-menu-sidebar-62" => "مستلموي",
     "left-menu-sidebar-63" => "عرض الصفحة الشخصية",
+	"left-menu-sidebar-64" => "سعر ثابت",
 
-
-
+	
+	"left-menu-sidebar-65" => "اختياراتي"،
+	"left-menu-sidebar-66" => "التوصيل الخاص بي"،
+	"left-menu-sidebar-67" => "الطلبات المكتملة"،
 
     "dash-general-1" => "شحنات",
     "dash-general-2" => "التقاطات",
@@ -3856,4 +3859,22 @@ $lang = array(
     "ws-add-text27" => "قوالب الإشعارات",
     "ws-add-text28" => "البريد الإلكتروني",
     "ws-add-text29" => "واتساب",
+	
+	"flat-price-1" => "استيراد السعر الثابت",
+	"flat-price-2" => "قائمة الأسعار الثابتة",
+	"flat-price-3" => "استيراد",
+	"flat-price-4" => "نوع العمل",
+	"flat-price-5" => "ملف Excel (تنسيق .xls و.xlsx فقط)",
+	"flat-price-6" => "اختر نوع العمل",
+	"flat-price-7" => "اختر ملف Excel ذو السعر الثابت.",
+	"flat-price-8" => "الملف كبير جدًا.",
+	"flat-price-9" => "حدث خطأ أثناء تحميل ملفك.",
+	"flat-price-10" => "نوع الملف غير صالح. مسموح فقط بملفات .xls و.xlsx.",
+	"flat-price-11" => "تم استيراد البيانات بنجاح",
+	"flat-price-12" => "السعر مع الضريبة",
+	
+	"email_title_1" => "طلب جديد",
+	"pieces_check_msg" => "يرجى الاتصال بمكتب الإرسال لدينا لمعرفة الأسعار وتأكيد هذا الطلب إذا كان أكبر من 4 قطع. شكرًا لك.",
+	"order-import-1" => "طلب الاستيراد",
+	
 );

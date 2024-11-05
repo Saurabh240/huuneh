@@ -210,7 +210,10 @@ function cdp_deleteImgAttached(id) {
 function cdp_preview_images() {
   $("#image_preview").html("");
   var total_file = document.getElementById("filesMultiple").files.length;
+  var flag=0;
   for (var i = 0; i < total_file; i++) {
+	  var filetype = event.target.files[i].type;
+	if (filetype == 'image/jpeg' || filetype == 'image/jpg' || filetype == 'image/png' || filetype == 'image/gif') {		
     var mime_type = event.target.files[i].type.split("/");
     var src = "";
     if (mime_type[0] == "image") {
@@ -218,7 +221,7 @@ function cdp_preview_images() {
     } else {
       src = "assets/images/no-preview.jpeg";
     }
-
+    
     $("#image_preview").append(
       '<div class="col-md-3" id="image_' +
       i +
@@ -242,6 +245,22 @@ function cdp_preview_images() {
       "</div>" +
       "</div>"
     );
+  }else{
+		flag=1;
+	
+	}
+  }
+  if(flag==1){
+	  	
+	Swal.fire({
+		  type: 'warning',
+		  title: 'opps..',
+		  text: 'Only jpeg,jpg,png,gif image format allows.',
+		  icon: 'warning',
+		  confirmButtonColor: '#336aea'
+		});
+		
+	
   }
 }
 
@@ -276,6 +295,8 @@ function cdp_validateZiseFiles() {
 
   for (var i = 0; i < file.length; i++) {
     var filesSize = file[i].size;
+	 var filetype = file[i].type;
+	if (filetype == 'image/jpeg' || filetype == 'image/jpg'  || filetype == 'image/png' || filetype == 'image/gif') {
     if (size > 5242880) {
       $(".resultados_file").html(
         "<div class='alert alert-danger'>" +
@@ -294,6 +315,7 @@ function cdp_validateZiseFiles() {
     }
 
     size += filesSize;
+  }
   }
 
   if (size > 5242880) {
@@ -329,13 +351,40 @@ $("#clean_file_button").on("click", function () {
   $(".resultados_file").html("");
 });
 
+$("#admin_discount").on("change", function () {
+	var total_price = $("#total_price").val();
+	/*if($("#admin_discount").val()>parseFloat(total_price)){
+		 Swal.fire({
+		  type: 'Error!',
+		  title: 'Oops...',
+		  text: 'Discount should not be grater than Subtotal',
+		  icon: 'error',
+		  confirmButtonColor: '#336aea'
+		});
+		$("#admin_discount").val('');
+		$("#admin_discount").focus();
+		$("#discount_div").html(total_price);
+		var tax = 0.00;
+		tax = (parseFloat(total_price) * (13 / 100));
+		var total_tax_value = parseFloat(parseFloat(total_price) + tax);
+		$("#total_after_tax").html(total_tax_value.toFixed(2));
+		$("#tax_13").html(tax.toFixed(2));
+	}else{
+	    calculateFinalTotal();
+	    
+	}*/
+	calculateFinalTotal();
+});
 $("input[type=file]").on("change", function () {
   deleted_file_ids = [];
   var inputFile = document.getElementById("filesMultiple");
   var file = inputFile.files;
   var contador = 0;
   for (var i = 0; i < file.length; i++) {
-    contador++;
+	   var filetype = file[i].type;
+	if (filetype == 'image/jpeg' || filetype == 'image/jpg'  || filetype == 'image/png' || filetype == 'image/gif') {
+		contador++;
+	}
   }
   $("#total_item_files").val(contador);
 
@@ -725,32 +774,49 @@ function calculateFinalTotal(element = null) {
   $("#fixed_value_ajax").val(baseRate);
   var distanceHtml = parseFloat($('#distance').val()).toFixed(2)
   $("#total_distance").html(distanceHtml);
-  //$("#insurance").html(total_seguro.toFixed(2));
-  //$("#total_impuesto_aduanero").html(total_impuesto_aduanero.toFixed(2));
+ 
   var shipmentfee = localStorage.getItem('shipmentfee');
-  $("#total_before_tax").html(Number(shipmentfee).toFixed(2));
-  var total_tax_value = parseFloat(parseFloat(shipmentfee) + (parseFloat(shipmentfee) * (13 / 100)));
-  $("#total_after_tax").html(total_tax_value.toFixed(2));
-  // alert(parseFloat(shipmentfee));
-  // alert(parseFloat(total_envio.toFixed(2)));
-  // parseInt(shipmentfee.toFixed(2))
-  // var subTotal = parseFloat(shipmentfee) + parseFloat(total_envio.toFixed(2));
-  //$("#total_envio").html(shipmentfee);
-  $("#total_envio_ajax").val(shipmentfee);
+  
+  var admin_discount = $("#admin_discount").val();
+  var shipmentfee_after_discount=parseFloat(shipmentfee);
+   if(admin_discount!=''){
+  var shipmentfee_after_discount=parseFloat(shipmentfee)-parseFloat(admin_discount);
+   }
+   
+    var business_type = $("#businessType").val();
 
-  // $("#total_weight").html(sumador_libras.toFixed(2));
-  //$("#total_vol_weight").html(sumador_volumetric.toFixed(2));
+  if (business_type === "flower_shop" || business_type === "flat_1" || business_type === "flat_2") {
+		var no_pieces = $("#pieces").val();
+	   if(no_pieces!=''){
+			shipmentfee_after_discount = shipmentfee_after_discount + (parseFloat(no_pieces) * 3);
+		}
+  }
+	$("#total_before_tax").html(Number(shipmentfee_after_discount).toFixed(2));
+   var total_tax_value = parseFloat(shipmentfee_after_discount + (parseFloat(shipmentfee_after_discount) * (13 / 100)));
+   $("#total_price").val(parseFloat(shipmentfee_after_discount).toFixed(2));
+   //$("#discount_div").html(shipmentfee_after_discount.toFixed(2));
+  
+  $("#total_after_tax").html(total_tax_value.toFixed(2));
+
+  $("#total_envio_ajax").val(shipmentfee);
   $("#total_fixed").html(max_fixed_charge.toFixed(2));
-  //$("#total_declared").html(shipmentfee);
+ 
   var tax = 0.00;
-  tax = parseFloat(total_tax_value) - parseFloat(shipmentfee);
+  tax = parseFloat(total_tax_value) - parseFloat(shipmentfee_after_discount);
+ 
   $("#tax_13").html(tax.toFixed(2));
 
 }
 
 $("#invoice_form").on("submit", function (event) {
   if (cdp_validateZiseFiles() == true) {
-    alert("error files");
+	Swal.fire({
+		  type: 'Error!',
+		  title: 'Oops...',
+		  text: validation_files_size,
+		  icon: 'error',
+		  confirmButtonColor: '#336aea'
+		});
     return false;
   }
 
@@ -1004,7 +1070,13 @@ $("#invoice_form").on("submit", function (event) {
   var distance = $("#distance").val();
 
   data.append("distance", distance);
+  
+  var admin_discount = $("#admin_discount").val();
 
+  data.append("admin_discount", admin_discount); 
+  
+  
+  
   var total_file = document.getElementById("filesMultiple").files.length;
 
   for (var i = 0; i < total_file; i++) {
@@ -1999,7 +2071,8 @@ var iti = window.intlTelInput(input, {
       callback(countryCode);
     });
   },
-  initialCountry: "auto",
+  onlyCountries: ["ca"], // This restricts the country list to Canada
+  initialCountry: "ca", // Sets the default country to Canada
   nationalMode: true,
 
   separateDialCode: true,
@@ -2049,7 +2122,8 @@ var iti_recipient = window.intlTelInput(input_recipient, {
       callback(countryCode);
     });
   },
-  initialCountry: "auto",
+  onlyCountries: ["ca"], // This restricts the country list to Canada
+  initialCountry: "ca", // Sets the default country to Canada
   nationalMode: true,
 
   separateDialCode: true,
@@ -2179,16 +2253,16 @@ function getTariffs() {
     var selectedData = e.params.data;
     destination = selectedData.text;
   });
+  
   origin = $('#sender_address_id option:selected').text();
+  var origin_id = $('#sender_address_id option:selected').val();
   destination = $('#recipient_address_id option:selected').text();
+  var destination_id = $('#recipient_address_id option:selected').val();
   sender_id = $("#sender_id option:selected").val();
-  // google api accepts information like given below.
-  // origin = "Seattle,Washington";
-  // destination = "San+Francisco,California";
 
+  var send_recipient_id = $("#recipient_id option:selected").val();
 
-
-
+ 
   if(!origin || !destination || !deliveryType || !sender_id){
     return;
   }
@@ -2196,8 +2270,11 @@ function getTariffs() {
   $.ajax({
     type: 'POST',
     url: 'ajax/courier/calculate_distance.php', // Replace with your PHP script for calculating distance
-    data: { 'origin': origin, 'destination': destination, 'deliveryType': deliveryType, 'sender_id': sender_id },
+    data: { 'origin': origin, 'destination': destination, 'deliveryType': deliveryType, 'sender_id': sender_id,'send_sender_id':sender_id,'send_recipient_id':send_recipient_id,'origin_id':origin_id,'destination_id':destination_id },
     dataType: 'json',
+	beforeSend: function() {
+		$('#loadingIcon').show();
+	},
     success: function (data) {
       console.log("All", data);
       // Update distance input with calculated distance
@@ -2210,18 +2287,30 @@ function getTariffs() {
       $("#table-totals").removeClass("d-none");
       $("#create_invoice").attr("disabled", false);
       calculateFinalTotal();
-
+	  $('#loadingIcon').hide();
+	   if (typeof data.msg !== 'undefined') {
+	   Swal.fire({
+            type: 'warning',
+            text: data.msg,
+            icon: 'warning',
+            confirmButtonColor: '#336aea'
+          });
+	 }
     },
     error: function () {
+		$('#loadingIcon').hide();
       // Handle error
       alert('Error calculating distance.');
-    }
+    },
+	complete: function() {
+		$('#loadingIcon').hide();
+	  },
   });
 
 }
 
 
-$("#calculate_invoice").css({ opacity: 0, height: 0, width: 0, padding: 0 });
+$("#calculate_invoice").css({ opacity: 0, height: 0, width: 0, padding: 0, display:'none' });
 
 $("#calculate_invoice").on("click", getTariffs);
 

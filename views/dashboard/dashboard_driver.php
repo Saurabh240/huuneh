@@ -86,7 +86,7 @@ $db = new Conexion;
             <!-- ============================================================== -->
             <div class="container-fluid">
 
-                <div class="row">
+                <!--div class="row">
                     <div class=" col-sm-12 col-md-12 col-lg-5">
                         <div class="card">
                             <div class="card-body border-bottom">
@@ -94,7 +94,7 @@ $db = new Conexion;
                             </div>
                             <div class="card-body">
                                 <div class="row">
-                                    <!-- Primer elemento contador de envios -->
+                                  
                                     <div class="col-lg-4 col-md-12 mb-0">
                                         <div class="d-flex align-items-center">
                                             <div class="m-r-10">
@@ -120,7 +120,7 @@ $db = new Conexion;
                                     </div>
 
 
-                                    <!-- Segundo elemento contador de envios -->
+                                   
                                     <div class="col-lg-4 col-md-12 mb-0">
                                         <div class="d-flex align-items-center">
                                             <div class="m-r-10">
@@ -145,7 +145,7 @@ $db = new Conexion;
                                         </div>
                                     </div>
 
-                                    <!-- Tercer elemento contador de envios -->
+                                   
                                     <div class="col-lg-4 col-md-12 mb-0">
                                         <div class="d-flex align-items-center">
                                             <div class="m-r-10">
@@ -183,7 +183,7 @@ $db = new Conexion;
                             <div class="card-body ">
                                 <div class="row">
 
-                                    <!-- Primero elemento contador de envios -->
+                                    
                                     <div class="col-lg-3 col-md-12 mb-0">
                                         <div class="d-flex align-items-center">
                                             <div class="m-r-10">
@@ -209,7 +209,7 @@ $db = new Conexion;
                                     </div>
 
 
-                                    <!-- Segundo elemento contador de envios -->
+                                   
                                     <div class="col-lg-3 col-md-12 mb-0">
                                         <div class="d-flex align-items-center">
                                             <div class="m-r-10">
@@ -234,7 +234,7 @@ $db = new Conexion;
                                         </div>
                                     </div>
 
-                                    <!-- Tercer elemento contador de envios -->
+                                   
                                     <div class="col-lg-3 col-md-12 mb-0">
                                         <div class="d-flex align-items-center">
                                             <div class="m-r-10">
@@ -261,7 +261,7 @@ $db = new Conexion;
 
 
 
-                                    <!-- Cuarto elemento contador de envios -->
+                                    
                                     <div class="col-lg-3 col-md-12 mb-0">
                                         <div class="d-flex align-items-center">
                                             <div class="m-r-10">
@@ -289,7 +289,7 @@ $db = new Conexion;
                             </div>
                         </div>
                     </div>
-                </div>
+                </div-->
 
                 <div class="row">
                     <div class=" col-md-12 col-lg-12">
@@ -297,7 +297,7 @@ $db = new Conexion;
                             <div class="card-body">
                                 <div class="d-md-flex align-items-center">
                                     <div>
-                                        <h4 class="card-title"><?php echo $lang['dash-general-19'] ?></h4>
+                                        <h4 class="card-title"><?php echo $lang['left-menu-sidebar-65'] ?></h4>
                                         <input type="hidden" name="userid" id="userid" value="<?php echo $_SESSION['userid']; ?>">
                                     </div>
 
@@ -309,6 +309,26 @@ $db = new Conexion;
                         </div>
                     </div>
                 </div>
+				
+				  <div class="row">
+                    <div class=" col-md-12 col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-md-flex align-items-center">
+                                    <div>
+                                        <h4 class="card-title"><?php echo $lang['left-menu-sidebar-66'] ?></h4>
+                                        <input type="hidden" name="userid" id="userid" value="<?php echo $_SESSION['userid']; ?>">
+                                    </div>
+
+                                </div>
+                                <div class="outer_div_drop_off">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+				
             </div>
             <?php include 'views/inc/footer.php'; ?>
         </div>

@@ -67,8 +67,20 @@ echo 'Fixed Time ->'.strtotime("2:00 PM");exit;*/
             background:#EBEBE4;
         }
         .pac-container {
-                     z-index: 10000 !important;
+			z-index: 10000 !important;
             }
+		#loadingIcon {
+		   position: absolute;
+			  top: 0;
+			  left: 0;
+			  width: 100%;
+			  height: 100%;
+			  background-color: rgba(255, 255, 255, 0.8); /* White background with transparency */
+			  display: flex;
+			  justify-content: center;
+			  align-items: center;
+			  z-index: 10;
+		}
     </style>
 </head>
 
@@ -274,6 +286,47 @@ echo 'Fixed Time ->'.strtotime("2:00 PM");exit;*/
 
                     <input type="hidden" id="businessType" value="<?php echo $userData->business_type; ?>" />
 
+                <?php  if( $userData->business_type == "flower_shop" || $userData->business_type == "flat_1" || $userData->business_type == "flat_2" ) { ?>
+				<div class="card" id="flowerBusinessCard">
+                    <div class="card-body">
+                        <!-- Charge and Rx Number Row -->
+                        
+                        
+                        <!-- Tags Section -->
+                        <div class="mb-3">
+                            <label class="form-label">Tags</label>
+                            <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="wreath" name="tags[]" value="Wreath">
+                            <label class="form-check-label" for="wreath">Wreath</label>
+                            </div>
+                            <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="standing_casket_spray" name="tags[]" value="Standing/Casket Spray">
+                            <label class="form-check-label" for="standing_casket_spray">Standing/Casket Spray</label>
+                            </div>
+                            
+                        </div>
+
+                        <div class="mb-3 row" id="piece_div">
+                            <div class="col-md-6">
+                            <label for="pieces" class="form-label">Pieces</label>
+                            <input type="number" class="form-control" name="pieces" id="pieces" placeholder="No of pieces" min=0 onchange="pieces_check()">
+							 <div class="form-text">Each piece is to be $3</div>
+                            </div>
+                            
+                        </div>
+						
+                        <!-- Notes Section -->
+                        <!--div class="mb-3">
+                            <label for="notes" class="form-label">Notes</label>
+                            <textarea class="form-control" id="notesForDriver_flower" name="notes_for_driver" rows="3" placeholder="Please be brief"></textarea>
+                            <div class="form-text">Add any special instruction notes for the driver</div>
+                        </div-->
+                        
+                       
+                    </div>
+                </div>
+
+				<?php } ?>
                 <?php  if( $userData->business_type == "pharmacy" || $userData->business_type == "pharmacy_2" || $userData->business_type == "pharmacy_3" ) { ?>
                     <div class="card">
                         <div class="card-body">
@@ -495,6 +548,9 @@ echo 'Fixed Time ->'.strtotime("2:00 PM");exit;*/
                                     <hr>
                                     
                                     <div class="row" style="margin-top: 20px;">
+									<div id="loadingIcon" style="display: none;">
+									<img src="assets/images/loader-small.gif" class="loader_small" id="loader_small">
+									 </div>
                                         <div class="table-responsive d-none" id="table-totals">
                                             <!-- <table id="insvoice-item-table" class="table">
                                                 <tfoot>
@@ -526,6 +582,7 @@ echo 'Fixed Time ->'.strtotime("2:00 PM");exit;*/
                                                         <?php echo $lang['messageerrorform30'] ?>
                                                     </h4>
                                                 </div>
+												
                                                 <hr>
                                                 <div class="row row-shadow input-container"> 
                                                 <!-- <div class="col-sm-12 col-md-6 col-lg-2">

@@ -120,6 +120,18 @@ $order_prefix = $settings->prefix;
         .pac-container{
             z-index: 1051 !important;
         }
+		#loadingIcon {
+		   position: absolute;
+			  top: 0;
+			  left: 0;
+			  width: 100%;
+			  height: 100%;
+			  background-color: rgba(255, 255, 255, 0.8); /* White background with transparency */
+			  display: flex;
+			  justify-content: center;
+			  align-items: center;
+			  z-index: 10;
+		}
 </style>
 </head>
 
@@ -509,6 +521,45 @@ $order_prefix = $settings->prefix;
                         </div> -->
                     </div>
                 </div>
+				
+				<div class="card" id="flowerBusinessCard" style="display: none;">
+                    <div class="card-body">
+                        <!-- Charge and Rx Number Row -->
+                        
+                        
+                        <!-- Tags Section -->
+                        <div class="mb-3">
+                            <label class="form-label">Tags</label>
+                            <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="wreath" name="tags[]" value="Wreath">
+                            <label class="form-check-label" for="wreath">Wreath</label>
+                            </div>
+                            <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="standing_casket_spray" name="tags[]" value="Standing/Casket Spray">
+                            <label class="form-check-label" for="standing_casket_spray">Standing/Casket Spray</label>
+                            </div>
+                            
+                        </div>
+
+                        <div class="mb-3 row" id="piece_div">
+                            <div class="col-md-6">
+                            <label for="pieces" class="form-label">Pieces</label>
+                            <input type="number" class="form-control" name="pieces" id="pieces" placeholder="No of pieces" min=0 onchange="pieces_check()">
+							 <div class="form-text">Each piece is to be $3</div>
+                            </div>
+                            
+                        </div>
+						
+                        <!-- Notes Section -->
+                        <div class="mb-3">
+                            <label for="notes" class="form-label">Notes</label>
+                            <textarea class="form-control" id="notesForDriver_flower" name="notes_for_driver" rows="3" placeholder="Please be brief"></textarea>
+                            <div class="form-text">Add any special instruction notes for the driver</div>
+                        </div>
+                        
+                       
+                    </div>
+                </div>
 
 
                     <div class="row">
@@ -560,7 +611,15 @@ $order_prefix = $settings->prefix;
 													</select>
                                                     </div>
 											</div>
-
+											
+											<div class="col-md-2">
+										 <label for="admin_discount" class="control-label col-form-label">Discount (in $)</label>
+										 <div class="input-group mb-3">
+											   <input type="number" id="admin_discount" name="admin_discount" step="0.01" class="form-control">
+											    <input type="hidden" id="total_price">
+											</div>
+										</div>
+										
                                         <!--<div class="form-group col-md-3">
                                             <label for="inputlname" class="control-label col-form-label"><?php echo $lang['add-title17'] ?></label>
                                             <div class="input-group mb-3">
@@ -707,8 +766,9 @@ $order_prefix = $settings->prefix;
                                                     <?php echo $lang['leftorder15']; ?>
                                                 </label>
                                             </div>
-                                            <input class="custom-file-input" id="filesMultiple" name="filesMultiple[]" multiple="multiple" type="file" style="display: none;" onchange="cdp_validateZiseFiles(); cdp_preview_images();" />
-                                            <button type="button" id="openMultiFile" class="btn btn-default  pull-left  mb-4">
+                                            <input class="custom-file-input" id="filesMultiple" name="filesMultiple[]" multiple type="file" style="display: none;" onchange="cdp_preview_images();" accept="image/jpeg, image/jpg, image/png, image/gif">
+
+                                            <button type="button" id="openMultiFile" class="btn btn-default  pull-left mb-4">
                                                 <i class='fa fa-paperclip' id="openMultiFile" style="font-size:18px; cursor:pointer;"></i>
                                                 <?php echo $lang['leftorder16']; ?>
 
@@ -745,6 +805,9 @@ $order_prefix = $settings->prefix;
                                     <hr>
                                     
                                     <div class="row" style="margin-top: 20px;">
+									<div id="loadingIcon" style="display: none;">
+									<img src="assets/images/loader-small.gif" class="loader_small" id="loader_small">
+									 </div>
                                         <div class="table-responsive d-none" id="table-totals">
                                         <!--    <table id="insvoice-item-table" class="table">
                                                 <tfoot>
@@ -778,7 +841,7 @@ $order_prefix = $settings->prefix;
                                                 </div>
                                                 <hr>
                                                 <div class="row row-shadow input-container"> 
-                                                <div class="col-sm-12 col-md-6 col-lg-2">
+                                                <!--div class="col-sm-12 col-md-6 col-lg-2">
                                                         <div class="form-group" hidden>
                                                             <label for="emailAddress1"><?php echo $lang['leftorder1879'] ?></label>
                                                             <?php
@@ -788,10 +851,10 @@ $order_prefix = $settings->prefix;
                                                             <?php
                                                             }
                                                             ?>
-                                                            <!-- <span id="fixed_value_label"> 0.00</span> -->
+                                                          
                                                             <input type="hidden" name="fixed_value_ajax" id="fixed_value_ajax" value="0">
                                                          </div>
-                                                    </div>
+                                                    </div-->
                                                     
                                                 <div class="col-sm-12 col-md-4 col-lg-3">
                                                     <div class="form-group">
@@ -817,12 +880,18 @@ $order_prefix = $settings->prefix;
                                                             
                                                         </div>
                                                 </div>
-
-                                                <div class="col-sm-12 col-md-4 col-lg-3">
+												
+                                                 <div class="col-sm-12 col-md-4 col-lg-2">
+                                                     <div class="form-group">
+                                                            <label for="tax_13">TaxL (13%)</label>
+                                                            <b> $ </b>
+                                                            <span id="tax_13">NaN</span>
+                                                            </div>
+                                                 </div>
+                                                <div class="col-sm-12 col-md-4 col-lg-2">
                                                     <div class="form-group">
                                                         <label for="emailAddress1"><?php echo $lang['leftorder1882'] ?> (<?php echo '13%';//echo $core->tax; ?>)</label>
-                                                            
-                                                            
+                                                        
                                                             <?php
                                                             if ($core->for_symbol !== null) {
                                                             ?>
@@ -875,6 +944,7 @@ $order_prefix = $settings->prefix;
                             <input type="hidden" value="<?php echo '13' ?>" name="tax_value" id="tax_value">
                             <input type="hidden" value="<?php echo $core->declared_tax; ?>" name="declared_value_tax" id="declared_value_tax">
                             <input type="hidden" value="0" name="reexpedicion_value" id="reexpedicion_value">
+                            <input type="hidden" value="0" name="total_tax_val" id="total_tax_val">
 
                             <input type="hidden" name="core_meter" id="core_meter" value="<?php echo $core->meter; ?>" />
                             <input type="hidden" name="core_min_cost_tax" id="core_min_cost_tax" value="<?php echo $core->min_cost_tax; ?>" />
@@ -889,7 +959,7 @@ $order_prefix = $settings->prefix;
             <?php include('views/modals/modal_add_addresses_recipient.php'); ?>
 
         </div>
-        <?php include 'views/inc/footer.php'; ?>
+        <?php include('views/inc/footer.php'); ?>
 
     </div>
 
@@ -917,7 +987,7 @@ $order_prefix = $settings->prefix;
       defer
     ></script>
 
-    <script src="dataJs/address_autocomplete.js"></script>
+    <!--script src="dataJs/address_autocomplete.js"></script-->
 
 </body>
 

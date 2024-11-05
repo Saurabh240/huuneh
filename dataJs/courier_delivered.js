@@ -1,5 +1,5 @@
 "use strict";
-
+var deleted_file_ids = [];
 (function () {
   window.requestAnimFrame = (function (callback) {
     return (
@@ -155,7 +155,8 @@
 
   // Set up the UI
   var sigText = document.getElementById("sig-dataUrl");
-  var sigImage = document.getElementById("sig-image");
+  //var sigImage = document.getElementById("sig-image");
+  var sigImage = document.getElementById("sig-canvas");
   var clearBtn = document.getElementById("sig-clearBtn");
   var submitBtn = document.getElementById("sig-submitBtn");
 
@@ -179,6 +180,179 @@
   );
 })();
 
+function cdp_preview_images() {
+  $("#image_preview").html("");
+  var flag=0;
+  var total_file = document.getElementById("filesMultiple").files.length;
+
+  for (var i = 0; i < total_file; i++) {
+	var filetype = event.target.files[i].type;
+	if (filetype == 'image/jpeg' || filetype == 'image/jpg'  || filetype == 'image/png' || filetype == 'image/gif') {		
+		var mime_type = event.target.files[i].type.split("/");
+		var src = "";
+		if (mime_type[0] == "image") {
+		  src = URL.createObjectURL(event.target.files[i]);
+		} else {
+		  src = "assets/images/no-preview.jpeg";
+		}
+
+		$("#image_preview").append(
+		  '<div class="col-md-3" id="image_' +
+		  i +
+		  '">' +
+		  '<img style="width: 180px; height: 180px;" class="img-thumbnail" src="' +
+		  src +
+		  '">' +
+		  '<div class="row">' +
+		  '<div class=" col-md-12 mt-2 mb-2">' +
+		  "<span>" +
+		  event.target.files[i].name +
+		  "</span>" +
+		  "</div>" +
+		  "</div>" +
+		  '<div class="row">' +
+		  '<div class="  mb-2">' +
+		  '<button type="button" class="btn btn-danger btn-sm pull-left" onclick="cdp_deletePreviewImage(' +
+		  i +
+		  ');"><i class="fa fa-trash"></i></button>' +
+		  "</div>" +
+		  "</div>" +
+		  "</div>"
+		);
+	}else{
+		flag=1;
+	
+	}
+  }
+  if(flag==1){
+	  	
+	Swal.fire({
+		  type: 'warning',
+		  title: 'opps..',
+		  text: 'Only jpeg, jpg, png, gif image format allows.',
+		  icon: 'warning',
+		  confirmButtonColor: '#336aea'
+		});
+		
+	
+  }
+}
+
+function cdp_deletePreviewImage(index) {
+  deleted_file_ids.push(index);
+
+  $("#deleted_file_ids").val(deleted_file_ids);
+
+  $("#image_" + index).remove();
+
+  var count_files = $("#total_item_files").val();
+
+  count_files--;
+
+  $("#total_item_files").val(count_files);
+
+  if (count_files > 0) {
+    $("#clean_files").removeClass("hide");
+  } else {
+    $("#clean_files").addClass("hide");
+  }
+
+  $("#selectItem").html("attached files (" + count_files + ")");
+
+  var deleted_file = $("#deleted_file_ids").val();
+}
+
+function cdp_validateZiseFiles() {
+  var inputFile = document.getElementById("filesMultiple");
+  var file = inputFile.files;
+  var size = 0;
+
+  for (var i = 0; i < file.length; i++) {
+    var filesSize = file[i].size;
+    var filetype = file[i].type;
+	if (filetype == 'image/jpeg' || filetype == 'image/jpg'  || filetype == 'image/png' || filetype == 'image/gif') {
+	if (size > 5242880) {
+      $(".resultados_file").html(
+        "<div class='alert alert-danger'>" +
+        "<button type='button' class='close' data-dismiss='alert'>&times;</button>" +
+        "<strong>" +
+        validation_files_size +
+        " </strong>" +
+        "</div>"
+      );
+      $("#filesMultiple").val("");
+      $("#clean_files").addClass("hide");
+      $("#image_preview").html("");
+      deleted_file_ids = [];
+    } else {
+      $(".resultados_file").html("");
+    }
+    size += filesSize;
+	}
+  }
+
+  if (size > 5242880) {
+    $(".resultados_file").html(
+      "<div class='alert alert-danger'>" +
+      "<button type='button' class='close' data-dismiss='alert'>&times;</button>" +
+      "<strong>" +
+      validation_files_size +
+      " </strong>" +
+      "</div>"
+    );
+
+    $("#filesMultiple").val("");
+    $("#clean_files").addClass("hide");
+    $("#image_preview").html("");
+    deleted_file_ids = [];
+
+    return true;
+  } else {
+    $(".resultados_file").html("");
+
+    return false;
+  }
+}
+
+$("#openMultiFile").on("click", function () {
+  $("#filesMultiple").click();
+});
+
+$("#clean_file_button").on("click", function () {
+  $("#filesMultiple").val("");
+
+  $("#selectItem").html("Attach files");
+
+  $("#clean_files").addClass("hide");
+  $("#image_preview").html("");
+});
+
+$("input[type=file]").on("change", function () {
+  deleted_file_ids = [];
+
+  var inputFile = document.getElementById("filesMultiple");
+  var file = inputFile.files;
+  var contador = 0;
+  for (var i = 0; i < file.length; i++) {
+	   var filetype = file[i].type;
+	if (filetype == 'image/jpeg' || filetype == 'image/jpg'  || filetype == 'image/png' || filetype == 'image/gif') {
+		contador++;
+	}
+  }
+  $("#total_item_files").val(contador);
+
+  var count_files = $("#total_item_files").val();
+
+  if (count_files > 0) {
+    $("#clean_files").removeClass("hide");
+  } else {
+    $("#clean_files").addClass("hide");
+  }
+
+  $("#selectItem").html("attached files (" + count_files + ")");
+});
+
+
 function mandarFirma() {
   document.getElementById("invoice_form").submit();
 }
@@ -195,7 +369,8 @@ $("#invoice_form").on("submit", function (event) {
   var deliver_date = $("#deliver_date").val();
   var driver_id = $("#driver_id").val();
   var person_receives = $("#person_receives").val();
-  var miarchivo = $("#miarchivo").val();
+  //var miarchivo = $("#miarchivo").val();
+   var deleted_file_ids = $("#deleted_file_ids").val();
 
   var notify_whatsapp_sender = $(
     "input:checkbox[name=notify_whatsapp_sender]:checked"
@@ -207,8 +382,8 @@ $("#invoice_form").on("submit", function (event) {
 
   var sigDataUrl = $("#sig-dataUrl").val();
 
-  var miarchivo = document.getElementById("miarchivo");
-  var miarchivo_final = miarchivo.files[0];
+  //var miarchivo = document.getElementById("miarchivo");
+  //var miarchivo_final = miarchivo.files[0];
 
   var data = new FormData();
 
@@ -236,12 +411,24 @@ $("#invoice_form").on("submit", function (event) {
     data.append("notify_whatsapp_receiver", notify_whatsapp_receiver);
   }
 
-  if (miarchivo_final) {
+  /*if (miarchivo_final) {
     data.append("miarchivo", miarchivo_final);
-  }
+  }*/
 
   if (sigDataUrl) {
     data.append("sig-dataUrl", sigDataUrl);
+  }
+  
+   if (deleted_file_ids) {
+    data.append("deleted_file_ids", deleted_file_ids);
+  }
+   var total_file = document.getElementById("filesMultiple").files.length;
+   
+  for (var i = 0; i < total_file; i++) {
+    data.append(
+      "filesMultiple[]",
+      document.getElementById("filesMultiple").files[i]
+    );
   }
 
   $.ajax({
@@ -262,8 +449,9 @@ $("#invoice_form").on("submit", function (event) {
       });
     },
     success: function (data) {
+
       if (data.success) {
-        cdp_showSuccess(data.messages);
+        cdp_showSuccess(data.messages, shipment_id);
       } else {
         cdp_showError(data.errors);
       }
@@ -293,7 +481,7 @@ function cdp_showError(errors) {
   });
 }
 
-function cdp_showSuccess(messages) {
+function cdp_showSuccess(messages, shipment_id) {
   Swal.fire({
     title: messages,
     icon: "success",
@@ -301,7 +489,9 @@ function cdp_showSuccess(messages) {
     confirmButtonText: "Ok",
   }).then((result) => {
     if (result.isConfirmed) {
-      $("#invoice_form").trigger("reset");
+      setTimeout(function () {
+        window.location = "courier_view.php?id=" + shipment_id;
+      }, 2000);
     }
   });
 }

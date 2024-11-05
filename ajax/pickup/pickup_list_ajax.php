@@ -29,8 +29,28 @@ $core = new Core;
 $userData = $user->cdp_getUserData();
 
 $search = cdp_sanitize($_REQUEST['search']);
+$status_courier = intval($_REQUEST['status_courier']);
+$range = cdp_sanitize($_REQUEST['daterange']);
 
 $sWhere = "";
+
+if ($status_courier > 0) {
+
+	$sWhere .= " and  a.status_courier = '" . $status_courier . "'";
+}
+
+if (!empty($range)) {
+
+	$fecha =  explode(" - ", $range);
+	$fecha = str_replace('/', '-', $fecha);
+
+	$fecha_inicio = date('Y-m-d', strtotime($fecha[0]));
+	$fecha_fin = date('Y-m-d', strtotime($fecha[1]));
+
+
+	$sWhere .= " and  a.order_date between '" . $fecha_inicio . "'  and '" . $fecha_fin . "'";
+}
+
 
 if ($userData->userlevel == 3) {
 
@@ -54,7 +74,7 @@ $offset = ($page - 1) * $per_page;
 
 
 $sql = "SELECT  a.is_consolidate, a.notes_for_driver, a.delivery_type,a.sub_total, a.distance, a.order_incomplete, a.status_invoice, a.is_pickup, a.total_order, a.order_id, a.order_prefix, a.order_no, a.order_date, a.sender_id, a.receiver_id, a.order_courier, a.order_pay_mode, a.status_courier, a.driver_id, a.order_service_options, a.total_order,  b.mod_style, b.color, 
-			 u.username, u.fname, u.lname, addrs.recipient_address FROM
+			 u.username, u.fname, u.lname, addrs.recipient_address,a.notes,a.tags,a.no_of_pieces FROM
 			 cdb_add_order as a
 			 LEFT JOIN cdb_users as u ON a.sender_id = u.id
 			 INNER JOIN cdb_address_shipments as addrs ON addrs.order_id = a.order_id
@@ -80,7 +100,8 @@ $sql = "SELECT  a.is_consolidate, a.notes_for_driver, a.delivery_type,a.sub_tota
 				u.username,
 				u.fname,
 				u.lname,
-				addrs.recipient_address
+				addrs.recipient_address,
+				a.notes
 			 order by order_id desc
 			 ";
 
@@ -110,6 +131,8 @@ if ($numrows > 0) { ?>
 					<th class="text-center"><b><?php echo $lang['lorigin'] ?></b></th>
 					<th class="text-center"><b><?php echo $lang['ldestination'] ?></b></th>
 					<th class="text-center"><b>Notes for driver</b></th>
+					<th class="text-center"><b>Tags</b></th>
+					<th class="text-center"><b>Pieces</b></th>
 					<th class="text-center"><b>Total KM</b></th>
 					<th class="text-center"><b>Subtotal</b></th>
 					<th class="text-center"><b><?php echo $lang['lstatusshipment'] ?></b></th> 
@@ -180,13 +203,19 @@ if ($numrows > 0) { ?>
 								<?php echo $receiver_data->fname; ?> <?php echo $receiver_data->lname; ?>
 							</td>
 
-							<td class="text-center"><?php echo $address_order->sender_address; ?></td>
-							<td class="text-center"><?php echo $row->recipient_address; ?></td>
-							<td class="text-center"><?php echo $row->notes_for_driver; ?></td>
+							<td class="text-center"><?php echo $address_order->sender_address.', '.$address_order->sender_city.', '.$address_order->sender_state; ?></td>
+							<td class="text-center"><?php echo $address_order->recipient_address.', '.$address_order->recipient_city.', '.$address_order->recipient_state; ?></td>
+							<td class="text-center"><?php echo $row->notes_for_driver!=''?$row->notes_for_driver:$row->notes; ?></td>
+							<td class="text-center">
+								<?php echo implode(',',json_decode($row->tags,TRUE)); ?>
+							</td>
+							
+							<td class="text-center">
+								<?php echo $row->no_of_pieces>0?$row->no_of_pieces:''; ?>
+							</td>
 							<td class="text-center">
 								<?php echo $row->distance; ?>
 							</td>
-
 							<td class="text-center">
 								$ <?php echo $row->sub_total; ?>
 							</td>

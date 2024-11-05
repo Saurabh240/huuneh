@@ -124,6 +124,9 @@ if (empty($errors)) {
         'charge' => !empty($_POST['charge']) ? cdp_sanitize($_POST['charge']) : 0.00,
         'no_of_rx' => !empty($_POST['no_of_rx']) ? cdp_sanitize($_POST['no_of_rx']) : 0,
         'notes_for_driver' => cdp_sanitize($_POST['notes_for_driver']),
+		'admin_discount' =>  !empty($_POST['admin_discount']) ? $_POST['admin_discount'] : 0.00,
+		'no_of_pieces' =>  !empty($_POST['no_of_pieces']) ? $_POST['no_of_pieces'] : 0,
+		'total_tax' =>  !empty($_POST['total_tax']) ? $_POST['total_tax'] : 0,
         'tags' => !empty($_POST['tags']) && is_array($_POST['tags']) ? json_encode($_POST['tags']) : json_encode([])
     );
 
@@ -254,7 +257,8 @@ if (empty($errors)) {
             'total_weight' =>  floatval($total_peso),
             'total_order' =>  floatval($total_envio),
             'delivery_type' => $_POST['delivery_type'],
-            'distance' => $_POST['distance']
+            'distance' => $_POST['distance'],
+            'admin_discount' => $_POST['admin_discount'],
         );
 
         $update = cdp_updateCourierShipmentTotals($dataShipmentUpdateTotals);
@@ -272,19 +276,20 @@ if (empty($errors)) {
             foreach ($_FILES["filesMultiple"]['tmp_name'] as $key => $tmp_name) {
 
                 if (!in_array($key, $deleted_file_ids)) {
-                    $image_name = $order_track .  date("Y-m-d") . "_" . basename($_FILES["filesMultiple"]["name"][$key]);
-                    $target_file = $target_dir . $image_name;
-                    $imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
-                    $imageFileZise = $_FILES["filesMultiple"]["size"][$key];
+					$image_name = $order_track .  date("Y-m-d") . "_" . basename($_FILES["filesMultiple"]["name"][$key]);
+					$target_file = $target_dir . $image_name;
+					 $imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
+					 $imageFileZise = $_FILES["filesMultiple"]["size"][$key];
+					if ($imageFileType == 'jpeg' || $imageFileType == 'jpg' || $imageFileType == 'JPEG' || $imageFileType == 'JPG' || $imageFileType == 'png' || $imageFileType == 'PNG' || $imageFileType == 'gif' || $imageFileType == 'GIF') {
+							if ($imageFileZise > 0) {
+								move_uploaded_file($_FILES["filesMultiple"]["tmp_name"][$key], $target_file);
+								$imagen = basename($_FILES["filesMultiple"]["name"][$key]);
+							}
 
-                    if ($imageFileZise > 0) {
-                        move_uploaded_file($_FILES["filesMultiple"]["tmp_name"][$key], $target_file);
-                        $imagen = basename($_FILES["filesMultiple"]["name"][$key]);
-                    }
-
-                    $target_file_db = "order_files/" . $image_name;
-                    cdp_insertOrdersFiles($shipment_id, $target_file_db, $image_name, date("Y-m-d H:i:s"), '0', $imageFileType);
-                }
+							$target_file_db = "order_files/" . $image_name;
+							cdp_insertOrdersFiles($shipment_id, $target_file_db, $image_name, date("Y-m-d H:i:s"), '0', $imageFileType);
+					}
+				}
             }
         }
         $sender_data = cdp_getSenderCourier(intval($_POST["sender_id"]));
@@ -341,7 +346,7 @@ if (empty($errors)) {
 
         $newbody = cdp_cleanOut($body);
 
-        //SENDMAIL PHP
+        //SENDMAIL PHP to the user
         if($userData->email_subscription){
             if ($check_mail == 'PHP') {
 
@@ -359,8 +364,8 @@ if (empty($errors)) {
             } elseif ($check_mail == 'SMTP') {
 
                 //PHPMAILER PHP
-                $destinatario = $sender_data->email;
-
+               $destinatario = $sender_data->email;
+                      
                 $mail = new PHPMailer();
                 $mail->IsSMTP();
                 $mail->SMTPAuth = true;
@@ -377,7 +382,9 @@ if (empty($errors)) {
                 $mail->From = $site_email; // Email desde donde envío el correo.
                 $mail->FromName = $names_info;
                 $mail->AddAddress($destinatario); // Esta es la dirección a donde enviamos los datos del formulario
-                $mail->addCC($site_email);
+				if($userData->userlevel!=9){
+					$mail->addCC($site_email);
+				}
 
 
                 $mail->Subject = $subject; // Este es el titulo del email.

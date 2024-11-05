@@ -48,7 +48,7 @@ if (empty($_POST['person_receives']))
 if (intval($_POST['driver_id']) <= 0)
 
     $errors['driver_id'] =  $lang['validate_field_ajax163'];
-
+/*
 if (!empty($_FILES['miarchivo']['name'])) {
 
     $target_dir = "../../files/";
@@ -64,7 +64,7 @@ if (!empty($_FILES['miarchivo']['name'])) {
 
         $errors['miarchivo'] = "<p>Illegal file type. Only jpg and png file types are allowed.";
     }
-}
+}*/
 
 
 if (empty($errors)) {
@@ -114,18 +114,48 @@ if (empty($errors)) {
             'person_receives' => cdp_sanitize($_POST["person_receives"])
         );
 
-
-        if (!empty($_FILES['miarchivo']['name'])) {
+		$dataUpdate['photo_delivered']='';
+        /*if (!empty($_FILES['miarchivo']['name'])) {
             $image_name = time() . "_" . basename($_FILES["miarchivo"]["name"]);
             $target_file = $target_dir . $image_name;
             move_uploaded_file($_FILES["miarchivo"]["tmp_name"], $target_file);
             // $imagen=basename($_FILES["favicon"]["name"]);
             $photo_delivered = 'files/' . $image_name;
             $dataUpdate['photo_delivered'] = $photo_delivered;
-        }
+        }*/
 
 
         $update = updateCourierStatusDelivered($dataUpdate);
+		
+		if (isset($_FILES['filesMultiple']) && count($_FILES['filesMultiple']['name']) > 0 && $_FILES['filesMultiple']['tmp_name'][0] != '') {
+
+            $target_dir = "../../files/";
+            $deleted_file_ids = array();
+
+            if (isset($_POST['deleted_file_ids']) && !empty($_POST['deleted_file_ids'])) {
+                $deleted_file_ids = explode(",", $_POST['deleted_file_ids']);
+            }
+
+            foreach ($_FILES["filesMultiple"]['tmp_name'] as $key => $tmp_name) {
+
+                if (!in_array($key, $deleted_file_ids)) {
+					$image_name = $order_track .  date("Y-m-d") . "_" . basename($_FILES["filesMultiple"]["name"][$key]);
+					$target_file = $target_dir . $image_name;
+					 $imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
+					 $imageFileZise = $_FILES["filesMultiple"]["size"][$key];
+					if ($imageFileType == 'jpeg' || $imageFileType == 'jpg' || $imageFileType == 'JPEG' || $imageFileType == 'JPG' || $imageFileType == 'png' || $imageFileType == 'PNG' || $imageFileType == 'gif' || $imageFileType == 'GIF') {
+							if ($imageFileZise > 0) {
+								move_uploaded_file($_FILES["filesMultiple"]["tmp_name"][$key], $target_file);
+								$imagen = basename($_FILES["filesMultiple"]["name"][$key]);
+							}
+
+							$target_file_db = "files/" . $image_name;
+							cdp_insertDeliverFiles($shipment_id, $target_file_db, $image_name, date("Y-m-d H:i:s"), '0', $imageFileType);
+					}
+				}
+            }
+        }
+		
 
         $order_track = $shipment->order_prefix . $shipment->order_no;
 
@@ -202,7 +232,7 @@ if (empty($errors)) {
             } elseif ($check_mail == 'SMTP') {
 
                 //PHPMAILER PHP   
-                $destinatario = $sender_data->email;
+                $destinatario = $sender_data->email!=''?$sender_data->email:$site_email;
                 $mail = new PHPMailer(true);                              // Passing `true` enables exceptions
 
                 //Server settings
@@ -218,7 +248,8 @@ if (empty($errors)) {
                 //Recipients
                 $mail->setFrom($site_email, $names_info);
                 $mail->addAddress($destinatario);     // Add a recipient
-                $mail->addCC($site_email,  $lang['notification_shipment14']);
+				if($sender_data->email!=''){
+                $mail->addCC($site_email,  $lang['notification_shipment14']); }
 
                 //Content
                 $mail->isHTML(true);                                  // Set email format to HTML

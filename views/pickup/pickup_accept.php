@@ -51,6 +51,19 @@ $receiver_data = $db->cdp_registro();
 $db->cdp_query("SELECT * FROM cdb_address_shipments where order_track='" . $row_order->order_prefix . $row_order->order_no . "'");
 $address_order = $db->cdp_registro();
 
+$tags = $db->getAllTags();
+
+$rowTags = [];
+if(($sender_data->business_type == 'pharmacy' || $sender_data->business_type == 'pharmacy_2' || $sender_data->business_type == 'pharmacy_3') && !empty($row_order->tags)){
+    $rowTags = json_decode($row_order->tags, TRUE);
+}
+
+$rowTagsFlower = [];
+if(($sender_data->business_type == 'flower_shop' || $sender_data->business_type == 'flat_1' || $sender_data->business_type == 'flat_2') && !empty($row_order->tags)){
+    $rowTagsFlower = json_decode($row_order->tags, TRUE);
+}
+
+$tagsFlower = ['Wreath','Standing/Casket Spray'];
 ?>
 <!DOCTYPE html>
 <html dir="<?php echo $direction_layout; ?>" lang="en">
@@ -94,6 +107,18 @@ $address_order = $db->cdp_registro();
             border: 1px solid blue;
             outline: none;
         }
+		#loadingIcon {
+		   position: absolute;
+			  top: 0;
+			  left: 0;
+			  width: 100%;
+			  height: 100%;
+			  background-color: rgba(255, 255, 255, 0.8); /* White background with transparency */
+			  display: flex;
+			  justify-content: center;
+			  align-items: center;
+			  z-index: 10;
+		}
     </style>
 
 </head>
@@ -341,7 +366,98 @@ $address_order = $db->cdp_registro();
                     </div>
                     <!-- Row -->
 
+					<?php if ($userData->userlevel==9){ 
+  if( $sender_data->business_type == "flower_shop" || $sender_data->business_type == "flat_1" || $sender_data->business_type == "flat_2" ) { ?>
+				 <div class="row">
+                    <div class="col-lg-12 col-xl-12 col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                
+                                <div class="mb-3">
+                                <h5> &nbsp;<b>Tags</b></h5>
+                                    <?php foreach ($tagsFlower as $tag){ ?>
+                                    <div class="form-check">
+                                        <p class="text-muted  m-l-5">
+                                            <input class="form-check-input" type="checkbox" id="<?php echo strtolower(str_replace(' ', '', $tag)); ?>" name="tags[]" value="<?php echo htmlspecialchars($tag); ?>" <?php if (isTagChecked($tag, $rowTagsFlower)) echo 'checked'; ?> disabled>
+                                            <label class="form-check-label" for="<?php echo strtolower(str_replace(' ', '', $tag)); ?>"><?php echo htmlspecialchars($tag); ?></label>
+                                        </p>
+                                    </div>
+                                    <?php } ?>
+                                </div>
 
+                                <div class="row">
+                                    <div class=" col-sm-12 col-md-4 mb-2">
+                                        <div class="">
+                                            <h5> &nbsp;<b>Pieces</b></h5>
+                                            <input type="number" class="form-control" name="pieces" id="pieces" placeholder="No of pieces" min=1 value="<?php echo $row_order->no_of_pieces; ?>" disabled>
+											
+                                        </div>
+                                    </div>
+
+                              
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="notes" class="form-label">Notes</label>
+                                    <textarea class="form-control" id="notesForDriver" name="notes_for_driver" rows="3" placeholder="Please be brief" readonly><?php echo $row_order->notes_for_driver ?></textarea>
+                                    <div class="form-text"></div>
+                                </div>
+                              
+                            </div>
+                        </div>
+                    </div>
+                </div>
+				
+				
+				
+				
+				<?php }elseif( $sender_data->business_type == "pharmacy" || $sender_data->business_type == "pharmacy_2" || $sender_data->business_type == "pharmacy_3" ) { ?>
+                <div class="row">
+                    <div class="col-lg-12 col-xl-12 col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class=" col-sm-12 col-md-4 mb-2">
+                                        <div class="">
+                                            <h5> &nbsp;<b>Charge</b></h5>
+                                            <p class="text-muted  m-l-5"><?php echo $row_order->charge; ?></p>
+                                        </div>
+                                    </div>
+
+                                    <div class=" col-sm-12 col-md-4 mb-2">
+                                        <div class="">
+                                            <h5> &nbsp;<b>No of Rx</b></h5>
+                                            <p class="text-muted  m-l-5"><?php echo $row_order->no_of_rx; ?></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                <h5> &nbsp;<b>Tags</b></h5>
+                                    <?php foreach ($tags as $tag){ ?>
+                                    <div class="form-check">
+                                        <p class="text-muted  m-l-5">
+                                            <input class="form-check-input" type="checkbox" id="<?php echo strtolower(str_replace(' ', '', $tag)); ?>" name="tags[]" value="<?php echo htmlspecialchars($tag); ?>" <?php if (isTagChecked($tag, $rowTags)) echo 'checked'; ?> disabled>
+                                            <label class="form-check-label" for="<?php echo strtolower(str_replace(' ', '', $tag)); ?>"><?php echo htmlspecialchars($tag); ?></label>
+                                        </p>
+                                    </div>
+                                    <?php } ?>
+                                </div>
+
+                                
+                                <div class="mb-3">
+                                    <label for="notes" class="form-label">Notes</label>
+                                    <textarea class="form-control" id="notesForDriver" name="notes_for_driver" rows="3" placeholder="Please be brief" readonly><?php echo $row_order->notes_for_driver ?></textarea>
+                                    <div class="form-text"></div>
+                                </div>
+                              
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php  }  } ?>
+								
+								
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="card">
@@ -461,10 +577,19 @@ $address_order = $db->cdp_registro();
                                             </div>
                                         </div>
                                        
-                                     <?php
-                                        } ?>
+                                    
+									
+										<div class="col-md-2">
+										 <label for="admin_discount" class="control-label col-form-label">Discount (in $)</label>
+										 <div class="input-group mb-3">
+											   <input type="number" id="admin_discount" name="admin_discount" step="0.01" value=<?php echo $row_order->admin_discount??''; ?> class="form-control">
+											   <input type="hidden" id="total_price">
+											</div>
+										</div>
+										<?php } ?>
                                     </div>
-
+								
+								
 
 
                                     <div class="col-md-12 row" id="image_preview"></div>
@@ -484,6 +609,9 @@ $address_order = $db->cdp_registro();
                         </div>
                     </div>
 
+
+
+								
                     <div class="row">
                     <div class="col-lg-4 h-70">
                             <div style="height: 26rem;" class=" card">
@@ -559,7 +687,7 @@ $address_order = $db->cdp_registro();
                                         <div class="row">
                                             <div class="col-md-8">
                                                 <div>
-                                                    <label class="control-label" id="selectItem"> Delivery Notes</label>
+                                                    <label class="control-label"> Delivery Notes</label>
                                                 </div>
                                                 <textarea class="form-control" name="delivery_notes" id="delivery_notes" rows="4" cols="50" placeholder="-Unit and Buzzer (If applicable) 
 -Package Description 
@@ -575,10 +703,10 @@ $address_order = $db->cdp_registro();
                                                     <label class="control-label" id="selectItem"> Attach Files</label>
                                                 </div>
 
-                                                <input class="custom-file-input" id="filesMultiple" name="filesMultiple[]" multiple="multiple" type="file" style="display: none;" onchange="cdp_validateZiseFiles(); cdp_preview_images();">
+                                                <input class="custom-file-input" id="filesMultiple" name="filesMultiple[]" multiple type="file" style="display: none;" onchange="cdp_preview_images();" accept="image/jpeg, image/jpg, image/png, image/gif">
 
 
-                                                <button type="button" id="openMultiFile" class="btn btn-default  pull-left  mb-4"> <i class="fa fa-paperclip" id="openMultiFile" style="font-size:18px; cursor:pointer;"></i> Upload files </button>
+                                                <button type="button" id="openMultiFile" class="btn btn-default pull-left  mb-4"> <i class="fa fa-paperclip" id="openMultiFile" style="font-size:18px; cursor:pointer;"></i> Upload files </button>
 
 
                                             </div>
@@ -594,19 +722,14 @@ $address_order = $db->cdp_registro();
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="resultados_file col-md-4 pull-right mt-4">
+                                            <!--div class="resultados_file col-md-4 pull-right mt-4">
 
 
-                                            </div>
+                                            </div-->
                                         </div>
 
 
-                                        <div class="row">
-
-                                            <div class="resultados_file col-md-4 pull-right mt-4">
-
-                                            </div>
-                                        </div>
+                                        
 
                                 </div>
                             </div>
@@ -648,6 +771,9 @@ $address_order = $db->cdp_registro();
                                     <hr>
                                     
                                     <div class="row" style="margin-top: 20px;">
+									<div id="loadingIcon" style="display: none;">
+									<img src="assets/images/loader-small.gif" class="loader_small" id="loader_small">
+									 </div>
                                         <div class="table-responsive d-none" id="table-totals">
                                             <!-- <table id="insvoice-item-table" class="table">
                                                 <tfoot>
@@ -711,10 +837,10 @@ $address_order = $db->cdp_registro();
                                                                  <input type="hidden" name="total_envio_ajax" id="total_envio_ajax" value="">
                                                             </div>
                                                  </div>
-
-                                                 <div class="col-sm-12 col-md-4 col-lg-3">
+												
+                                                 <div class="col-sm-12 col-md-4 col-lg-2">
                                                      <div class="form-group">
-                                                            <label for="emailAddress1">TaxL (13%)</label>
+                                                            <label for="tax_13">TaxL (13%)</label>
                                                                 
                                                                 
                                                             <b> $ </b>
@@ -724,7 +850,7 @@ $address_order = $db->cdp_registro();
                                                  </div>
                                                 
 
-                                                <div class="col-sm-12 col-md-4 col-lg-3">
+                                                <div class="col-sm-12 col-md-4 col-lg-2">
                                                      <div class="form-group">
                                                             <label for="emailAddress1">TOTAL</label>
                                                                 
@@ -899,13 +1025,15 @@ $address_order = $db->cdp_registro();
                             <input type="hidden" value="13" name="tax_value" id="tax_value">
                             <input type="hidden" value="3" name="declared_value_tax" id="declared_value_tax">
                             <input type="hidden" value="0" name="reexpedicion_value" id="reexpedicion_value">
+							 <input type="hidden" value="0" name="total_tax_val" id="total_tax_val">
 
                             <input type="hidden" name="core_meter" id="core_meter" value="500">
                             <input type="hidden" name="core_min_cost_tax" id="core_min_cost_tax" value="300">
                             <input type="hidden" name="core_min_cost_declared_tax" id="core_min_cost_declared_tax" value="250">
                             <input type="hidden" name="total_cost" id="total_cost" value="0" />
                             <input type="hidden" name="subtotal" id="subtotal" value="0" />                                        
-
+                            <input type="hidden" name="businessType" id="businessType" value="<?php echo $sender_data->business_type; ?>" />                                        
+                
                     </div> 
                     </div>
 
@@ -940,6 +1068,7 @@ $address_order = $db->cdp_registro();
                                                     $file->file_type == 'jpg' ||
                                                     $file->file_type == 'jpeg' ||
                                                     $file->file_type == 'png' ||
+                                                    $file->file_type == 'gif' ||
                                                     $file->file_type == 'ico'
                                                 ) {
 

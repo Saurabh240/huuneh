@@ -133,6 +133,13 @@ if(($sender_data->business_type == 'pharmacy' || $sender_data->business_type == 
     $rowTags = json_decode($row_order->tags, TRUE);
 }
 
+$rowTagsFlower = [];
+if(($sender_data->business_type == 'flower_shop' || $sender_data->business_type == 'flat_1' || $sender_data->business_type == 'flat_2') && !empty($row_order->tags)){
+    $rowTagsFlower = json_decode($row_order->tags, TRUE);
+}
+
+$tagsFlower = ['Wreath','Standing/Casket Spray'];
+
 ?>
 
 <!DOCTYPE html>
@@ -292,11 +299,12 @@ if(($sender_data->business_type == 'pharmacy' || $sender_data->business_type == 
 
                                                             <?php if ($row_order->status_courier != 21) { ?>
                                                                 <?php if ($row_order->status_courier != 12) { ?>
+																<?php if ($userData->userlevel != 3){ ?>
                                                                     <a class="dropdown-item" target="blank" href="print_inv_ship.php?id=<?php echo $_GET['id']; ?>">
                                                                         <i style="color:#343a40" class="ti-printer"></i>&nbsp;<?php echo $lang['toolprint'] ?></a>
 
                                                                     <a class="dropdown-item" href="print_label_ship.php?id=<?php echo $_GET['id']; ?>" target="_blank"> <i style="color:#343a40" class="ti-printer"></i>&nbsp;<?php echo $lang['toollabel'] ?> </a>
-
+																<?php } ?>
 
                                                                     <?php if ($userData->userlevel == 9 || $userData->userlevel == 3 || $userData->userlevel == 2) { ?>
 
@@ -306,8 +314,9 @@ if(($sender_data->business_type == 'pharmacy' || $sender_data->business_type == 
                                                                                 <?php if ($row_order->status_courier != 21) { ?>
                                                                                     <?php if ($row_order->status_courier != 12) { ?>
 
-
+																						
                                                                                         <a class="dropdown-item" href="courier_shipment_tracking.php?id=<?php echo $_GET['id']; ?>" title="<?php echo $lang['toolupdate'] ?>"><i style="color:#20c997" class="ti-reload">&nbsp;</i><?php echo $lang['toolupdate'] ?></a>
+																						
 
                                                                                         <a class="dropdown-item" href="courier_deliver_shipment.php?id=<?php echo $row_order->order_id; ?>" title="<?php echo $lang['tooldeliver'] ?>"><i style="color:#2962FF" class="ti-package"></i>&nbsp;<?php echo $lang['tooldeliver'] ?></a>
                                                                                     <?php } ?>
@@ -1137,6 +1146,50 @@ if(($sender_data->business_type == 'pharmacy' || $sender_data->business_type == 
                     </div>
                 </div>
 
+                <?php  if( $sender_data->business_type == "flower_shop" || $sender_data->business_type == "flat_1" || $sender_data->business_type == "flat_2" ) { ?>
+				 <div class="row">
+                    <div class="col-lg-12 col-xl-12 col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                
+                                <div class="mb-3">
+                                <h5> &nbsp;<b>Tags</b></h5>
+                                    <?php foreach ($tagsFlower as $tag){ ?>
+                                    <div class="form-check">
+                                        <p class="text-muted  m-l-5">
+                                            <input class="form-check-input" type="checkbox" id="<?php echo strtolower(str_replace(' ', '', $tag)); ?>" name="tags[]" value="<?php echo htmlspecialchars($tag); ?>" <?php if (isTagChecked($tag, $rowTagsFlower)) echo 'checked'; ?> disabled>
+                                            <label class="form-check-label" for="<?php echo strtolower(str_replace(' ', '', $tag)); ?>"><?php echo htmlspecialchars($tag); ?></label>
+                                        </p>
+                                    </div>
+                                    <?php } ?>
+                                </div>
+
+                                <div class="row">
+                                    <div class=" col-sm-12 col-md-4 mb-2">
+                                        <div class="">
+                                            <h5> &nbsp;<b>Pieces</b></h5>
+                                            <p class="text-muted  m-l-5"><?php echo $row_order->no_of_pieces; ?></p>
+                                        </div>
+                                    </div>
+
+                              
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="notes" class="form-label">Notes</label>
+                                    <textarea class="form-control" id="notesForDriver" name="notes_for_driver" rows="3" placeholder="Please be brief" readonly><?php echo $row_order->notes_for_driver ?></textarea>
+                                    <div class="form-text"></div>
+                                </div>
+                              
+                            </div>
+                        </div>
+                    </div>
+                </div>
+				
+				
+				
+				
+				<?php } ?>
                 <?php  if( $sender_data->business_type == "pharmacy" || $sender_data->business_type == "pharmacy_2" || $sender_data->business_type == "pharmacy_3" ) { ?>
                 <div class="row">
                     <div class="col-lg-12 col-xl-12 col-md-12">
@@ -1252,6 +1305,71 @@ if(($sender_data->business_type == 'pharmacy' || $sender_data->business_type == 
                     </div>
                 <?php
                 } ?>
+					
+					 <?php
+
+                $db->cdp_query("SELECT * FROM cdb_deliver_files where order_id='" . $_GET['id'] . "' ORDER BY date_file");
+                $files_order = $db->cdp_registros();
+                $numrows = $db->cdp_rowCount();
+
+                if ($numrows > 0) {
+                ?>
+                    <div class="row">
+                        <div class="col-lg-12 col-xl-12 col-md-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-md-flex align-items-center">
+                                        <div>
+                                            <h3 class="card-title"><span>Delivery Proof</span></h3>
+                                        </div>
+                                    </div>
+                                    <div><hr></div>
+                                    <div class="col-md-12 row">
+
+                                        <?php
+                                        $count = 0;
+                                        foreach ($files_order as $file) {
+
+                                            $date_add = date("Y-m-d h:i A", strtotime($file->date_file));
+
+                                            $src = 'assets/images/no-preview.jpeg';
+
+                                            if (
+                                                $file->file_type == 'jpg' ||
+                                                $file->file_type == 'jpeg' ||
+                                                $file->file_type == 'png' ||
+                                                $file->file_type == 'gif' ||
+                                                $file->file_type == 'ico'
+                                            ) {
+
+                                                $src = $file->url;
+                                            }
+
+                                            $count++;
+                                        ?>
+
+                                            <div class=" col-sm-12 col-md-3 mb-2">
+
+                                                <img style="width: 180px; height: 180px;" class="img-thumbnail" src="<?php echo $src; ?>">
+
+                                                <div class="row ">
+                                                    <div class=" col-md-12 mb-2 mt-2">
+                                                        <p class="text-justify"><a style="color:#7460ee;" target="_blank" href="<?php echo $file->url; ?>" class=""><?php echo $file->name; ?> </a></p>
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        <?php
+                                        } ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php
+                } ?>
+
 
                   <!-- Row Total Cost with commented shipping details  -->
                   <div class="row">
@@ -1430,12 +1548,14 @@ if(($sender_data->business_type == 'pharmacy' || $sender_data->business_type == 
                                 </div>
 
                                 <div><br></div> -->
+								  <?php if ($userData->userlevel != 3) { ?>
                                 <div class="d-md-flex align-items-center">
                                     <div>
                                         <h3 class="card-title"><span><?php echo $lang['messageerrorform30'] ?></span></h3>
                                     </div>
                                 </div>
                                 <div><hr></div>
+								
                                 <div class="table-responsive">
                                     <table class="table table-hover" id="tabla">
                                         <thead class="bg-inverse text-white">
@@ -1448,6 +1568,7 @@ if(($sender_data->business_type == 'pharmacy' || $sender_data->business_type == 
                                                 <th><b><?php echo $lang['langs_048'] ?></b></th> -->
                                                 <th><b><?php echo $lang['left240'] ?></th>
                                                 <th><b><?php echo $lang['leftorder67'] ?> (13%) </b></th>
+												
                                                 <th><b><?php echo $lang['leftorder2020'] ?></b></th>
                                             </tr>
                                         </thead>
@@ -1461,20 +1582,24 @@ if(($sender_data->business_type == 'pharmacy' || $sender_data->business_type == 
                                                 <!-- <td class="text-center" id="reexp"><?php echo $sumador_fixed_charge; ?></td>
                                                 <td class="text-center" id="reexp"><?php echo "$ " . cdb_money_format($row_order->total_reexp); ?></td> -->
                                                 <td class="text-left" id="total_envio"><b><?php echo "$ " . cdb_money_format_bar(floatval($row_order->sub_total)); ?></b></td>
+												
                                                 <td class="text-left" id="impuesto"><?php 
-                                                    if (floatval($row_order->total_order) && floatval($row_order->total_order) > floatval($row_order->sub_total)) {
-                                                        $tax = floatval($row_order->total_order) - floatval($row_order->sub_total);
-                                                        echo "$ " . cdb_money_format_bar($tax);
-                                                    } else {
+												
+                                                     if (floatval($row_order->total_order)) { 
+															$tax = floatval($row_order->total_order) - floatval($row_order->sub_total);
+															echo "$ " . cdb_money_format_bar($tax);
+													}else{
                                                         echo "$ 0.00";
                                                     }
                                                 ?></td>
+												
                                                 <td class="text-left" id="total_envio"><b><?php echo "$ " . cdb_money_format_bar(floatval($row_order->total_order)); ?></b></td>
                                             </tr>
                             
                                         </tbody>
                                     </table>
                                 </div>
+								  <?php } ?>
                             </div>
                         </div>
                     </div>

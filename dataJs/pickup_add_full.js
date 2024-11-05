@@ -53,6 +53,21 @@ $(function () {
   cdp_select2_init_recipient();
 });
 
+function pieces_check() {
+	var pieces=$("#pieces").val();
+	if(pieces>4){
+		Swal.fire({
+		  type: 'warning',
+		  title: 'opps..',
+		  text: message_error_form107,
+		  icon: 'warning',
+		  confirmButtonColor: '#336aea'
+		});
+		$("#pieces").val(3);
+	}
+	calculateFinalTotal();
+}
+
 function cdp_load_countries(modal) {
   $("#country" + modal)
     .select2({
@@ -153,6 +168,33 @@ function cdp_load_cities(modal) {
     allowClear: true,
   });
 }
+
+$("#admin_discount").on("change", function () {
+	var total_price = $("#total_price").val();
+	/*
+	if($("#admin_discount").val()>parseFloat(total_price)){
+		 Swal.fire({
+		  type: 'Error!',
+		  title: 'Oops...',
+		  text: 'Discount should not be grater than Subtotal',
+		  icon: 'error',
+		  confirmButtonColor: '#336aea'
+		});
+		$("#admin_discount").val('');
+		$("#admin_discount").focus();
+		//$("#discount_div").html(total_price);
+		var tax = 0.00;
+		tax = (parseFloat(total_price) * (13 / 100));
+		var total_tax_value = parseFloat(parseFloat(total_price) + tax);
+		$("#total_after_tax").html(total_tax_value.toFixed(2));
+		$("#tax_13").html(tax.toFixed(2));
+		$("#total_tax_val").val(tax.toFixed(2));
+	}else{
+		
+	    calculateFinalTotal();
+	}*/
+	 calculateFinalTotal();
+});
 
 function loadPackages() {
   $("#data_items").html("");
@@ -529,9 +571,32 @@ function calculateFinalTotal(element = null) {
   //$("#insurance").html(total_seguro.toFixed(2));
   //$("#total_impuesto_aduanero").html(total_impuesto_aduanero.toFixed(2));
   var shipmentfee = localStorage.getItem('shipmentfee');
-  $("#total_before_tax").html(Number(shipmentfee).toFixed(2));
-  var total_tax_value = parseFloat(parseFloat(shipmentfee) + (parseFloat(shipmentfee) * (13 / 100)));
+  var shipmentfee_after_discount=parseFloat(shipmentfee);
+  var admin_discount = $("#admin_discount").val();
+  
+  if(admin_discount!=''){
+		var shipmentfee_after_discount=parseFloat(shipmentfee)-parseFloat(admin_discount);
+   }
+
+  
+   var no_pieces = $("#pieces").val();
+   if(no_pieces!=''){
+		shipmentfee_after_discount = parseFloat(shipmentfee_after_discount) + (parseFloat(no_pieces) * 3);
+	}
+  
+   
+ $("#total_before_tax").html(Number(shipmentfee_after_discount).toFixed(2));
+  var total_tax_value = parseFloat(shipmentfee_after_discount + (parseFloat(shipmentfee_after_discount) * (13 / 100)));
+  $("#total_price").val(parseFloat(shipmentfee_after_discount).toFixed(2));
+  //$("#discount_div").html(shipmentfee_after_discount.toFixed(2));
+   
+ 
   $("#total_after_tax").html(total_tax_value.toFixed(2));
+  var tax = 0.00;
+  tax = parseFloat(total_tax_value) - parseFloat(shipmentfee_after_discount);
+ 
+  $("#tax_13").html(tax.toFixed(2));
+  $("#total_tax_val").val(tax.toFixed(2));
   // alert(parseFloat(shipmentfee));
   // alert(parseFloat(total_envio.toFixed(2)));
   // parseInt(shipmentfee.toFixed(2))
@@ -664,7 +729,13 @@ function calculateFinalTotal(element = null) {
 
 $("#invoice_form").on("submit", function (event) {
   if (cdp_validateZiseFiles() == true) {
-    alert("error files");
+    Swal.fire({
+		  type: 'Error!',
+		  title: 'Oops...',
+		  text: validation_files_size,
+		  icon: 'error',
+		  confirmButtonColor: '#336aea'
+		});
     return false;
   }
   
@@ -722,11 +793,21 @@ $("#invoice_form").on("submit", function (event) {
   var charge = "";
   var no_of_rx = "";
   var notes_for_driver = "";
+  var no_of_pieces = 0;
 
   // Get business type
   var business_type = $("#businessType").val();
 
-  if (business_type && business_type === "pharmacy" || business_type === "pharmacy_2" || business_type === "pharmacy_3") {
+  if (business_type === "flower_shop" || business_type === "flat_1" || business_type === "flat_2") {
+    // Collect checked checkbox values
+    $('input[name="tags[]"]:checked').each(function() {
+      tags.push($(this).val());
+    });
+	  no_of_pieces = $("#pieces").val();
+	  notes_for_driver = $("#notesForDriver_flower").val();
+  }
+  
+   if (business_type && business_type === "pharmacy" || business_type === "pharmacy_2" || business_type === "pharmacy_3") {
     // Collect checked checkbox values
     $('input[name="tags[]"]:checked').each(function() {
       tags.push($(this).val());
@@ -865,9 +946,14 @@ $("#invoice_form").on("submit", function (event) {
   data.append('total_order', total_order);
   var sub_total = $("#total_before_tax").text();
   data.append('sub_total', sub_total);
-
+  var admin_discount = $("#admin_discount").val();
+  data.append("admin_discount", admin_discount); 
+  data.append("no_of_pieces", no_of_pieces); 
+  var total_tax_val = $("#total_tax_val").val();
+  data.append("total_tax", parseFloat(total_tax_val)); 
+  
   var total_file = document.getElementById("filesMultiple").files.length;
-
+   
   for (var i = 0; i < total_file; i++) {
     data.append(
       "filesMultiple[]",
@@ -1015,41 +1101,59 @@ function isNumberKey(evt, element) {
 
 function cdp_preview_images() {
   $("#image_preview").html("");
-
+  var flag=0;
   var total_file = document.getElementById("filesMultiple").files.length;
 
   for (var i = 0; i < total_file; i++) {
-    var mime_type = event.target.files[i].type.split("/");
-    var src = "";
-    if (mime_type[0] == "image") {
-      src = URL.createObjectURL(event.target.files[i]);
-    } else {
-      src = "assets/images/no-preview.jpeg";
-    }
+	var filetype = event.target.files[i].type;
+	if (filetype == 'image/jpeg' || filetype == 'image/jpg'  || filetype == 'image/png' || filetype == 'image/gif') {		
+		var mime_type = event.target.files[i].type.split("/");
+		var src = "";
+		if (mime_type[0] == "image") {
+		  src = URL.createObjectURL(event.target.files[i]);
+		} else {
+		  src = "assets/images/no-preview.jpeg";
+		}
 
-    $("#image_preview").append(
-      '<div class="col-md-3" id="image_' +
-      i +
-      '">' +
-      '<img style="width: 180px; height: 180px;" class="img-thumbnail" src="' +
-      src +
-      '">' +
-      '<div class="row">' +
-      '<div class=" col-md-12 mt-2 mb-2">' +
-      "<span>" +
-      event.target.files[i].name +
-      "</span>" +
-      "</div>" +
-      "</div>" +
-      '<div class="row">' +
-      '<div class="  mb-2">' +
-      '<button type="button" class="btn btn-danger btn-sm pull-left" onclick="cdp_deletePreviewImage(' +
-      i +
-      ');"><i class="fa fa-trash"></i></button>' +
-      "</div>" +
-      "</div>" +
-      "</div>"
-    );
+		$("#image_preview").append(
+		  '<div class="col-md-3" id="image_' +
+		  i +
+		  '">' +
+		  '<img style="width: 180px; height: 180px;" class="img-thumbnail" src="' +
+		  src +
+		  '">' +
+		  '<div class="row">' +
+		  '<div class=" col-md-12 mt-2 mb-2">' +
+		  "<span>" +
+		  event.target.files[i].name +
+		  "</span>" +
+		  "</div>" +
+		  "</div>" +
+		  '<div class="row">' +
+		  '<div class="  mb-2">' +
+		  '<button type="button" class="btn btn-danger btn-sm pull-left" onclick="cdp_deletePreviewImage(' +
+		  i +
+		  ');"><i class="fa fa-trash"></i></button>' +
+		  "</div>" +
+		  "</div>" +
+		  "</div>"
+		);
+	}else{
+		flag=1;
+	
+	}
+  }
+  if(flag==1){
+	  	
+	Swal.fire({
+		  type: 'warning',
+		  title: 'opps..',
+		  text: 'Only jpeg, jpg, png, gif image format allows.',
+		  icon: 'warning',
+		  confirmButtonColor: '#336aea'
+		});
+		
+	
   }
 }
 
@@ -1080,13 +1184,13 @@ function cdp_deletePreviewImage(index) {
 function cdp_validateZiseFiles() {
   var inputFile = document.getElementById("filesMultiple");
   var file = inputFile.files;
-
   var size = 0;
 
   for (var i = 0; i < file.length; i++) {
     var filesSize = file[i].size;
-
-    if (size > 5242880) {
+    var filetype = file[i].type;
+	if (filetype == 'image/jpeg' || filetype == 'image/jpg'  || filetype == 'image/png' || filetype == 'image/gif') {
+	if (size > 5242880) {
       $(".resultados_file").html(
         "<div class='alert alert-danger'>" +
         "<button type='button' class='close' data-dismiss='alert'>&times;</button>" +
@@ -1095,7 +1199,6 @@ function cdp_validateZiseFiles() {
         " </strong>" +
         "</div>"
       );
-
       $("#filesMultiple").val("");
       $("#clean_files").addClass("hide");
       $("#image_preview").html("");
@@ -1103,8 +1206,8 @@ function cdp_validateZiseFiles() {
     } else {
       $(".resultados_file").html("");
     }
-
     size += filesSize;
+	}
   }
 
   if (size > 5242880) {
@@ -1150,7 +1253,10 @@ $("input[type=file]").on("change", function () {
   var file = inputFile.files;
   var contador = 0;
   for (var i = 0; i < file.length; i++) {
-    contador++;
+	   var filetype = file[i].type;
+	if (filetype == 'image/jpeg' || filetype == 'image/jpg'  || filetype == 'image/png' || filetype == 'image/gif') {
+		contador++;
+	}
   }
   $("#total_item_files").val(contador);
 
@@ -1204,6 +1310,11 @@ function cdp_select2_init_sender() {
         $("#specialBusinessCard").css("display", "flex");
     } else {
         $("#specialBusinessCard").css("display", "none");
+    }
+	if (businessType == "flower_shop" || businessType == "flat_1" || businessType == "flat_2") {
+        $("#flowerBusinessCard").css("display", "flex");
+    } else {
+        $("#flowerBusinessCard").css("display", "none");
     }
 
       $("#sender_address_id").attr("disabled", true);
@@ -1857,11 +1968,15 @@ $('#deliveryType').on('change', function () {
 
 //Function to calculate distance between two coordinates and update distance input
 function calculateAndDisplayDistance(origin, destination, deliveryType, sender_id = null) {
+  var send_recipient_id = $("#recipient_id option:selected").val();
+  var  origin_id = $('#sender_address_id option:selected').val();
+  var destination_id = $('#recipient_address_id option:selected').val();
   if (!origin) {
     origin = $('#sender_address_id option:selected').text();
   }
   if (!destination) {
     destination = $('#recipient_address_id option:selected').text();
+    
   }
   if (!deliveryType) {
     deliveryType = document.getElementById('deliveryType').value;
@@ -1879,8 +1994,12 @@ function calculateAndDisplayDistance(origin, destination, deliveryType, sender_i
   $.ajax({
     type: 'POST',
     url: 'ajax/courier/calculate_distance.php', // Replace with your PHP script for calculating distance
-    data: { 'origin': origin, 'destination': destination, 'deliveryType': deliveryType, 'sender_id': sender_id },
+    data: { 'origin': origin, 'destination': destination, 'deliveryType': deliveryType, 'sender_id': sender_id,'send_sender_id':sender_id,'send_recipient_id':send_recipient_id, 'origin_id':origin_id, 'destination_id':destination_id},
+	
     dataType: 'json',
+	beforeSend: function() {
+		$('#loadingIcon').show();
+	},
     success: function (data) {
       console.log("All", data);
       // Update distance input with calculated distance
@@ -1891,11 +2010,24 @@ function calculateAndDisplayDistance(origin, destination, deliveryType, sender_i
       localStorage.setItem('baseRate', data.baseRate)
       localStorage.setItem('shipmentfee', data.shipmentfee)
       getTariffs();
+	  $('#loadingIcon').hide();
+	 if (typeof data.msg !== 'undefined') {
+	   Swal.fire({
+            type: 'warning',
+            text: data.msg,
+            icon: 'warning',
+            confirmButtonColor: '#336aea'
+          });
+	 }
     },
     error: function () {
+		$('#loadingIcon').hide();
       // Handle error
       // alert('Error calculating distance.');
-    }
+    },
+	complete: function() {
+		$('#loadingIcon').hide();
+	  },
   });
 }
 
@@ -2035,53 +2167,48 @@ $("#add_address_users_from_modal_shipments").on("submit", function (event) {
 
 });
 
+var autocomplete;
+var address_field;
+var country_field;
+var country_field_label;
+var full_address='';
+var autocompleteInstances = [];
+
+var address_fields = []; // Declare in outer scope
 
 function initAutocomplete() {
 
-  const address_fields = [document.querySelector("#address_modal_user_address"), document.querySelector("#address_modal_recipient"), document.querySelector("#address_modal_user"), document.querySelector("#address_modal_recipient_address")];
-  //var country_array = ["AFG","ALB","DZA","AND","AGO","ATG","ARG","ARM","AUS","AUT","AZE","BHS","BHR","BGD","BRB","BLR","BEL","BLZ","BEN","BMU","BTN","BOL","BIH","BWA","BRA","BRN","BGR","BFA","BDI","KHM","CMR","CAN","CPV","CAF","TCD","CHL","CHN","COL","COM","COG","COD","CRI","CIV","HRV","CUB","CYP","CZE","DNK","DJI","DMA","DOM","TLS","ECU","EGY","SLV","GNQ","ERI","EST","ETH","FJI","FIN","FRA","GAB","GMB","GEO","DEU","GHA","GRC","GRD","GTM","GIN","GNB","GUY","HTI","HND","HKG","HUN","ISL","IND","IDN","IRN","IRQ","IRL","ISR","ITA","JAM","JPN","JOR","KAZ","KEN","KIR","PRK","KOR","KWT","KGZ","LAO","LVA","LBN","LSO","LBR","LBY","LIE","LTU","LUX","MKD","MDG","MWI","MYS","MDV","MLI","MLT","MHL","MRT","MUS","MEX","FSM","MDA","MCO","MNG","MNE","MAR","MOZ","MMR","NAM","NRU","NPL","BES","NLD","NZL","NIC","NER","NGA","NOR","OMN","PAK","PLW","PAN","PNG","PRY","PER","PHL","POL","PRT","PRI","QAT","ROU","RUS","RWA","KNA","LCA","VCT","WSM","SMR","STP","SAU","SEN","SRB","SYC","SLE","SGP","SVK","SVN","SLB","SOM","ZAF","SSD","ESP","LKA","SDN","SUR","SWZ","SWE","CHE","SYR","TWN","TJK","TZA","THA","TGO","TON","TTO","TUN","TUR","TKM","TUV","UGA","UKR","ARE","GBR","USA","URY","UZB","VUT","VEN","VNM","VIR","YEM","ZMB","ZWE","XKX","test","HA","ISM","MAR","YU","YU"];
+  address_fields = [document.querySelector("#address_modal_user_address"), document.querySelector("#address_modal_recipient"), document.querySelector("#address_modal_user"), document.querySelector("#address_modal_recipient_address")];
+  	
+	 address_fields.forEach((address, index) => {
+    let autocomplete = new google.maps.places.Autocomplete(address, {
+      fields: ["address_components", "geometry","formatted_address"],
+      types: ["address"],
+      strictBounds: false,
+	  componentRestrictions: { country: "CA" } // Restrict to Canada
+    });
+    address.focus();
+   
+    autocompleteInstances[index] = autocomplete;
 
-  address_fields.forEach(address => {
-    if (address) {
-      let autocomplete = new google.maps.places.Autocomplete(address, {
-        // componentRestrictions: { country: new_country_array },
-        fields: ["address_components", "geometry"],
-        types: ["address"],
-        strictBounds: false,
-      });
-      address.focus();
-      // When the user selects an address from the drop-down, populate the
-      // address fields in the form.
-      autocomplete.addListener("place_changed", fillInAddress);
-    }
-  })
-  // Create the autocomplete object, restricting the search predictions to
-  // addresses in the US and Canada.
-  // autocomplete = new google.maps.places.Autocomplete(address_field, {
-  //   // componentRestrictions: { country: new_country_array },
-  //   fields: ["address_components", "geometry"],
-  //   types: ["address"],
-  //   strictBounds: false,
-  // });
-  // address_field.focus();
-  // // When the user selects an address from the drop-down, populate the
-  // // address fields in the form.
-  // autocomplete.addListener("place_changed", fillInAddress);
-
+    autocomplete.addListener("place_changed", function () {
+      fillInAddress(index);
+    });
+  });
+  
 }
 
-function fillInAddress() {
+function fillInAddress(index) {
   // Get the place details from the autocomplete object.
+  const autocomplete = autocompleteInstances[index];
   const place = autocomplete.getPlace();
+  full_address = place.formatted_address;
+  console.log(place);
+  console.log("full_address="+full_address);
   let address1 = "";
   let postcode = "";
 
-  // Get each component of the address from the place details,
-  // and then fill-in the corresponding field on the form.
-  // place.address_components are google.maps.GeocoderAddressComponent objects
-  // which are documented at http://goo.gle/3l5i5Mr
   for (const component of place.address_components) {
-    // @ts-ignore remove once typings fixed
     const componentType = component.types[0];
 
     switch (componentType) {
@@ -2096,9 +2223,13 @@ function fillInAddress() {
       }
 
     }
-
-    address_field.value = address1;
   }
+  const address_field = address_fields[index];
+	  if (address_field) {
+		address_field.value = address1; // Set the formatted address value
+		const event = new Event('change', { bubbles: true, cancelable: true });
+		address_field.dispatchEvent(event);
+	  }
 }
 
 window.initAutocomplete = initAutocomplete;
@@ -2259,7 +2390,8 @@ var iti = window.intlTelInput(input, {
       callback(countryCode);
     });
   },
-  initialCountry: "auto",
+  onlyCountries: ["ca"], // This restricts the country list to Canada
+  initialCountry: "ca", // Sets the default country to Canada
   nationalMode: true,
 
   separateDialCode: true,
@@ -2341,7 +2473,8 @@ var iti_recipient = window.intlTelInput(input_recipient, {
       callback(countryCode);
     });
   },
-  initialCountry: "auto",
+  onlyCountries: ["ca"], // This restricts the country list to Canada
+  initialCountry: "ca", // Sets the default country to Canada
   nationalMode: true,
 
   separateDialCode: true,
@@ -2404,4 +2537,243 @@ function cdp_showSuccess(messages, shipment_id) {
     }
   });
 }
+
+
+/* Autocomplete Address */
+
+function loadStates(selectedCountryId, stateInput, cityInput, modelId,inputAddress)
+{
+      // Select state
+      if (stateInput) {
+		  if(inputAddress=='address_modal_user_address'  || inputAddress=='address_modal_user'){
+			 var $stateSelect = modelId ? $("#state_modal_user" + modelId) : $("#state_modal_user");
+		}else{
+			var $stateSelect = modelId ? $("#state_modal_recipient" + modelId) : $("#state_modal_recipient");
+		}
+        $.ajax({
+          url: "ajax/select2_states.php?id=" + selectedCountryId, // Your data source URL for states
+          dataType: "json",
+          data: {
+            country_id: selectedCountryId
+          },
+          success: function (statesData) {
+            // Find the selected state's text
+            var selectedState = statesData.find(function (state) {
+              return state.text == stateInput;
+            });
+			
+			if (selectedState === undefined) {
+				
+				 const normalizedStr2 = stateInput.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+				//console.log("normalizedStr2="+normalizedStr2);
+				var selectedState = statesData.find(function (state) {
+				  return state.text == normalizedStr2;
+				});
+			}
+    
+            // Create a new option element
+            var newStateOption = new Option(selectedState.text, selectedState.id, true, true);
+    
+            // Append it to the select
+            $stateSelect.append(newStateOption).trigger('change');
+    
+            // Manually trigger the change event to update Select2
+            $stateSelect.trigger({
+              type: 'select2:select',
+              params: {
+                data: selectedState
+              }
+            });
+    
+            // After state is selected, load cities
+            loadCities(selectedState.id, cityInput, modelId,inputAddress); // Assuming cdp_load_cities(modal) function exists
+          }
+        });
+      }
+    
+}
+
+function loadCities(selectedStateId, cityInput, modelId,inputAddress)
+{
+
+      // Select city
+      if (cityInput) {
+		  if(inputAddress=='address_modal_user_address'  || inputAddress=='address_modal_user'){
+			  var $citySelect = modelId ? $("#city_modal_user" + modelId) : $("#city_modal_user");
+			
+		}else{
+        var $citySelect = modelId ? $("#city_modal_recipient" + modelId) : $("#city_modal_recipient");
+		}
+        $.ajax({
+          url: "ajax/select2_cities.php?id=" + selectedStateId, // Your data source URL for cities
+          dataType: "json",
+          data: {
+            state_id: selectedStateId
+          },
+          success: function (citiesData) {
+            // Find the selected city's text
+            var selectedCity = citiesData.find(function (city) {
+              return city.text == cityInput;
+            });
+    
+            // Create a new option element
+            var newCityOption = new Option(selectedCity.text, selectedCity.id, true, true);
+    
+            // Append it to the select
+            $citySelect.append(newCityOption).trigger('change');
+    
+            // Manually trigger the change event to update Select2
+            $citySelect.trigger({
+              type: 'select2:select',
+              params: {
+                data: selectedCity
+              }
+            });
+          }
+        });
+      }
+}
+
+
+function loadCountries(fullAddress, modelId,inputAddress)
+{
+  if (!fullAddress) return;
+
+    var countryInput = fullAddress.country;
+    var stateInput = fullAddress.state;
+    var cityInput = fullAddress.city;
+    var selectedZip = fullAddress.zip_code;
+    var $countrySelect;
+    
+	if(inputAddress=='address_modal_user_address' || inputAddress=='address_modal_user'){
+		
+ 
+    modelId ? $("#postal_modal_user" + modelId).val(selectedZip) : $("#postal_modal_user").val(selectedZip);
+	}else{
+		
+    modelId ? $("#postal_modal_recipient" + modelId).val(selectedZip) : $("#postal_modal_recipient").val(selectedZip); 
+	}
+    // Select country
+    if (countryInput) {
+		if(inputAddress=='address_modal_user_address'  || inputAddress=='address_modal_user'){
+			
+			  $countrySelect = modelId ? $countrySelect = $("#country_modal_user" + modelId) : $("#country_modal_user");
+		}else{
+			
+			$countrySelect = modelId ? $countrySelect = $("#country_modal_recipient" + modelId) : $("#country_modal_recipient");
+		}
+      $.ajax({
+        url: "ajax/select2_countries.php", // Your data source URL for countries
+        dataType: "json",
+        success: function (countriesData) {
+          var selectedCountry = countriesData.find(function (country) {
+            return country.text == countryInput;
+          });
+  
+          // Create a new option element
+          var newCountryOption = new Option(selectedCountry.text, selectedCountry.id, true, true);
+  
+          // Append it to the select
+          $countrySelect.append(newCountryOption).trigger('change');
+  
+          // Manually trigger the change event to update Select2
+          $countrySelect.trigger({
+            type: 'select2:select',
+            params: {
+              data: selectedCountry
+            }
+          });
+
+          // After country is selected, load states
+          loadStates(selectedCountry.id, stateInput, cityInput, modelId,inputAddress); 
+        }
+      });
+    }
+    
+
+}
+
+
+function getRecipientFullAddress(inputAddress, modelId)
+{
+
+   var recipientAddress=full_address;
+  $.ajax({
+    type: 'POST',
+    url: 'ajax/courier/address_details_api.php',
+    data: { 'address_modal': recipientAddress },
+    dataType: 'json',
+    success: function (response) {
+      if(response.status){
+        var fullAddress = response.fullAddress;
+        loadCountries(fullAddress, modelId,inputAddress);
+      }else{
+        // alert(response.message);
+      }
+
+    },
+    error: function () {
+      // Handle error
+      alert('Error: Something Went Wrong!.');
+    }
+  });
+  
+}
+
+$("#address_modal_recipient").on("change paste", function(){
+	if(event.type==='paste'){
+		setTimeout(function() {
+        full_address = $("#address_modal_recipient").val();
+		var abc = full_address.split(","); 
+		if (typeof abc[0] !== "undefined") {
+		$("#address_modal_recipient").val(abc[0]); }
+    }, 0);
+	
+	}else{
+  getRecipientFullAddress("address_modal_recipient", "");
+	}
+});
+
+
+$("#address_modal_recipient_address").on("change paste", function(){
+	if(event.type==='paste'){
+		setTimeout(function() {
+        full_address = $("#address_modal_recipient_address").val();
+		var abc = full_address.split(","); 
+		if (typeof abc[0] !== "undefined") {
+		$("#address_modal_recipient_address").val(abc[0]); }
+    }, 0);
+	
+	}else{
+  getRecipientFullAddress("address_modal_recipient_address", "_address");
+	}
+});
+
+$("#address_modal_user_address").on("change paste", function(){
+	if(event.type==='paste'){
+		setTimeout(function() {
+        full_address = $("#address_modal_user_address").val();
+		var abc = full_address.split(","); 
+		if (typeof abc[0] !== "undefined") {
+		$("#address_modal_user_address").val(abc[0]); }
+    }, 0);
+	
+	}else{
+	getRecipientFullAddress("address_modal_user_address", "_address"); }
+});
+
+$("#address_modal_user").on("change paste", function(){
+	if(event.type==='paste'){
+		setTimeout(function() {
+        full_address = $("#address_modal_user").val();
+		var abc = full_address.split(","); 
+		if (typeof abc[0] !== "undefined") {
+		$("#address_modal_user").val(abc[0]); }
+    }, 0);
+	
+	}else{
+	getRecipientFullAddress("address_modal_user", ""); }
+  
+});
+
 

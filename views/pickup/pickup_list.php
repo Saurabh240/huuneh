@@ -39,6 +39,8 @@ $statusrow = $core->cdp_getStatus();
     <title><?php echo $lang['left1072'] ?> | <?php echo $core->site_name ?></title>
     <link rel="stylesheet" href="assets/template/assets/libs/sweetalert2/sweetalert2.min.css">
     <?php include 'views/inc/head_scripts.php'; ?>
+	 <link rel="stylesheet" href="assets/template/assets/libs/daterangepicker/daterangepicker.css">
+    <link rel="stylesheet" type="text/css" href="assets/template/assets/libs/select2/dist/css/select2.min.css">
 
 </head>
 
@@ -121,7 +123,7 @@ $statusrow = $core->cdp_getStatus();
 
                         </div> -->
 
-                        <div class=" col-sm-6">
+                        <div class="col-sm-6">
 
                             <div class="input-group">
                                 <input type="text" name="search" id="search" class="form-control input-sm float-right" placeholder="Search by Invoice/client/recipient address" onkeyup="cdp_load(1);">
@@ -131,6 +133,30 @@ $statusrow = $core->cdp_getStatus();
 
                             </div>
                         </div>
+						
+						  <div class=" col-sm-12 col-md-3 mb-2">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <span class="fa fa-calendar"></span>
+                                                </span>
+                                            </div>
+                                            <input type="text" name="daterange" id="daterange" class="form-control float-right">
+                                        </div>
+
+                                    </div>
+									
+							<div class=" col-sm-12 col-md-2 mb-2">
+                                        <div class="input-group">
+                                            <select onchange="cdp_load(1);" class="form-control custom-select " id="status_courier" name="status_courier">
+                                                <option value="0">--<?php echo $lang['left210'] ?>--</option>
+                                                <?php foreach ($statusrow as $row) : ?>
+                                                    <option value="<?php echo $row->id; ?>"><?php echo $row->mod_style; ?></option>
+
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+                                    </div>
                     </div>
 
                     <div class="table-responsive-sm">
@@ -202,8 +228,11 @@ $statusrow = $core->cdp_getStatus();
     <!-- All Jquery -->
     <!-- ============================================================== -->
     <?php include('helpers/languages/translate_to_js.php'); ?>
-
+	<script src="assets/template/assets/libs/moment/moment.min.js"></script>
     <script src="assets/template/assets/libs/sweetalert2/sweetalert2.min.js"></script>
+	<script src="assets/template/assets/libs/daterangepicker/daterangepicker.js"></script>
+    <script src="assets/template/assets/libs/select2/dist/js/select2.full.min.js"></script>
+    <script src="assets/template/assets/libs/select2/dist/js/select2.min.js"></script>
 
     <script src="dataJs/pickup.js"></script>
 

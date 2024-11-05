@@ -52,27 +52,43 @@ var packagesItems = [
 
 // Function to calculate distance between two coordinates and update distance input
 function calculateAndDisplayDistance(origin, destination, deliveryType) {
+	   var send_sender_id = $("#sender_id option:selected").val();
+	   var send_recipient_id = $("#recipient_id option:selected").val();
   // AJAX request to calculate distance
+  var origin_id;
+  var destination_id;
   if (!origin) {
     origin = $('#sender_address_id option:selected').text();
+    origin_id = $('#sender_address_id option:selected').val();
     if (!origin) {
-      origin = $("#select2-sender_address_id-container").text()
+      origin = $("#select2-sender_address_id-container").text();
+      origin_id = $("#select2-sender_address_id-container").val();
     }
+  }else{
+	   origin_id = $('#sender_address_id option:selected').val();
   }
   if (!destination) {
     destination = $('#recipient_address_id option:selected').text();
+    destination_id = $('#recipient_address_id option:selected').val();
     if (!destination) {
       destination = $("#select2-recipient_address_id-container").text();
+      destination_id = $("#select2-recipient_address_id-container").val();
     }
+  }else{
+	 destination_id = $('#recipient_address_id option:selected').val();  
   }
   if (!deliveryType) {
     deliveryType = document.getElementById('deliveryType').value;
   }
+
   $.ajax({
     type: 'POST',
     url: 'ajax/courier/calculate_distance.php', // Replace with your PHP script for calculating distance
-    data: { 'origin': origin, 'destination': destination, 'deliveryType': deliveryType },
+    data: { 'origin': origin, 'destination': destination, 'deliveryType': deliveryType,'send_sender_id':send_sender_id,'send_recipient_id':send_recipient_id,'origin_id':origin_id,'destination_id':destination_id},
     dataType: 'json',
+	beforeSend: function() {
+		$('#loadingIcon').show();
+	},
     success: function (data) {
       console.log("All", data);
       // Update distance input with calculated distance
@@ -82,12 +98,23 @@ function calculateAndDisplayDistance(origin, destination, deliveryType) {
       localStorage.setItem('baseRate', data.baseRate)
       localStorage.setItem('shipmentfee', data.shipmentfee)
       calculateFinalTotal();
-
+      $('#loadingIcon').hide();
+	   if (typeof data.msg !== 'undefined') {
+	   Swal.fire({
+            type: 'warning',
+            text: data.msg,
+            icon: 'warning',
+            confirmButtonColor: '#336aea'
+          });
+	 }
     },
     error: function () {
-      // Handle error
+	$('#loadingIcon').hide();
       //alert('Error calculating distance.');
-    }
+    },
+	complete: function() {
+		$('#loadingIcon').hide();
+	  },
   });
 }     // }
 // Automatically select the first (and only) option
@@ -666,6 +693,21 @@ function loading_calculation() {
   $("#calculate_invoice").attr("disabled", true);
 }
 
+function pieces_check() {
+	var pieces=$("#pieces").val();
+	if(pieces>4){
+		Swal.fire({
+		  type: 'warning',
+		  title: 'opps..',
+		  text: message_error_form107,
+		  icon: 'warning',
+		  confirmButtonColor: '#336aea'
+		});
+		$("#pieces").val(3);
+	}
+	calculateFinalTotal();
+}
+
 function calculateFinalTotal(element = null) {
   if (element) {
     if (!element.value) {
@@ -785,12 +827,24 @@ function calculateFinalTotal(element = null) {
   //$("#insurance").html(total_seguro.toFixed(2));
   //$("#total_impuesto_aduanero").html(total_impuesto_aduanero.toFixed(2));
   var shipmentfee = localStorage.getItem('shipmentfee');
-  $("#total_before_tax").html(Number(shipmentfee).toFixed(2));
+  
+   var business_type = $("#businessType").val();
+     if (business_type === "flower_shop" || business_type === "flat_1" || business_type === "flat_2") {
+	   var no_pieces = $("#pieces").val();
+	   if(no_pieces!=''){
+			shipmentfee = parseFloat(shipmentfee) + (parseFloat(no_pieces) * 3);
+
+		}
+	 }
+	  $("#total_before_tax").html(Number(shipmentfee).toFixed(2));
+	
+ 
   var total_tax_value = parseFloat(parseFloat(shipmentfee) + (parseFloat(shipmentfee) * (13 / 100)));
   $("#total_after_tax").html(total_tax_value.toFixed(2));
   var tax = 0.00;
   tax = parseFloat(total_tax_value) - parseFloat(shipmentfee);
   $("#tax_13").html(tax.toFixed(2));
+  $("#total_tax_val").val(tax.toFixed(2));
   // alert(parseFloat(shipmentfee));
   // alert(parseFloat(total_envio.toFixed(2)));
   // parseInt(shipmentfee.toFixed(2))
@@ -860,8 +914,19 @@ $("#invoice_form").on("submit", function (event) {
   var no_of_rx = "";
   var notes_for_driver = "";
 
+  var no_of_pieces = 0;
+
   // Get business type
   var business_type = $("#businessType").val();
+
+  if (business_type === "flower_shop" || business_type === "flat_1" || business_type === "flat_2") {
+    // Collect checked checkbox values
+    $('input[name="tags[]"]:checked').each(function() {
+      tags.push($(this).val());
+    });
+	  no_of_pieces = $("#pieces").val();
+	  //notes_for_driver = $("#notesForDriver_flower").val();
+  }
 
   if (business_type && business_type === "pharmacy" || business_type === "pharmacy_2" || business_type === "pharmacy_3") {
     // Collect checked checkbox values
@@ -987,7 +1052,10 @@ $("#invoice_form").on("submit", function (event) {
 
   var sub_total = $("#total_before_tax").text();
   data.append("sub_total", sub_total);
-
+  data.append("no_of_pieces", no_of_pieces); 
+    var total_tax_val = $("#total_tax_val").val();
+  data.append("total_tax", parseFloat(total_tax_val)); 
+  
   var total_file = document.getElementById("filesMultiple").files.length;
 
   for (var i = 0; i < total_file; i++) {
@@ -1845,53 +1913,42 @@ var autocomplete;
 var address_field;
 var country_field;
 var country_field_label;
-
-
+var autocompleteInstances = [];
+var full_address;
+var address_fields = []; // Declare in outer scope
 
 function initAutocomplete() {
 
-  const address_fields = [document.querySelector("#address_modal_recipient_address"), document.querySelector("#address_modal_user_address"), document.querySelector("#address_modal_recipient")];
-  //var country_array = ["AFG","ALB","DZA","AND","AGO","ATG","ARG","ARM","AUS","AUT","AZE","BHS","BHR","BGD","BRB","BLR","BEL","BLZ","BEN","BMU","BTN","BOL","BIH","BWA","BRA","BRN","BGR","BFA","BDI","KHM","CMR","CAN","CPV","CAF","TCD","CHL","CHN","COL","COM","COG","COD","CRI","CIV","HRV","CUB","CYP","CZE","DNK","DJI","DMA","DOM","TLS","ECU","EGY","SLV","GNQ","ERI","EST","ETH","FJI","FIN","FRA","GAB","GMB","GEO","DEU","GHA","GRC","GRD","GTM","GIN","GNB","GUY","HTI","HND","HKG","HUN","ISL","IND","IDN","IRN","IRQ","IRL","ISR","ITA","JAM","JPN","JOR","KAZ","KEN","KIR","PRK","KOR","KWT","KGZ","LAO","LVA","LBN","LSO","LBR","LBY","LIE","LTU","LUX","MKD","MDG","MWI","MYS","MDV","MLI","MLT","MHL","MRT","MUS","MEX","FSM","MDA","MCO","MNG","MNE","MAR","MOZ","MMR","NAM","NRU","NPL","BES","NLD","NZL","NIC","NER","NGA","NOR","OMN","PAK","PLW","PAN","PNG","PRY","PER","PHL","POL","PRT","PRI","QAT","ROU","RUS","RWA","KNA","LCA","VCT","WSM","SMR","STP","SAU","SEN","SRB","SYC","SLE","SGP","SVK","SVN","SLB","SOM","ZAF","SSD","ESP","LKA","SDN","SUR","SWZ","SWE","CHE","SYR","TWN","TJK","TZA","THA","TGO","TON","TTO","TUN","TUR","TKM","TUV","UGA","UKR","ARE","GBR","USA","URY","UZB","VUT","VEN","VNM","VIR","YEM","ZMB","ZWE","XKX","test","HA","ISM","MAR","YU","YU"];
-
-  address_fields.forEach(address => {
+  address_fields = [document.querySelector("#address_modal_recipient_address"), document.querySelector("#address_modal_user_address"), document.querySelector("#address_modal_recipient")];
+  	
+	 address_fields.forEach((address, index) => {
     let autocomplete = new google.maps.places.Autocomplete(address, {
-      // componentRestrictions: { country: new_country_array },
-      fields: ["address_components", "geometry"],
+      fields: ["address_components", "geometry","formatted_address"],
       types: ["address"],
       strictBounds: false,
+	  componentRestrictions: { country: "CA" } // Restrict to Canada
     });
     address.focus();
-    // When the user selects an address from the drop-down, populate the
-    // address fields in the form.
-    autocomplete.addListener("place_changed", fillInAddress);
-  })
-  // Create the autocomplete object, restricting the search predictions to
-  // addresses in the US and Canada.
-  // autocomplete = new google.maps.places.Autocomplete(address_field, {
-  //   // componentRestrictions: { country: new_country_array },
-  //   fields: ["address_components", "geometry"],
-  //   types: ["address"],
-  //   strictBounds: false,
-  // });
-  // address_field.focus();
-  // // When the user selects an address from the drop-down, populate the
-  // // address fields in the form.
-  // autocomplete.addListener("place_changed", fillInAddress);
+   
+    autocompleteInstances[index] = autocomplete;
 
+    autocomplete.addListener("place_changed", function () {
+      fillInAddress(index);
+    });
+  });
+  
 }
 
-function fillInAddress() {
+function fillInAddress(index) {
   // Get the place details from the autocomplete object.
+  const autocomplete = autocompleteInstances[index];
   const place = autocomplete.getPlace();
+  full_address = place.formatted_address;
+
   let address1 = "";
   let postcode = "";
 
-  // Get each component of the address from the place details,
-  // and then fill-in the corresponding field on the form.
-  // place.address_components are google.maps.GeocoderAddressComponent objects
-  // which are documented at http://goo.gle/3l5i5Mr
   for (const component of place.address_components) {
-    // @ts-ignore remove once typings fixed
     const componentType = component.types[0];
 
     switch (componentType) {
@@ -1906,9 +1963,13 @@ function fillInAddress() {
       }
 
     }
-
-    address_field.value = address1;
   }
+  const address_field = address_fields[index];
+	  if (address_field) {
+		address_field.value = address1; // Set the formatted address value
+		const event = new Event('change', { bubbles: true, cancelable: true });
+		address_field.dispatchEvent(event);
+	  }
 }
 
 window.initAutocomplete = initAutocomplete;
@@ -2068,7 +2129,8 @@ var iti = window.intlTelInput(input, {
       callback(countryCode);
     });
   },
-  initialCountry: "auto",
+  onlyCountries: ["ca"], // This restricts the country list to Canada
+  initialCountry: "ca", // Sets the default country to Canada
   nationalMode: true,
 
   separateDialCode: true,
@@ -2118,8 +2180,9 @@ var iti_recipient = window.intlTelInput(input_recipient, {
       callback(countryCode);
     });
   },
-  initialCountry: "auto",
   nationalMode: true,
+  onlyCountries: ["ca"], // This restricts the country list to Canada
+  initialCountry: "ca", // Sets the default country to Canada
 
   separateDialCode: true,
   utilsScript: "assets/template/assets/libs/intlTelInput/utils.js",
@@ -2332,11 +2395,11 @@ $(document).ready(function () {
   $(document).on('change', '#recipient_address_id', function () {
     // var recipient_id = $(this).val();
     var recipient_id = $("#recipient_id option:selected").val();
-    // alert(recipient_id);
+    console.log('recipient_change');
+	
     $.ajax({
       type: 'POST',
       url: "ajax/select2_recipient_addresses.php?id=" + recipient_id, // Replace with your PHP script for calculating distance
-      // data: { 'origin': origin, 'destination': destination, 'deliveryType':deliveryType },
       data: function (params) {
         return {
           q: params.term, // search term
@@ -2344,17 +2407,11 @@ $(document).ready(function () {
       },
       dataType: 'json',
       success: function (data) {
-        // console.log("Data length:",$('#sender_address_id').length);
-        // console.log('receiver detail:',data);
+      
         if (data.length == 1) {
-          // alert("True");
-          // Automatically select the first (and only) option
-          // $('#select2-recipient_address_id-container').text(data[0].text);
-          // $("#recipient_address_id").val(data[0].id)
           $('#recipient_address_id').empty().append('<option value="' + data[0].id + '">' + data[0].text + '</option>');
 
-        }
-        //  console.log('sender detail:',data);        
+        }    
 
       },
       error: function () {
@@ -2362,20 +2419,16 @@ $(document).ready(function () {
         alert('Error calculating distance.');
       }
     });
+	calculateAndDisplayDistance(senderadd, receiveradd, deliveryType);
   });
-  // $('#sender_address_id select').trigger('change.select2');
-  // alert(recipient_id);
+ 
 
 
   var senderadd = "";
   var receiveradd = "";
   var deliveryType = "";
 
-  // if ($('#recipient_address_id option').length == 1) {
-  //   // Automatically select the first (and only) option
-  //   var singleOption = $('#recipient_address_id option').first().val();
-  //   $('#recipient_address_id').val(singleOption).trigger('change');
-  // }
+  
 
 
 
@@ -2403,7 +2456,6 @@ $(document).ready(function () {
 
     console.log("Selected receiver value:", receiveradd);
     // Display the selected value and text
-    calculateAndDisplayDistance(senderadd, receiveradd, deliveryType);
 
   });
 
@@ -2423,11 +2475,16 @@ $(document).ready(function () {
   });
 });
 
-function loadStates(selectedCountryId, stateInput, cityInput, modelId)
+function loadStates(selectedCountryId, stateInput, cityInput, modelId,inputAddress)
 {
       // Select state
       if (stateInput) {
-        var $stateSelect = modelId ? $("#state_modal_recipient" + modelId) : $("#state_modal_recipient");
+		  
+		  if(inputAddress=='address_modal_user_address'){
+			 var $stateSelect = modelId ? $("#state_modal_user" + modelId) : $("#state_modal_user");
+		}else{
+			var $stateSelect = modelId ? $("#state_modal_recipient" + modelId) : $("#state_modal_recipient");
+		}
         $.ajax({
           url: "ajax/select2_states.php?id=" + selectedCountryId, // Your data source URL for states
           dataType: "json",
@@ -2439,7 +2496,15 @@ function loadStates(selectedCountryId, stateInput, cityInput, modelId)
             var selectedState = statesData.find(function (state) {
               return state.text == stateInput;
             });
-    
+			if (selectedState === undefined) {
+				
+				 const normalizedStr2 = stateInput.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+				//console.log("normalizedStr2="+normalizedStr2);
+				var selectedState = statesData.find(function (state) {
+				  return state.text == normalizedStr2;
+				});
+			}
+   
             // Create a new option element
             var newStateOption = new Option(selectedState.text, selectedState.id, true, true);
     
@@ -2455,19 +2520,24 @@ function loadStates(selectedCountryId, stateInput, cityInput, modelId)
             });
     
             // After state is selected, load cities
-            loadCities(selectedState.id, cityInput, modelId); // Assuming cdp_load_cities(modal) function exists
+            loadCities(selectedState.id, cityInput, modelId,inputAddress); // Assuming cdp_load_cities(modal) function exists
           }
         });
       }
     
 }
 
-function loadCities(selectedStateId, cityInput, modelId)
+function loadCities(selectedStateId, cityInput, modelId,inputAddress)
 {
 
       // Select city
       if (cityInput) {
+		  if(inputAddress=='address_modal_user_address'){
+			  var $citySelect = modelId ? $("#city_modal_user" + modelId) : $("#city_modal_user");
+			
+		}else{
         var $citySelect = modelId ? $("#city_modal_recipient" + modelId) : $("#city_modal_recipient");
+		}
         $.ajax({
           url: "ajax/select2_cities.php?id=" + selectedStateId, // Your data source URL for cities
           dataType: "json",
@@ -2498,7 +2568,7 @@ function loadCities(selectedStateId, cityInput, modelId)
       }
 }
 
-function loadCountries(fullAddress, modelId)
+function loadCountries(fullAddress, modelId,inputAddress)
 {
   if (!fullAddress) return;
 
@@ -2507,10 +2577,19 @@ function loadCountries(fullAddress, modelId)
     var cityInput = fullAddress.city;
     var selectedZip = fullAddress.zip_code;
     var $countrySelect;
-    modelId ? $("#postal_modal_recipient" + modelId).val(selectedZip) : $("#postal_modal_recipient").val(selectedZip);
+
+	if(inputAddress=='address_modal_user_address'){
+    modelId ? $("#postal_modal_user" + modelId).val(selectedZip) : $("#postal_modal_user").val(selectedZip);
+	}else{
+    modelId ? $("#postal_modal_recipient" + modelId).val(selectedZip) : $("#postal_modal_recipient").val(selectedZip); 
+	}
     // Select country
     if (countryInput) {
-      $countrySelect = modelId ? $countrySelect = $("#country_modal_recipient" + modelId) : $("#country_modal_recipient");
+		if(inputAddress=='address_modal_user_address'){
+			  $countrySelect = modelId ? $countrySelect = $("#country_modal_user" + modelId) : $("#country_modal_user");
+		}else{
+			$countrySelect = modelId ? $countrySelect = $("#country_modal_recipient" + modelId) : $("#country_modal_recipient");
+		}
       $.ajax({
         url: "ajax/select2_countries.php", // Your data source URL for countries
         dataType: "json",
@@ -2534,7 +2613,7 @@ function loadCountries(fullAddress, modelId)
           });
 
           // After country is selected, load states
-          loadStates(selectedCountry.id, stateInput, cityInput, modelId); 
+          loadStates(selectedCountry.id, stateInput, cityInput, modelId,inputAddress); 
         }
       });
     }
@@ -2544,9 +2623,10 @@ function loadCountries(fullAddress, modelId)
 
 function getRecipientFullAddress(inputAddress, modelId)
 {
-  var recipientAddress = $("#" + inputAddress).val();
-  console.log(recipientAddress);
+ // var recipientAddress = $("#" + inputAddress).val();
 
+   var recipientAddress=full_address;
+ 
   $.ajax({
     type: 'POST',
     url: 'ajax/courier/address_details_api.php',
@@ -2555,7 +2635,7 @@ function getRecipientFullAddress(inputAddress, modelId)
     success: function (response) {
       if(response.status){
         var fullAddress = response.fullAddress;
-        loadCountries(fullAddress, modelId);
+        loadCountries(fullAddress, modelId,inputAddress);
       }else{
         // alert(response.message);
       }
@@ -2569,11 +2649,42 @@ function getRecipientFullAddress(inputAddress, modelId)
   
 }
 
-$("#address_modal_recipient").on("change", function(){
-  getRecipientFullAddress("address_modal_recipient", "");
+$("#address_modal_recipient").on("change paste", function(){
+	if(event.type==='paste'){
+		setTimeout(function() {
+        full_address = $("#address_modal_recipient").val();
+		var abc = full_address.split(","); 
+		if (typeof abc[0] !== "undefined") {
+		$("#address_modal_recipient").val(abc[0]); }
+    }, 0);
+	
+	}else{
+	getRecipientFullAddress("address_modal_recipient", ""); }
 });
 
 
-$("#address_modal_recipient_address").on("change", function(){
-  getRecipientFullAddress("address_modal_recipient_address", "_address");
+$("#address_modal_recipient_address").on("change paste", function(){
+	if(event.type==='paste'){
+		setTimeout(function() {
+        full_address = $("#address_modal_recipient_address").val();
+		var abc = full_address.split(","); 
+		if (typeof abc[0] !== "undefined") {
+		$("#address_modal_recipient_address").val(abc[0]); }
+    }, 0);
+	
+	}else{
+	getRecipientFullAddress("address_modal_recipient_address", "_address"); }
+});
+
+$("#address_modal_user_address").on("change paste", function(){
+	if(event.type==='paste'){
+		setTimeout(function() {
+        full_address = $("#address_modal_user_address").val();
+		var abc = full_address.split(","); 
+		if (typeof abc[0] !== "undefined") {
+		$("#address_modal_user_address").val(abc[0]); }
+    }, 0);
+	
+	}else{
+	getRecipientFullAddress("address_modal_user_address", "_address"); }
 });

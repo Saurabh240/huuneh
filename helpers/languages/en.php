@@ -529,7 +529,7 @@ $lang = array(
 	"notification_shipment28" => "Consolidation created",
 	"notification_shipment29" => "There is a new consolidated shipment, please check it",
 	"notification_shipment30" => "Updated Consolidation",
-	"notification_shipment31" => "Huuneh - Your order is picked up!",
+	"notification_shipment31" => "Huuneh - Update on your Order Status",
 	"notification_shipment32" => "Huuneh - Your order is delivered!",
 
 
@@ -707,6 +707,11 @@ $lang = array(
 	"left-menu-sidebar-61" => "Help",
 	"left-menu-sidebar-62" => "All Recipients",
 	"left-menu-sidebar-63" => "My Profile",
+	"left-menu-sidebar-64" => "Flat Price",
+	
+	"left-menu-sidebar-65" => "My Pick Ups",
+	"left-menu-sidebar-66" => "My Drop Off",
+	"left-menu-sidebar-67" => "Completed Orders",
 
 
 	"dash-pending-orders" => "Pending Orders",
@@ -3450,4 +3455,24 @@ $lang = array(
 	"ws-add-text27" => "Notification templates",
 	"ws-add-text28" => "Email",
 	"ws-add-text29" => "WhatsApp",
+	
+	
+	"flat-price-1" => "Flat Price Import",
+	"flat-price-2" => "Flat Price List",
+	"flat-price-3" => "Import",
+	"flat-price-4" => "Business Type",
+	"flat-price-5" => "Excel File (only .xls, .xlsx format)",
+	"flat-price-6" => "Select Business Type",
+	"flat-price-7" => "Choose Flat Price Excel File.",
+	"flat-price-8" => "File is too large.",
+	"flat-price-9" => "There was an error uploading your file.",
+	"flat-price-10" => "Invalid file type. Only .xls and .xlsx files are allowed.",
+	"flat-price-11" => "Data Imported Successfully",
+	"flat-price-12" => "Price with tax",
+	
+	"email_title_1" => "New Order",
+	"pieces_check_msg" => "Please contact our Dispatch office to obtain pricing and confirm this order if larger than 4 pieces. Thank you.",
+	"order-import-1" => "Order Import",
+	
+
 );

@@ -26,7 +26,8 @@ require_once("../loader.php");
 
 $db = new Conexion; 
 
-$sWhere = '1';
+//$sWhere = '1';
+$sWhere = 'is_active = 1';
 if (isset($_REQUEST['q'])) {
     $search = cdp_sanitize($_REQUEST['q']);
     $sWhere = " AND name LIKE '%" . $search . "%'";

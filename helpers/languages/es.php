@@ -689,6 +689,12 @@ $lang = array(
 	"left-menu-sidebar-61"  => "Ayuda",
 	"left-menu-sidebar-62"  => "Mis destinatarios",
 	"left-menu-sidebar-63"	=> "Ver Perfíl",
+	"left-menu-sidebar-64" => "Precio fijo",
+	
+	"left-menu-sidebar-65" => "Mis recogidas",
+	"left-menu-sidebar-66" => "Mi entrega",
+	"left-menu-sidebar-67" => "Pedidos completados",
+	
 	"dash-general-1"		=> "envíos",
 	"dash-general-2"		=> "Recogidas",
 	"dash-general-220"		=> "Entregadas",
@@ -3683,4 +3689,21 @@ $lang = array(
 	"ws-add-text27" => "Plantillas de notificación",
 	"ws-add-text28" => "Correo electrónico",
 	"ws-add-text29" => "WhatsApp",
+	
+	"flat-price-1" => "Importación de precio fijo",
+	"flat-price-2" => "Lista de precios fijos",
+	"flat-price-3" => "Importar",
+	"flat-price-4" => "Tipo de negocio",
+	"flat-price-5" => "Archivo Excel (solo formato .xls, .xlsx)",
+	"flat-price-6" => "Seleccione tipo de negocio",
+	"flat-price-7" => "Elija el archivo Excel de precio fijo.",
+	"flat-price-8" => "El archivo es demasiado grande.",
+	"flat-price-9" => "Hubo un error al cargar su archivo.",
+	"flat-price-10" => "Tipo de archivo no válido. Sólo se permiten archivos .xls y .xlsx.",
+	"flat-price-11" => "Datos importados correctamente",
+	"flat-price-12" => "Precio con impuestos",
+	
+	"email_title_1" => "Nuevo pedido",
+	"pieces_check_msg" => "Comuníquese con nuestra oficina de despacho para conocer los precios y confirmar este pedido si es más de 4 piezas. Gracias",
+	"order-import-1" => "Importación de pedidos",
 );

@@ -92,14 +92,14 @@ if (!empty($range)) {
 	$sWhere .= " and  a.order_date between '" . $fecha_inicio . "'  and '" . $fecha_fin . "'";
 }
 
-$sql = "SELECT a.total_declared_value, a.total_weight, a.total_tax_discount, a.sub_total, a.total_tax_insurance, a.total_tax_custom_tariffis, a.total_tax, a.status_invoice,  a.is_consolidate, a.is_pickup,  a.total_order, a.order_id, a.order_prefix, a.order_no, a.order_date, a.sender_id, a.order_courier,a.status_courier,  b.mod_style, b.color FROM
+$sql = "SELECT a.total_declared_value, a.total_weight, a.total_tax_discount, a.sub_total, a.total_tax_insurance, a.total_tax_custom_tariffis, a.total_tax, a.status_invoice,  a.is_consolidate, a.is_pickup,  a.total_order, a.order_id, a.order_prefix, a.order_no, a.order_date, a.sender_id, a.order_courier,a.status_courier,  b.mod_style, b.color,a.delivery_type FROM
 	 cdb_add_order as a
 	 INNER JOIN cdb_styles as b ON a.status_courier = b.id
 	 $sWhere
 	  and a.is_pickup=1
 
 
-	 order by order_id desc 
+	 order by order_id asc 
 	 ";
 
 
@@ -130,21 +130,15 @@ $html = '
 		<table border=1>
 		<tbody>
 			<tr style="background-color: #3e5569; color: white">				
-				<th><b></b></th>
-				<th><b>' . $lang['ltracking'] . '</b></th>
-				<th><b>' . $lang['ddate'] . '</b></th>
-				 <th><b>' . $lang['report-text37'] . '</b></th>
-				<th><b>' . $lang['lorigin'] . '</b></th>
-				<th><b>' . $lang['lstatusshipment'] . '</b></th>
-                <th><b>' . $lang['report-text52'] . '</b></th>
-                <th><b>' . $lang['report-text43'] . '</b></th>
-                <th><b>' . $lang['report-text44'] . '</b></th>
-                <th><b>' . $lang['report-text48'] . '</b></th>
-                <th><b>' . $lang['report-text49'] . '</b></th>
-                <th><b>' . $lang['report-text51'] . '</b></th>
-                <th><b>' . $lang['report-text50'] . '</b></th>
-                <th><b>' . $lang['report-text42'] . '</b></th>
-				<th><b></b></th>
+				<th><b>Order Number</b></th>
+						<th class="text-center"><b>'.$lang['ddate'].'</b></th>
+						<th class="text-center"><b>Order Type</b></th>
+						<th class="text-center"><b>'.$lang['lstatusshipment'].'</b></th>
+						<th class="text-center"><b>'.$lang['report-text37'].' Name</b></th>
+						<th class="text-center"><b>Sender Address</b></th>
+						<th class="text-center"><b>Recipient Address</b></th>
+						<th class="text-center"><b>'.$lang['report-text43'].'</b></th>
+						<th class="text-center"><b>'.$lang['report-text42'].'</b></th>
 			</tr>';
 
 if ($numrows > 0) {
@@ -212,40 +206,25 @@ if ($numrows > 0) {
 		}
 		$count++;
 
-
+							
 		$html .= '<tr>';
-		$html .= '<td ><b>' . $count . '</b></td>';
 		$html .= '<td>' . $row->order_prefix . $row->order_no . '</td>';
 		$html .= '<td>' . $row->order_date . '</td>';
-		$html .= '<td>' . $sender_data->fname . ' ' . $sender_data->lname . '</td>';
-		$html .= '<td>' . $address_order->sender_country . '-' . $address_order->sender_city . '</td>';
+		$html .= '<td>' . $row->delivery_type . '</td>';
 		$html .= '<td>' . $row->mod_style . '</td>';
-		$html .= '<td>' . $row->total_weight . '</td>';
+		$html .= '<td>' . $sender_data->fname .' '.$sender_data->lname. '</td>';
+		$html .= '<td>' . $address_order->sender_address.', '.$address_order->sender_city.', '.$address_order->sender_state.', '.$address_order->sender_country.', '.$address_order->sender_zip_code . '</td>';
+		$html .= '<td>' . $address_order->recipient_address.', '.$address_order->recipient_city.', '.$address_order->recipient_state.', '.$address_order->recipient_country.', '.$address_order->recipient_zip_code . '</td>';
 		$html .= '<td>' . cdb_money_format_bar($row->sub_total) . '</td>';
-		$html .= '<td>' . cdb_money_format_bar($row->total_tax_discount) . '</td>';
-		$html .= '<td>' . cdb_money_format_bar($row->total_tax_insurance) . '</td>';
-		$html .= '<td>' . cdb_money_format_bar($row->total_tax_custom_tariffis) . '</td>';
-		$html .= '<td>' . cdb_money_format_bar($row->total_tax) . '</td>';
-		$html .= '<td>' . cdb_money_format_bar($row->total_declared_value) . '</td>';
-
 		$html .= '<td>' . cdb_money_format_bar($row->total_order) . '</td>';
-		$html .= '<td>' . $text_status . '</td>';
 		$html .= '</tr>';
 	}
 
 	$html .= '<tr>';
 	$html .= '<td><b>' . $lang['report-text53'] . '</td> </b>';
-	$html .= '<td  colspan="5"></td>';
-	$html .= '<td><b>' . $sumador_weight . ' </b></td>';
+	$html .= '<td  colspan="6"></td>';
 	$html .= '<td><b>' . cdb_money_format_bar($sumador_subtotal) . ' </b></td>';
-	$html .= '<td><b>' . cdb_money_format_bar($sumador_discount) . ' </b></td>';
-	$html .= '<td><b>' . cdb_money_format_bar($sumador_insurance) . ' </b></td>';
-	$html .= '<td><b>' . cdb_money_format_bar($sumador_c_tariff) . ' </b></td>';
-	$html .= '<td><b>' . cdb_money_format_bar($sumador_tax) . ' </b></td>';
-	$html .= '<td><b>' . cdb_money_format_bar($sumador_declared_tax) . ' </b></td>';
-
 	$html .= '<td><b>' . cdb_money_format_bar($sumador_total) . ' </b></td>';
-	$html .= '<td></td>';
 	$html .= '</tr>';
 }
 

@@ -187,10 +187,33 @@ $driverrow = $user->cdp_userAllDriver();
 
                                         <div class="col-sm-12 col-md-6">
                                             <div class="form-group">
-                                                <label class="subtitle"><?php echo $lang['left1064'] ?> </label>
-                                                <input type="file" class="form-control form-control-sm" name="miarchivo" id="miarchivo">
+                                                <label class="control-label" id="selectItem">
+                                                    <?php echo $lang['leftorder15']; ?>
+                                                </label>
+                                                <!--input type="file" class="form-control form-control-sm" name="miarchivo" id="miarchivo"-->
+												 <input class="custom-file-input" id="filesMultiple" name="filesMultiple[]" multiple type="file" style="display: none;" onchange="cdp_preview_images();" accept="image/jpeg, image/jpg, image/png, image/gif">
+
+                                            <button type="button" id="openMultiFile" class="btn btn-default  pull-left mb-4">
+                                                <i class='fa fa-paperclip' id="openMultiFile" style="font-size:18px; cursor:pointer;"></i>
+                                                <?php echo $lang['leftorder16']; ?>
+
+                                            </button>
                                             </div>
                                         </div>
+										 <div class="col-md-12 row" id="image_preview"></div>
+                                    <div class="col-md-4 mt-4">
+                                        <div id="clean_files" class="hide">
+                                            <button type="button" id="clean_file_button" class="btn btn-danger ml-3">
+                                                <i class='fa fa-trash' style="font-size:18px; cursor:pointer;"></i>
+                                                <?php echo $lang['leftorder17']; ?>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="resultados_file col-md-4 pull-right mt-4">
+                                        </div>
+                                    </div>
                                     </div>
 
                                     <br>
@@ -266,7 +289,9 @@ $driverrow = $user->cdp_userAllDriver();
                                     </br>
                                     <footer>
                                         <div class="pull-right">
-
+											 <input type="hidden" name="total_item_files" id="total_item_files" value="0" />
+                                                        <input type="hidden" name="deleted_file_ids" id="deleted_file_ids" />
+                                                       
                                             <a href="index.php" class="btn btn-outline-secondary btn-confirmation"><span><i class="ti-share-alt"></i></span> <?php echo $lang['status-ship11'] ?></a>
 
                                             <button class="btn btn-success" type="submit" id="sig-submitBtn"><?php echo $lang['deliver-ship10'] ?></button>
