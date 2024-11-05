@@ -667,7 +667,7 @@ $ship_modes = $db->cdp_registro();
                                                 <i class="ti-upload"></i> <?php echo $lang['flat-price-3'] ?>
                                                 <span><i class="icon-ok"></i></span></button>
                                             <a href="pickup_list.php" class="btn btn-outline-secondary btn-confirmation"><span><i class="ti-share-alt"></i></span> <?php echo $lang['global-buttons-3'] ?></a>
-											<a href="https://huuneh.com/dashboard/order_files/order_import_data_sample.xlsx" class="btn btn-outline-primary"><span><i class="ti-download"></i> Download Format</span></a>
+											<a href="https://huuneh.com/dashboard/order_files/order_import_data_sample.xlsx" class="btn btn-outline-primary" download="order.xlsx" target="_blank"><span><i class="ti-download"></i> Download Format</span></a>
                                         </div>
                                     </div>
                                 </form>
