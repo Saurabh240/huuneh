@@ -582,6 +582,11 @@ function calculateFinalTotal(element = null) {
    var no_pieces = $("#pieces").val();
    if(no_pieces!=''){
 		shipmentfee_after_discount = parseFloat(shipmentfee_after_discount) + (parseFloat(no_pieces) * 3);
+	} 
+	
+	var no_pieces_warehouse = $("#pieces_warehouse").val();
+   if(no_pieces_warehouse!=''){
+		shipmentfee_after_discount = parseFloat(shipmentfee_after_discount) + (parseFloat(no_pieces_warehouse) * 2);
 	}
   
    
@@ -805,6 +810,10 @@ $("#invoice_form").on("submit", function (event) {
     });
 	  no_of_pieces = $("#pieces").val();
 	  notes_for_driver = $("#notesForDriver_flower").val();
+  } 
+  
+  if (business_type === "warehouses") {
+	  no_of_pieces = $("#pieces_warehouse").val();
   }
   
    if (business_type && business_type === "pharmacy" || business_type === "pharmacy_2" || business_type === "pharmacy_3") {
@@ -1228,7 +1237,6 @@ function cdp_validateZiseFiles() {
     return true;
   } else {
     $(".resultados_file").html("");
-
     return false;
   }
 }
@@ -1315,6 +1323,12 @@ function cdp_select2_init_sender() {
         $("#flowerBusinessCard").css("display", "flex");
     } else {
         $("#flowerBusinessCard").css("display", "none");
+    }
+	
+	if (businessType == "warehouses") {
+        $("#warehouseCard").css("display", "flex");
+    } else {
+        $("#warehouseCard").css("display", "none");
     }
 
       $("#sender_address_id").attr("disabled", true);

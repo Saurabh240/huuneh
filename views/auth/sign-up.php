@@ -291,7 +291,7 @@
                                                             <option value="pharmacy">Pharmacy</option>
                                                             <option value="flower_shop">Flower Shop</option>
                                                             <option value="bakery">Bakery/Custom Cakes</option>
-                                                            <option value="warehouses">Warehouses</option>
+                                                            <option value="warehouses">Warehouse</option>
                                                             <option value="grocery_stores">Grocery Stores</option>
                                                             <option value="other">Other (Include typing option)</option>
                                                         </select>
@@ -316,7 +316,7 @@
                                                         <div class="form-icon position-relative">
                                                             <select class="custom-select form-control ps-5" id="billing_choice" name="billing_choice">
                                                                 <option value="weekly">Weekly Billing</option>
-                                                                <option value="monthly">Monthly Billing</option>
+                                                                <!--option value="monthly">Monthly Billing</option-->
                                                             </select>
                                                         </div>
                                                     </div>
@@ -417,7 +417,7 @@
                                                     <p class="mb-0 mt-3"><small class="text-dark me-2"><?php echo $lang['left167'] ?></small> <a href="index.php" class="text-dark fw-bold"><?php echo $lang['left168'] ?></a></p>
                                                 </div> 
 
-                                                 
+                                                 <input type="hidden" name="map_fullAddress" id="map_fullAddress">
                                             </div>
                                             <!--end col-->
                                         </form>
@@ -609,6 +609,7 @@ function loadSenderStates(selectedCountryId, stateInput, cityInput, modelId)
 
 function loadSenderCountries(fullAddress, modelId)
 {
+	console.log("fullAddress="+fullAddress);
   if (!fullAddress) return;
 
     var countryInput = fullAddress.country;
@@ -655,8 +656,9 @@ function loadSenderCountries(fullAddress, modelId)
 
 function getSenderFullAddress(inputAddress, modelId)
 {
-  var userAddress = $("#" + inputAddress).val();
-  console.log(userAddress);
+  //var userAddress = $("#" + inputAddress).val();
+  var userAddress = $("#map_fullAddress").val();
+  console.log("userAddress="+userAddress);
 
   $.ajax({
     type: 'POST',
