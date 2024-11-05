@@ -4834,6 +4834,15 @@ function cdp_recipientEmailExiste($email) {
     return  $db->cdp_registro();
 }
 
+function cdp_recipientExist($datos) {
+    $db = new Conexion;
+    $db->cdp_query("SELECT id FROM cdb_recipients WHERE sender_id = :sender_id and fname = :fname and lname = :lname limit 0,1");
+    $db->bind(':sender_id', $datos['sender_id']);
+	$db->bind(':fname', $datos['fname']);
+    $db->bind(':lname', $datos['lname']);
+	 $db->cdp_execute();
+    return  $db->cdp_registro();
+}
 
 // ===========================================================
 // USERS CUSTOMERS

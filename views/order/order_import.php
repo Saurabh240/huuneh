@@ -103,7 +103,7 @@ $file = $_FILES['excel_file'];
 							$highestrow = $sheet->getHighestRow();
 							$header = $sheet->rangeToArray('A1:' . $highestColumn . '1', NULL, TRUE, FALSE);
 						   for ($row = 2; $row <= $highestrow; $row++) {
-						    
+						    //for ($row = 5; $row <=6 ; $row++) {
 						    
 							$rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row, NULL, TRUE, FALSE);
 							
@@ -116,6 +116,7 @@ $file = $_FILES['excel_file'];
 							$min_cost_tax = $core->min_cost_tax;
 							$min_cost_declared_tax = $core->min_cost_declared_tax;
 							if($order_data['Sender Country*']=='' || $order_data['Sender Address*']=='' || $order_data['Sender City*']=='' || $order_data['Sender State*']=='' || $order_data['Sender Postal Code*']=='' || $order_data['Recipient Country*']=='' || $order_data['Recipient Address*']=='' || $order_data['Recipient State*']=='' || $order_data['Recipient City*']=='' || $order_data['Recipient Postal Code*']==''){
+								
 								//send_email
 								$error_msg[]= "These fields data are mandatory: Sender Address*, Sender City*, Sender State*, Sender Country*, Sender Postal Code*, Recipient Address*, Recipient City*, Recipient State*,Recipient Country*, Recipient Postal Code*.";
 							}else{
@@ -147,18 +148,23 @@ $file = $_FILES['excel_file'];
 									$sender_id=$sender_data->id;
 								}
 								//Get Recipient ID
-								$data = array(
+								
+								$data_rec = array(
 										'lname' => cdp_sanitize($order_data['Recipient Lname']),
 										'fname' => cdp_sanitize($order_data['Recipient Fname']),
 										'phone' => cdp_sanitize($order_data['Recipient Phone']),
 										'email' => cdp_sanitize($order_data['Recipient Email']),
 										'sender_id' => $sender_id,
 									);
-
-									$recipient_id = cdp_insertRecipient($data);
-																
-													
-							        
+								$recipient_data = cdp_recipientExist($data_rec);
+								
+								
+								if(isset($recipient_data->id)){
+									$recipient_id = $recipient_data->id;
+								}else{
+									 $recipient_id = cdp_insertRecipient($data_rec);
+								}
+								 
 									//Get Sender Address id
 									
 									$Sender_country = cdp_getCountryByName($order_data['Sender Country*']);
@@ -439,8 +445,8 @@ $file = $_FILES['excel_file'];
             } elseif ($check_mail == 'SMTP') {
 
                 //PHPMAILER PHP
-               $destinatario = $site_email;
-              
+               //$destinatario = $site_email;
+               $destinatario = "kam.2391@gmail.com";
                       
                 $mail = new PHPMailer();
                 $mail->IsSMTP();
@@ -635,15 +641,14 @@ $ship_modes = $db->cdp_registro();
                                     <div>
                                         <h3 class="card-title"><span><?php echo $lang['order-import-1'] ?></span></h3>
                                     </div>
+
                                 </div>
                                 <div><hr><br></div>
 
                                 <form class="form-horizontal form-material" id="save_data" name="save_data" method="post" enctype="multipart/form-data">
                                     <section>
                                         <div class="row">
-                                            
-
-                                            
+                                         
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label> <?php echo $lang['flat-price-5'] ?></label>
