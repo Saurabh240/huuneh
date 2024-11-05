@@ -637,18 +637,18 @@ $ship_modes = $db->cdp_registro();
                         <div class="card">
                             <div class="card-body">
 
-                                 <div class="d-md-flex align-items-center">
+                                 <div class="d-md-flex">
                                     <div>
                                         <h3 class="card-title"><span><?php echo $lang['order-import-1'] ?></span></h3>
                                     </div>
-
+									
                                 </div>
                                 <div><hr><br></div>
 
                                 <form class="form-horizontal form-material" id="save_data" name="save_data" method="post" enctype="multipart/form-data">
                                     <section>
                                         <div class="row">
-                                         
+                                        
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label> <?php echo $lang['flat-price-5'] ?></label>
@@ -664,9 +664,10 @@ $ship_modes = $db->cdp_registro();
                                     <div class="form-group">
                                         <div class="col-sm-12">
                                             <button class="btn btn-outline-primary btn-confirmation" name="dosubmit" type="submit">
-                                                <?php echo $lang['flat-price-3'] ?>
+                                                <i class="ti-upload"></i> <?php echo $lang['flat-price-3'] ?>
                                                 <span><i class="icon-ok"></i></span></button>
                                             <a href="pickup_list.php" class="btn btn-outline-secondary btn-confirmation"><span><i class="ti-share-alt"></i></span> <?php echo $lang['global-buttons-3'] ?></a>
+											<a href="https://huuneh.com/dashboard/order_files/order_import_data_sample.xlsx" class="btn btn-outline-primary"><span><i class="ti-download"></i> Download Format</span></a>
                                         </div>
                                     </div>
                                 </form>
