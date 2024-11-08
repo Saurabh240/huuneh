@@ -262,7 +262,7 @@ if (empty($errors)) {
             foreach ($_FILES["filesMultiple"]['tmp_name'] as $key => $tmp_name) {
 
                 if (!in_array($key, $deleted_file_ids)) {
-                    $image_name = $order_track .  date("Y-m-d") . "_" . basename($_FILES["filesMultiple"]["name"][$key]);
+                    $image_name = $order_track .  date("Y-m-d-H-i-s") . "_" . basename($_FILES["filesMultiple"]["name"][$key]);
                     $target_file = $target_dir . $image_name;
                     $imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
                     $imageFileZise = $_FILES["filesMultiple"]["size"][$key];

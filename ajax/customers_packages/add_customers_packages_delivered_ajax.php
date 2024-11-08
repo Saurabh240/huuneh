@@ -52,7 +52,10 @@ if (intval($_POST['driver_id']) <= 0)
 if (!empty($_FILES['miarchivo']['name'])) {
 
     $target_dir = "../../files/";
-    $image_name = time() . "_" . basename($_FILES["miarchivo"]["name"]);
+	$shipment_id = intval($_POST['package_id']);
+	$shipment = cdp_getCustomerPackage($shipment_id);
+	$order_track = $shipment->order_prefix . $shipment->order_no;
+    $image_name = $order_track . date("Y-m-d-H-i-s") . "_" . basename($_FILES["miarchivo"]["name"]);
     $target_file = $target_dir . $image_name;
     $imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
     $imageFileZise = $_FILES["miarchivo"]["size"];
@@ -113,10 +116,11 @@ if (empty($errors)) {
             'status_courier' =>  cdp_sanitize(intval($status)),
             'person_receives' => cdp_sanitize($_POST["person_receives"])
         );
-
+		
+		$order_track = $shipment->order_prefix . $shipment->order_no;
 
         if (!empty($_FILES['miarchivo']['name'])) {
-            $image_name = time() . "_" . basename($_FILES["miarchivo"]["name"]);
+			$image_name = $order_track . date("Y-m-d-H-i-s") . "_" . basename($_FILES["miarchivo"]["name"]);
             $target_file = $target_dir . $image_name;
             move_uploaded_file($_FILES["miarchivo"]["tmp_name"], $target_file);
             // $imagen=basename($_FILES["favicon"]["name"]);
@@ -127,7 +131,7 @@ if (empty($errors)) {
 
         $update = updateCustomerPackagesStatusDelivered($dataUpdate);
 
-        $order_track = $shipment->order_prefix . $shipment->order_no;
+        
 
         $dataTrack = array(
             'user_id' =>  $_SESSION['userid'],

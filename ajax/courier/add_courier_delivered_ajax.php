@@ -135,11 +135,11 @@ if (empty($errors)) {
             if (isset($_POST['deleted_file_ids']) && !empty($_POST['deleted_file_ids'])) {
                 $deleted_file_ids = explode(",", $_POST['deleted_file_ids']);
             }
-
+			$order_track = $shipment->order_prefix . $shipment->order_no;
             foreach ($_FILES["filesMultiple"]['tmp_name'] as $key => $tmp_name) {
 
                 if (!in_array($key, $deleted_file_ids)) {
-					$image_name = $order_track .  date("Y-m-d") . "_" . basename($_FILES["filesMultiple"]["name"][$key]);
+					$image_name = $order_track .  date("Y-m-d-H-i-s") . "_" . basename($_FILES["filesMultiple"]["name"][$key]);
 					$target_file = $target_dir . $image_name;
 					 $imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
 					 $imageFileZise = $_FILES["filesMultiple"]["size"][$key];
@@ -157,7 +157,7 @@ if (empty($errors)) {
         }
 		
 
-        $order_track = $shipment->order_prefix . $shipment->order_no;
+        
 
         $dataTrack = array(
             'user_id' =>  $_SESSION['userid'],
