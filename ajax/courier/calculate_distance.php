@@ -254,10 +254,25 @@ function getRatesByDeliveryTypeAndBusinessType($deliveryType, $businessType) {
             'NEXT DAY (BEFORE 2PM)' => ['baseRate' => 10.00, 'additionalRatePerKm' => 0.70, 'baseKm' => 15],
             'NEXT DAY (BEFORE 11:30AM)' => ['baseRate' => 15.00, 'additionalRatePerKm' => 0.80, 'baseKm' => 15],
             'NEXT DAY (BEFORE 10:30AM)' => ['baseRate' => 20.00, 'additionalRatePerKm' => 0.90, 'baseKm' => 15]
-        ]
+        ],
+		'warehouses' => [
+            'SAMEDAY (BEFORE 9PM)' => ['baseRate' => 7.00, 'additionalRatePerKm' => 0.00, 'baseKm' => 10],
+            'SAMEDAY (BEFORE 7PM)' => ['baseRate' => 7.00, 'additionalRatePerKm' => 0.00, 'baseKm' => 10],
+            'SAME DAY (1PM to 4PM)' => ['baseRate' => 10.00, 'additionalRatePerKm' => 0.65, 'baseKm' => 10],
+            'SAME DAY (BEFORE 5PM)' => ['baseRate' => 7.00, 'additionalRatePerKm' => 0.60, 'baseKm' => 10],
+            'RUSH (4 HOURS)' => ['baseRate' => 15.00, 'additionalRatePerKm' => 0.70, 'baseKm' => 10],
+            'RUSH (3 HOURS)' => ['baseRate' => 20.00, 'additionalRatePerKm' => 0.80, 'baseKm' => 10],
+            'RUSH (2 HOURS)' => ['baseRate' => 25.00, 'additionalRatePerKm' => 0.90, 'baseKm' => 10],
+            'URGENT (90 MINUTES)' => ['baseRate' => 30.00, 'additionalRatePerKm' => 1.00, 'baseKm' => 10],
+            'NEXT DAY (BEFORE 7PM)' => ['baseRate' => 7.00, 'additionalRatePerKm' => 0.00, 'baseKm' => 10],
+            'NEXT DAY (BEFORE 5PM)' => ['baseRate' => 7.00, 'additionalRatePerKm' => 0.60, 'baseKm' => 10],
+            'NEXT DAY (BEFORE 2PM)' => ['baseRate' => 10.00, 'additionalRatePerKm' => 0.70, 'baseKm' => 10],
+            'NEXT DAY (BEFORE 11:30AM)' => ['baseRate' => 15.00, 'additionalRatePerKm' => 0.80, 'baseKm' => 10],
+            'NEXT DAY (BEFORE 10:30AM)' => ['baseRate' => 20.00, 'additionalRatePerKm' => 0.90, 'baseKm' => 10]
+        ],
     ];
 
-    if ($businessType == 'flower_shop' || $businessType == 'flower_shop_2' || $businessType == 'pharmacy' || $businessType == 'pharmacy_2' || $businessType == 'pharmacy_3') {
+    if ($businessType == 'flower_shop' || $businessType == 'flower_shop_2' || $businessType == 'pharmacy' || $businessType == 'pharmacy_2' || $businessType == 'pharmacy_3' || $businessType == 'warehouses') {
         return $rates[$businessType][$deliveryType] ?? null;
     } else if ($businessType == 'special') {
         return $rates['special'][$deliveryType] ?? null;
