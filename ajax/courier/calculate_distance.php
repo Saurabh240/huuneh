@@ -265,7 +265,7 @@ function getRatesByDeliveryTypeAndBusinessType($deliveryType, $businessType) {
             'RUSH (2 HOURS)' => ['baseRate' => 25.00, 'additionalRatePerKm' => 0.90, 'baseKm' => 10],
             'URGENT (90 MINUTES)' => ['baseRate' => 30.00, 'additionalRatePerKm' => 1.00, 'baseKm' => 10],
             'NEXT DAY (BEFORE 7PM)' => ['baseRate' => 7.00, 'additionalRatePerKm' => 0.00, 'baseKm' => 10],
-            'NEXT DAY (BEFORE 5PM)' => ['baseRate' => 7.00, 'additionalRatePerKm' => 0.60, 'baseKm' => 10],
+            'NEXT DAY (BEFORE 5PM)' => ['baseRate' => 7.00, 'additionalRatePerKm' => 0.00, 'baseKm' => 10],
             'NEXT DAY (BEFORE 2PM)' => ['baseRate' => 10.00, 'additionalRatePerKm' => 0.70, 'baseKm' => 10],
             'NEXT DAY (BEFORE 11:30AM)' => ['baseRate' => 15.00, 'additionalRatePerKm' => 0.80, 'baseKm' => 10],
             'NEXT DAY (BEFORE 10:30AM)' => ['baseRate' => 20.00, 'additionalRatePerKm' => 0.90, 'baseKm' => 10]
