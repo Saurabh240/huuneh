@@ -1,5 +1,5 @@
 "use strict";
-
+/*
 $(function () {
     cdp_load_notifications();
 });
@@ -28,3 +28,4 @@ function cdp_load_notifications() {
         }
     })
 }
+*/

@@ -3277,11 +3277,9 @@ function cdp_insertOrdersFiles($order_id, $target_file, $image_name, $date, $is_
 }
 
 
-function cdp_insertDeliverFiles($order_id, $target_file, $image_name, $date, $is_consolidate, $imageFileType)
+function cdp_insertDeliverFiles($order_id, $target_file, $image_name, $date, $is_consolidate, $imageFileType,$delivery_status)
 {
-
     $db = new Conexion;
-
     $db->cdp_query("
             INSERT INTO cdb_deliver_files  
             (
@@ -3290,7 +3288,8 @@ function cdp_insertDeliverFiles($order_id, $target_file, $image_name, $date, $is
                 date_file,
                 name,
                 is_consolidate,
-                file_type                   
+                file_type,
+				delivery_status				
             )
             VALUES
                 (
@@ -3299,11 +3298,10 @@ function cdp_insertDeliverFiles($order_id, $target_file, $image_name, $date, $is
                 :date_file,
                 :name,
                 :is_consolidate,
-                :file_type                                     
+                :file_type,                                    
+                :delivery_status                                    
                 )
         ");
-
-
 
     $db->bind(':order_id',  $order_id);
     $db->bind(':url', $target_file);
@@ -3311,6 +3309,7 @@ function cdp_insertDeliverFiles($order_id, $target_file, $image_name, $date, $is
     $db->bind(':is_consolidate', $is_consolidate);
     $db->bind(':date_file', $date);
     $db->bind(':file_type', $imageFileType);
+    $db->bind(':delivery_status', $delivery_status);
 
     return $db->cdp_execute();
 }
