@@ -4,7 +4,7 @@ info:
   description: Endpoint for adding pickup client data via webhook.
   version: 1.0.0
 servers:
-  - url: http://localhost/huuneh/webhooks
+  - url: http://huuneh.com/huuneh/webhooks
 paths:
   /add_pickup_client_webhook.php:
     post:
