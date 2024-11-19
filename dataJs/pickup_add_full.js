@@ -1316,8 +1316,10 @@ function cdp_select2_init_sender() {
     $("#businessType").val(businessType);
     if (businessType == "pharmacy" || businessType == "pharmacy_2" || businessType == "pharmacy_3") {
         $("#specialBusinessCard").css("display", "flex");
+        $("#pharmacy_option").show();
     } else {
         $("#specialBusinessCard").css("display", "none");
+        $("#pharmacy_option").hide();
     }
 	if (businessType == "flower_shop" || businessType == "flat_1" || businessType == "flat_2") {
         $("#flowerBusinessCard").css("display", "flex");

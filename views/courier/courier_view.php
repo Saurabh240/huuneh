@@ -502,6 +502,9 @@ $tagsFlower = ['Wreath','Standing/Casket Spray'];
                                                         <option value="NEXT DAY (BEFORE 7PM)"
                                                         <?php if($row_order->delivery_type == "NEXT DAY (BEFORE 7PM)") { ?> selected <?php } ?>
                                                         >NEXT DAY (BEFORE 7PM)</option>
+														<option value="NEXT DAY (BEFORE 9PM)"
+                                                        <?php if($row_order->delivery_type == "NEXT DAY (BEFORE 9PM)") { ?> selected <?php } ?>
+                                                        >NEXT DAY (BEFORE 9PM)</option>
 														<option value="NEXT DAY (BEFORE 5PM)"
                                                         <?php if($row_order->delivery_type == "NEXT DAY (BEFORE 5PM)") { ?> selected <?php } ?>
                                                         >NEXT DAY (BEFORE 5PM)</option>
@@ -1548,7 +1551,7 @@ $tagsFlower = ['Wreath','Standing/Casket Spray'];
                                 </div>
 
                                 <div><br></div> -->
-								  <?php if ($userData->userlevel != 3) { ?>
+								  <?php if ($userData->userlevel != 3 && $_SESSION['userid']!=52) { ?>
                                 <div class="d-md-flex align-items-center">
                                     <div>
                                         <h3 class="card-title"><span><?php echo $lang['messageerrorform30'] ?></span></h3>

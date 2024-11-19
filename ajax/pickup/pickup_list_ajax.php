@@ -134,9 +134,13 @@ if ($numrows > 0) { ?>
 					<th class="text-center"><b>Tags</b></th>
 					<th class="text-center"><b>Pieces</b></th>
 					<th class="text-center"><b>Total KM</b></th>
+					<?php if($_SESSION['userid']!=52){ ?>
 					<th class="text-center"><b>Subtotal</b></th>
+					<?php } ?>
 					<th class="text-center"><b><?php echo $lang['lstatusshipment'] ?></b></th> 
+					<?php if($_SESSION['userid']!=52){ ?>
 					<th class="text-center"><b>Total Cost</b></th>
+					<?php } ?>
 
 					<th></th>
 					<?php if ($userData->userlevel != 1) { ?>
@@ -216,9 +220,11 @@ if ($numrows > 0) { ?>
 							<td class="text-center">
 								<?php echo $row->distance; ?>
 							</td>
+							<?php if($_SESSION['userid']!=52){ ?>
 							<td class="text-center">
 								$ <?php echo $row->sub_total; ?>
 							</td>
+							<?php } ?>
 							<td class="text-center">
 
 								
@@ -239,8 +245,9 @@ if ($numrows > 0) { ?>
 								
 								
 							</td>
+							<?php if($_SESSION['userid']!=52){ ?>
 							<td class="text-center"><?php echo cdb_money_format($row->total_order); ?></td>
-
+							<?php } ?>
 
 							<td align='center'>
 								<?php if ($row->status_courier != 14) { ?>

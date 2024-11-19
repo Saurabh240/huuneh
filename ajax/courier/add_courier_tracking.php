@@ -91,6 +91,36 @@ if (empty($errors)) {
     if ($shipment) {
 
         $update = updateCourierStatusFromTracking($status, $shipment_id);
+		
+		if (isset($_FILES['filesMultiple']) && count($_FILES['filesMultiple']['name']) > 0 && $_FILES['filesMultiple']['tmp_name'][0] != '') {
+
+            $target_dir = "../../files/";
+            $deleted_file_ids = array();
+
+            if (isset($_POST['deleted_file_ids']) && !empty($_POST['deleted_file_ids'])) {
+                $deleted_file_ids = explode(",", $_POST['deleted_file_ids']);
+            }
+			$order_track = $shipment->order_prefix . $shipment->order_no;
+            foreach ($_FILES["filesMultiple"]['tmp_name'] as $key => $tmp_name) {
+
+                if (!in_array($key, $deleted_file_ids)) {
+					$image_name = $order_track .  date("Y-m-d-H-i-s") . "_" . basename($_FILES["filesMultiple"]["name"][$key]);
+					$target_file = $target_dir . $image_name;
+					 $imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
+					 $imageFileZise = $_FILES["filesMultiple"]["size"][$key];
+					if ($imageFileType == 'jpeg' || $imageFileType == 'jpg' || $imageFileType == 'JPEG' || $imageFileType == 'JPG' || $imageFileType == 'png' || $imageFileType == 'PNG' || $imageFileType == 'gif' || $imageFileType == 'GIF') {
+							if ($imageFileZise > 0) {
+								move_uploaded_file($_FILES["filesMultiple"]["tmp_name"][$key], $target_file);
+								$imagen = basename($_FILES["filesMultiple"]["name"][$key]);
+							}
+
+							$target_file_db = "files/" . $image_name;
+							cdp_insertDeliverFiles($shipment_id, $target_file_db, $image_name, date("Y-m-d H:i:s"), '0', $imageFileType,intval($status));
+					}
+				}
+            }
+        }
+		
         $order_track = $shipment->order_prefix . $shipment->order_no;
 
         $dataTrack = array(

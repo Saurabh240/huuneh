@@ -199,7 +199,7 @@ $statusrow = $core->cdp_getStatus();
                                         <div class="col-sm-12 col-md-6">
                                             <label for="inputcontact" class="control-label col-form-label"><?php echo $lang['status-ship9'] ?></label>
                                             <div class="input-group mb-3">
-                                                <select class="custom-select" name="status_courier" placeholder="<?php echo $lang['langs_0588'] ?>" required="required">
+                                                <select class="custom-select" name="status_courier" placeholder="<?php echo $lang['langs_0588'] ?>" required="required" id="status_courier">
                                                     <!-- <datalist id="browserst"> -->
                                                     <option value="0"><?php echo $lang['langs_0588'] ?></option>
                                                     <?php foreach ($statusrow as $row) : ?>
@@ -259,7 +259,43 @@ $statusrow = $core->cdp_getStatus();
                                             </div>
                                         <?php } ?>
                                     </div>
+									<div class="row" id="div_image" style="display:none;">
+                                        
+
+                                        <div class="col-sm-12 col-md-6">
+                                            <div class="form-group">
+                                                <label class="control-label" id="selectItem">
+                                                    <?php echo $lang['leftorder15']; ?>
+                                                </label>
+                                                <!--input type="file" class="form-control form-control-sm" name="miarchivo" id="miarchivo"-->
+												 <input class="custom-file-input" id="filesMultiple" name="filesMultiple[]" multiple type="file" style="display: none;" onchange="cdp_preview_images();" accept="image/jpeg, image/jpg, image/png, image/gif">
+
+                                            <button type="button" id="openMultiFile" class="btn btn-default  pull-left mb-4">
+                                                <i class='fa fa-paperclip' id="openMultiFile" style="font-size:18px; cursor:pointer;"></i>
+                                                <?php echo $lang['leftorder16']; ?>
+
+                                            </button>
+                                            </div>
+                                        </div>
+										 <div class="col-md-12 row" id="image_preview"></div>
+                                    <div class="col-md-4 mt-4">
+                                        <div id="clean_files" class="hide">
+                                            <button type="button" id="clean_file_button" class="btn btn-danger ml-3">
+                                                <i class='fa fa-trash' style="font-size:18px; cursor:pointer;"></i>
+                                                <?php echo $lang['leftorder17']; ?>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="resultados_file col-md-4 pull-right mt-4">
+                                        </div>
+                                    </div>
+                                    </div>
+									
                                     <input type="hidden" value="<?php echo $_GET['id']; ?>" id="shipment_id" name="shipment_id">
+									 <input type="hidden" name="total_item_files" id="total_item_files" value="0" />
+                                     <input type="hidden" name="deleted_file_ids" id="deleted_file_ids" />
 
                                     </br>
                                     </br>

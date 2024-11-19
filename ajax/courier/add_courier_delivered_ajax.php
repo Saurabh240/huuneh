@@ -150,7 +150,7 @@ if (empty($errors)) {
 							}
 
 							$target_file_db = "files/" . $image_name;
-							cdp_insertDeliverFiles($shipment_id, $target_file_db, $image_name, date("Y-m-d H:i:s"), '0', $imageFileType);
+							cdp_insertDeliverFiles($shipment_id, $target_file_db, $image_name, date("Y-m-d H:i:s"), '0', $imageFileType,intval($status));
 					}
 				}
             }

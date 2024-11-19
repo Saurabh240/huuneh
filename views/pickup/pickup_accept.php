@@ -674,7 +674,12 @@ $tagsFlower = ['Wreath','Standing/Casket Spray'];
 														<option value="URGENT (90 MINUTES)"
                                                         <?php if($row_order->delivery_type == "URGENT (90 MINUTES)") { ?> selected <?php } ?>
                                                         >URGENT (90 MINUTES)</option>
-                                                        <option value="NEXT DAY (BEFORE 7PM)"
+														<?php if($sender_data->business_type == 'pharmacy' || $sender_data->business_type == 'pharmacy_2' || $sender_data->business_type == 'pharmacy_3'){ ?>
+                                                        <option value="NEXT DAY (BEFORE 9PM)"
+                                                        <?php if($row_order->delivery_type == "NEXT DAY (BEFORE 9PM)") { ?> selected <?php } ?>
+                                                        >NEXT DAY (BEFORE 9PM)</option>
+														<?php } ?>
+														<option value="NEXT DAY (BEFORE 7PM)"
                                                         <?php if($row_order->delivery_type == "NEXT DAY (BEFORE 7PM)") { ?> selected <?php } ?>
                                                         >NEXT DAY (BEFORE 7PM)</option>
 														<option value="NEXT DAY (BEFORE 5PM)"
