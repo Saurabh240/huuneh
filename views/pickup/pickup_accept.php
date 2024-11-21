@@ -651,8 +651,11 @@ $tagsFlower = ['Wreath','Standing/Casket Spray'];
 													<select class="form-control custom-select" id="deliveryType" name="deliveryType" required style="width: 100%;">
                                                     <option value="" selected>Select Delivery Type</option>
 														<option value="SAMEDAY (BEFORE 9PM)"
-                                                        <?php if($row_order->delivery_type == "SAMEDAY (BEFORE 9PM)") { ?> selected <?php } ?>
+                                                        <?php if($row_order->delivery_type == "SAMEDAY (BEFORE 9PM)") { ?> selected <?php } ?> <?php if(time() > strtotime("1:00 PM") || date('l') === 'Sunday') { echo "disabled='disabled' class='disabled-cls'"; }?> 
                                                         >SAMEDAY (BEFORE 9PM)</option>
+														<?php  if( $sender_data->business_type == "pharmacy" || $sender_data->business_type == "pharmacy_2" || $sender_data->business_type == "pharmacy_3" ) { ?>
+														<option  <?php if(date('l') === 'Saturday') { echo "disabled='disabled' class='disabled-cls'"; }?>  value="NEXT DAY (BEFORE 9PM)">NEXT DAY (BEFORE 9PM)</option>
+														 <?php }else{ ?>
                                                         <option value="SAMEDAY (BEFORE 7PM)"
                                                         <?php if($row_order->delivery_type == "SAMEDAY (BEFORE 7PM)") { ?> selected <?php } ?>
                                                         >SAMEDAY (BEFORE 7PM)</option>
@@ -674,11 +677,7 @@ $tagsFlower = ['Wreath','Standing/Casket Spray'];
 														<option value="URGENT (90 MINUTES)"
                                                         <?php if($row_order->delivery_type == "URGENT (90 MINUTES)") { ?> selected <?php } ?>
                                                         >URGENT (90 MINUTES)</option>
-														<?php if($sender_data->business_type == 'pharmacy' || $sender_data->business_type == 'pharmacy_2' || $sender_data->business_type == 'pharmacy_3'){ ?>
-                                                        <option value="NEXT DAY (BEFORE 9PM)"
-                                                        <?php if($row_order->delivery_type == "NEXT DAY (BEFORE 9PM)") { ?> selected <?php } ?>
-                                                        >NEXT DAY (BEFORE 9PM)</option>
-														<?php } ?>
+														
 														<option value="NEXT DAY (BEFORE 7PM)"
                                                         <?php if($row_order->delivery_type == "NEXT DAY (BEFORE 7PM)") { ?> selected <?php } ?>
                                                         >NEXT DAY (BEFORE 7PM)</option>
@@ -694,7 +693,7 @@ $tagsFlower = ['Wreath','Standing/Casket Spray'];
 														<option value="NEXT DAY (BEFORE 10:30AM)"
                                                         <?php if($row_order->delivery_type == "NEXT DAY (BEFORE 10:30AM)") { ?> selected <?php } ?>
                                                         >NEXT DAY (BEFORE 10:30AM)</option>
-                                                      
+														 <?php } ?>
 													</select>
 												</div>
 											</div>

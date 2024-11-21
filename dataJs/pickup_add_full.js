@@ -1316,10 +1316,18 @@ function cdp_select2_init_sender() {
     $("#businessType").val(businessType);
     if (businessType == "pharmacy" || businessType == "pharmacy_2" || businessType == "pharmacy_3") {
         $("#specialBusinessCard").css("display", "flex");
-        $("#pharmacy_option").show();
+        
+		for(var m=1;m<=14;m++){
+			$("#option"+m).hide();
+		}
+		$("#option1").show();
+		$("#option9").show();
     } else {
         $("#specialBusinessCard").css("display", "none");
-        $("#pharmacy_option").hide();
+        for(var m=1;m<=14;m++){
+			$("#option"+m).show();
+		}
+		$("#option9").hide();
     }
 	if (businessType == "flower_shop" || businessType == "flat_1" || businessType == "flat_2") {
         $("#flowerBusinessCard").css("display", "flex");
@@ -2662,8 +2670,6 @@ function loadCountries(fullAddress, modelId,inputAddress)
     var $countrySelect;
     
 	if(inputAddress=='address_modal_user_address' || inputAddress=='address_modal_user'){
-		
- 
     modelId ? $("#postal_modal_user" + modelId).val(selectedZip) : $("#postal_modal_user").val(selectedZip);
 	}else{
 		
