@@ -421,6 +421,9 @@ echo 'Fixed Time ->'.strtotime("2:00 PM");exit;*/
 													<select class="form-control custom-select" id="deliveryType" name="deliveryType" required style="width: 100%;">
 														<option value="" selected>Select Delivery Type</option>
 														<option <?php if(time() > strtotime("1:00 PM") || date('l') === 'Sunday') { echo "disabled='disabled' class='disabled-cls'"; }?>value="SAMEDAY (BEFORE 9PM)">SAMEDAY (BEFORE 9PM)</option>
+														<?php  if( $userData->business_type == "pharmacy" || $userData->business_type == "pharmacy_2" || $userData->business_type == "pharmacy_3" ) { ?>
+														<option  <?php if(date('l') === 'Saturday') { echo "disabled='disabled' class='disabled-cls'"; }?>  value="NEXT DAY (BEFORE 9PM)">NEXT DAY (BEFORE 9PM)</option>
+														 <?php }else{ ?>
 														<option <?php if(time() > strtotime("12:30 PM") || date('l') === 'Sunday') { echo "disabled='disabled' class='disabled-cls'"; }?>value="SAMEDAY (BEFORE 7PM)">SAMEDAY (BEFORE 7PM)</option>
 														<option <?php if(time() > strtotime("10:30 AM") || date('l') === 'Sunday') { echo "disabled='disabled' class='disabled-cls'"; }?>value="SAME DAY (1PM to 4PM)">SAME DAY (1PM to 4PM)</option>
 														<option <?php if(time() > strtotime("12:00 PM") || date('l') === 'Sunday') { echo "disabled='disabled' class='disabled-cls'"; }?> value="SAME DAY (BEFORE 5PM)">SAME DAY (BEFORE 5PM)</option>
@@ -428,15 +431,13 @@ echo 'Fixed Time ->'.strtotime("2:00 PM");exit;*/
 														<option <?php if(time() > strtotime("12:30 PM") || date('l') === 'Sunday') { echo "disabled='disabled' class='disabled-cls'"; }?> value="RUSH (3 HOURS)">RUSH (3 HOURS)</option>
 														<option <?php if(time() > strtotime("1:30 PM") || date('l') === 'Sunday') { echo "disabled='disabled' class='disabled-cls'"; }?> value="RUSH (2 HOURS)">RUSH (2 HOURS)</option>
 														<option <?php if(time() > strtotime("2:30 PM") || date('l') === 'Sunday') { echo "disabled='disabled' class='disabled-cls'"; }?> value="URGENT (90 MINUTES)">URGENT (90 MINUTES)</option>
-														 <?php  if( $userData->business_type == "pharmacy" || $userData->business_type == "pharmacy_2" || $userData->business_type == "pharmacy_3" ) { ?>
-														<option  <?php if(date('l') === 'Saturday') { echo "disabled='disabled' class='disabled-cls'"; }?>  value="NEXT DAY (BEFORE 9PM)">NEXT DAY (BEFORE 9PM)</option>
-														 <?php } ?>
+														 
 														<option  <?php if(date('l') === 'Saturday') { echo "disabled='disabled' class='disabled-cls'"; }?>  value="NEXT DAY (BEFORE 7PM)">NEXT DAY (BEFORE 7PM)</option>
 														<option <?php if(date('l') === 'Saturday') { echo "disabled='disabled' class='disabled-cls'"; }?> value="NEXT DAY (BEFORE 5PM)">NEXT DAY (BEFORE 5PM)</option>
 														<option <?php if(date('l') === 'Saturday') { echo "disabled='disabled' class='disabled-cls'"; }?>  value="NEXT DAY (BEFORE 2PM)">NEXT DAY (BEFORE 2PM)</option>
 														<option value="NEXT DAY (BEFORE 11:30AM)">NEXT DAY (BEFORE 11:30AM)</option>
 														<option value="NEXT DAY (BEFORE 10:30AM)">NEXT DAY (BEFORE 10:30AM)</option>
-                                                     
+														 <?php } ?>
                                                       
 													</select>
 												</div>
