@@ -651,10 +651,10 @@ $tagsFlower = ['Wreath','Standing/Casket Spray'];
 													<select class="form-control custom-select" id="deliveryType" name="deliveryType" required style="width: 100%;">
                                                     <option value="" selected>Select Delivery Type</option>
 														<option value="SAMEDAY (BEFORE 9PM)"
-                                                        <?php if($row_order->delivery_type == "SAMEDAY (BEFORE 9PM)") { ?> selected <?php } ?> <?php if(time() > strtotime("1:00 PM") || date('l') === 'Sunday') { echo "disabled='disabled' class='disabled-cls'"; }?> 
+                                                        <?php if($row_order->delivery_type == "SAMEDAY (BEFORE 9PM)") { ?> selected <?php } ?>  
                                                         >SAMEDAY (BEFORE 9PM)</option>
 														<?php  if( $sender_data->business_type == "pharmacy" || $sender_data->business_type == "pharmacy_2" || $sender_data->business_type == "pharmacy_3" ) { ?>
-														<option <?php if($row_order->delivery_type == "NEXT DAY (BEFORE 9PM)") { ?> selected <?php } ?><?php if(date('l') === 'Saturday') { echo "disabled='disabled' class='disabled-cls'"; } ?>  value="NEXT DAY (BEFORE 9PM)">NEXT DAY (BEFORE 9PM)</option>
+														<option <?php if($row_order->delivery_type == "NEXT DAY (BEFORE 9PM)") { ?> selected <?php } ?>  value="NEXT DAY (BEFORE 9PM)">NEXT DAY (BEFORE 9PM)</option>
 														 <?php }else{ ?>
                                                         <option value="SAMEDAY (BEFORE 7PM)"
                                                         <?php if($row_order->delivery_type == "SAMEDAY (BEFORE 7PM)") { ?> selected <?php } ?>
