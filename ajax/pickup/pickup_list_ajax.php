@@ -74,7 +74,7 @@ $offset = ($page - 1) * $per_page;
 
 
 $sql = "SELECT  a.is_consolidate, a.notes_for_driver, a.delivery_type,a.sub_total, a.distance, a.order_incomplete, a.status_invoice, a.is_pickup, a.total_order, a.order_id, a.order_prefix, a.order_no, a.order_date, a.sender_id, a.receiver_id, a.order_courier, a.order_pay_mode, a.status_courier, a.driver_id, a.order_service_options, a.total_order,  b.mod_style, b.color, 
-			 u.username, u.fname, u.lname, addrs.recipient_address,a.notes,a.tags,a.no_of_pieces FROM
+			 u.username, u.fname, u.lname, addrs.recipient_address,a.notes,a.tags,a.no_of_pieces,a.charge FROM
 			 cdb_add_order as a
 			 LEFT JOIN cdb_users as u ON a.sender_id = u.id
 			 INNER JOIN cdb_address_shipments as addrs ON addrs.order_id = a.order_id
@@ -131,6 +131,8 @@ if ($numrows > 0) { ?>
 					<th class="text-center"><b><?php echo $lang['lorigin'] ?></b></th>
 					<th class="text-center"><b><?php echo $lang['ldestination'] ?></b></th>
 					<th class="text-center"><b>Notes for driver</b></th>
+					<th class="text-center"><b>Charge</b></th>
+					
 					<th class="text-center"><b>Tags</b></th>
 					<th class="text-center"><b>Pieces</b></th>
 					<th class="text-center"><b>Total KM</b></th>
@@ -210,6 +212,7 @@ if ($numrows > 0) { ?>
 							<td class="text-center"><?php echo $address_order->sender_address.', '.$address_order->sender_city.', '.$address_order->sender_state; ?></td>
 							<td class="text-center"><?php echo $address_order->recipient_address.', '.$address_order->recipient_city.', '.$address_order->recipient_state; ?></td>
 							<td class="text-center"><?php echo $row->notes_for_driver!=''?$row->notes_for_driver:$row->notes; ?></td>
+							<td class="text-center"><?php echo $row->charge>0?'$'.number_format($row->charge,2):''; ?></td>
 							<td class="text-center">
 								<?php echo implode(',',json_decode($row->tags,TRUE)); ?>
 							</td>
@@ -222,7 +225,7 @@ if ($numrows > 0) { ?>
 							</td>
 							<?php if($_SESSION['userid']!=52){ ?>
 							<td class="text-center">
-								$ <?php echo $row->sub_total; ?>
+								$<?php echo $row->sub_total; ?>
 							</td>
 							<?php } ?>
 							<td class="text-center">
