@@ -1154,6 +1154,7 @@ function isNumberKey(evt, element) {
 }
 
 function cdp_select2_init_sender() {
+	/*
   $("#sender_id")
     .select2({
       ajax: {
@@ -1202,7 +1203,7 @@ function cdp_select2_init_sender() {
       cdp_select2_init_sender_address();
       cdp_select2_init_recipient_address();
       cdp_select2_init_recipient();
-    });
+    });*/
 }
 
 function cdp_select2_init_sender_address() {
