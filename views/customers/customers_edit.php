@@ -279,7 +279,7 @@ $user_addreses = $db->cdp_registros();
                                                         <div class="col-md-6">
                                                             <div class="form-group">
                                                                 <label for="business_type"><?php echo "Business Type" ?></label>
-                                                                <input type="text" class="form-control" id="business_type" name="business_type" value="<?php echo $row->business_type; ?>" readonly>
+                                                                <input type="text" class="form-control" id="business_type" name="business_type" value="<?php echo $row->business_type=='warehouses'?'warehouse':$row->business_type; ?>" readonly>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
