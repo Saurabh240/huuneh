@@ -945,7 +945,45 @@ echo 'Fixed Time ->'.strtotime("2:00 PM");exit;*/
     <!-- ============================================================== -->
     <!-- End Wrapper -->
     <!-- ============================================================== -->
+	<?php  
+	if(isset($_SESSION['show_login_popup']) && $_SESSION['show_login_popup']){ 
+	unset($_SESSION['show_login_popup']); ?>
+	<div class="modal" tabindex="-1" role="dialog" id="myModal_alert">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+     
+      <div class="modal-body">
+			<p><b>Dear Valued Huuneh Client,</b> </p>
 
+			<p>This is an update to let you know about our Christmas and New Year Hours and Operations:</p>
+
+			<p>December 25: Closed (no orders will be accepted)</p> 
+
+			<p>December 26: Closed (no orders will be accepted) </p>
+
+			<p>December 31: Closed (no orders will be accepted) </p>
+
+			<p>January 1, 2025: Closed (no orders will be accepted) </p>
+
+			<p>January 2, 2025: Closed (no orders will be accepted) </p>
+
+			<p>From the Huuneh team, we wish you and your family a merry christmas and a happy new year! </p>
+
+			<p>- Huuneh Management</p>
+      </div>
+      <div class="modal-footer">
+     
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+$(document).ready(function(){
+	   $("#myModal_alert").modal('show');
+ });
+ </script>
+<?php } ?>
     <?php include('helpers/languages/translate_to_js.php'); ?>
 
     <script src="assets/template/assets/libs/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
