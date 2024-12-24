@@ -425,7 +425,7 @@ echo 'Fixed Time ->'.strtotime("2:00 PM");exit;*/
 														
 														
 														<?php  if( $userData->business_type == "pharmacy" || $userData->business_type == "pharmacy_2" || $userData->business_type == "pharmacy_3" ) { ?>
-														<option  <?php if(date('l') === 'Saturday'  || date("d-m") === "25-12" || date("d-m") === "31-12" || date("d-m") === "01-01") { echo "disabled='disabled' class='disabled-cls'"; }?>   value="NEXT DAY (BEFORE 9PM)">NEXT DAY (BEFORE 9PM)</option>
+														<option  <?php if(date('l') === 'Saturday'  || date("d-m") === "25-12" || date("d-m") === "31-12" || date("d-m") === "01-01" || date("d-m") === "24-12"  || date("d-m") === "30-12") { echo "disabled='disabled' class='disabled-cls'"; }?>   value="NEXT DAY (BEFORE 9PM)">NEXT DAY (BEFORE 9PM)</option>
 														
 														 <?php }else{ ?>
 														
