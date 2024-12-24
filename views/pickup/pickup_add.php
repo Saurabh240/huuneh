@@ -420,10 +420,28 @@ echo 'Fixed Time ->'.strtotime("2:00 PM");exit;*/
 												<div class="input-group mb-3">
 													<select class="form-control custom-select" id="deliveryType" name="deliveryType" required style="width: 100%;">
 														<option value="" selected>Select Delivery Type</option>
+														<?php if(date("d-m") === "22-12") { ?>
+														<option <?php if(time() > strtotime("12:00 PM")){ echo "disabled='disabled' class='disabled-cls'"; } ?> value="SAMEDAY (BEFORE 9PM)">SAMEDAY (BEFORE 9PM)</option>
+														<?php }else{ ?>
 														<option <?php if(time() > strtotime("1:00 PM") || date('l') === 'Sunday') { echo "disabled='disabled' class='disabled-cls'"; }?>value="SAMEDAY (BEFORE 9PM)">SAMEDAY (BEFORE 9PM)</option>
+														<?php } ?>
+														
 														<?php  if( $userData->business_type == "pharmacy" || $userData->business_type == "pharmacy_2" || $userData->business_type == "pharmacy_3" ) { ?>
-														<option  <?php if(date('l') === 'Saturday') { echo "disabled='disabled' class='disabled-cls'"; }?>  value="NEXT DAY (BEFORE 9PM)">NEXT DAY (BEFORE 9PM)</option>
+														<option  <?php if(date('l') === 'Saturday') { echo "disabled='disabled' class='disabled-cls'"; } ?>  value="NEXT DAY (BEFORE 9PM)">NEXT DAY (BEFORE 9PM)</option>
+														 <?php if(date("d-m") === "21-12"){ ?>
+															<option value="NEXT DAY (BEFORE 7PM)">NEXT DAY (BEFORE 7PM)</option>
+														<?php } ?>
 														 <?php }else{ ?>
+														 <!--remove-->
+														 <?php if(date("d-m") === "22-12"){ ?>
+														 <option <?php if(time() > strtotime("11:00 AM")) { echo "disabled='disabled' class='disabled-cls'"; }?>value="SAMEDAY (BEFORE 7PM)">SAMEDAY (BEFORE 7PM)</option>
+														<option  <?php if(date('l') === 'Saturday') { echo "disabled='disabled' class='disabled-cls'"; }?>  value="NEXT DAY (BEFORE 7PM)">NEXT DAY (BEFORE 7PM)</option>
+														<option <?php if(date('l') === 'Saturday') { echo "disabled='disabled' class='disabled-cls'"; }?> value="NEXT DAY (BEFORE 5PM)">NEXT DAY (BEFORE 5PM)</option>
+														<option <?php if(date('l') === 'Saturday') { echo "disabled='disabled' class='disabled-cls'"; }?>  value="NEXT DAY (BEFORE 2PM)">NEXT DAY (BEFORE 2PM)</option>
+														<option value="NEXT DAY (BEFORE 11:30AM)">NEXT DAY (BEFORE 11:30AM)</option>
+														<option value="NEXT DAY (BEFORE 10:30AM)">NEXT DAY (BEFORE 10:30AM)</option>
+														  
+														  <?php }else{ ?>
 														<option <?php if(time() > strtotime("12:30 PM") || date('l') === 'Sunday') { echo "disabled='disabled' class='disabled-cls'"; }?>value="SAMEDAY (BEFORE 7PM)">SAMEDAY (BEFORE 7PM)</option>
 														<option <?php if(time() > strtotime("10:30 AM") || date('l') === 'Sunday') { echo "disabled='disabled' class='disabled-cls'"; }?>value="SAME DAY (1PM to 4PM)">SAME DAY (1PM to 4PM)</option>
 														<option <?php if(time() > strtotime("12:00 PM") || date('l') === 'Sunday') { echo "disabled='disabled' class='disabled-cls'"; }?> value="SAME DAY (BEFORE 5PM)">SAME DAY (BEFORE 5PM)</option>
@@ -431,13 +449,22 @@ echo 'Fixed Time ->'.strtotime("2:00 PM");exit;*/
 														<option <?php if(time() > strtotime("12:30 PM") || date('l') === 'Sunday') { echo "disabled='disabled' class='disabled-cls'"; }?> value="RUSH (3 HOURS)">RUSH (3 HOURS)</option>
 														<option <?php if(time() > strtotime("1:30 PM") || date('l') === 'Sunday') { echo "disabled='disabled' class='disabled-cls'"; }?> value="RUSH (2 HOURS)">RUSH (2 HOURS)</option>
 														<option <?php if(time() > strtotime("2:30 PM") || date('l') === 'Sunday') { echo "disabled='disabled' class='disabled-cls'"; }?> value="URGENT (90 MINUTES)">URGENT (90 MINUTES)</option>
-														 
-														<option  <?php if(date('l') === 'Saturday') { echo "disabled='disabled' class='disabled-cls'"; }?>  value="NEXT DAY (BEFORE 7PM)">NEXT DAY (BEFORE 7PM)</option>
+														  <?php if(date("d-m") === "21-12"){ ?>
+														<option  value="NEXT DAY (BEFORE 7PM)">NEXT DAY (BEFORE 7PM)</option>
+														  <?php }else{ ?>
+														  <option  <?php if(date('l') === 'Saturday') { echo "disabled='disabled' class='disabled-cls'"; }?>  value="NEXT DAY (BEFORE 7PM)">NEXT DAY (BEFORE 7PM)</option>
+														  <?php } ?>
 														<option <?php if(date('l') === 'Saturday') { echo "disabled='disabled' class='disabled-cls'"; }?> value="NEXT DAY (BEFORE 5PM)">NEXT DAY (BEFORE 5PM)</option>
 														<option <?php if(date('l') === 'Saturday') { echo "disabled='disabled' class='disabled-cls'"; }?>  value="NEXT DAY (BEFORE 2PM)">NEXT DAY (BEFORE 2PM)</option>
 														<option value="NEXT DAY (BEFORE 11:30AM)">NEXT DAY (BEFORE 11:30AM)</option>
 														<option value="NEXT DAY (BEFORE 10:30AM)">NEXT DAY (BEFORE 10:30AM)</option>
+														
 														 <?php } ?>
+														 <?php } ?>
+														
+														 
+														  
+														
                                                       
 													</select>
 												</div>
@@ -923,7 +950,45 @@ echo 'Fixed Time ->'.strtotime("2:00 PM");exit;*/
     <!-- ============================================================== -->
     <!-- End Wrapper -->
     <!-- ============================================================== -->
+	<?php  
+	if(isset($_SESSION['show_login_popup']) && $_SESSION['show_login_popup']){ 
+	unset($_SESSION['show_login_popup']); ?>
+	<div class="modal" tabindex="-1" role="dialog" id="myModal_alert">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+     
+      <div class="modal-body">
+			<p><b>Dear Valued Huuneh Client,</b> </p>
 
+			<p>This is an update to let you know about our Christmas and New Year Hours and Operations:</p>
+
+			<p>December 25: Closed (no orders will be accepted)</p> 
+
+			<p>December 26: Closed (no orders will be accepted) </p>
+
+			<p>December 31: Closed (no orders will be accepted) </p>
+
+			<p>January 1, 2025: Closed (no orders will be accepted) </p>
+
+			<p>January 2, 2025: Closed (no orders will be accepted) </p>
+
+			<p>From the Huuneh team, we wish you and your family a merry christmas and a happy new year! </p>
+
+			<p>- Huuneh Management</p>
+      </div>
+      <div class="modal-footer">
+     
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+$(document).ready(function(){
+	   $("#myModal_alert").modal('show');
+ });
+ </script>
+<?php } ?>
     <?php include('helpers/languages/translate_to_js.php'); ?>
 
     <script src="assets/template/assets/libs/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
