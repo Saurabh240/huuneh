@@ -33,7 +33,9 @@ if ($login->cdp_loginCheck() == true) {
 if (isset($_POST['login'])) {
 
     $result = $login->cdp_login($_POST['username'], $_POST['password']);
+	
     if ($result) {
+		//$_SESSION['show_login_popup'] = true;
         header("location: index.php");
     }
 }
