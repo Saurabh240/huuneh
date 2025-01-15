@@ -414,30 +414,44 @@ echo 'Fixed Time ->'.strtotime("2:00 PM");exit;*/
                                                     </div>
                                                 </div> -->
                                             <input type="hidden" name="distance" class="form-control" id="distance">
-                                            <?php date_default_timezone_set("Americal/Montreal"); ?>
+                                            <?php date_default_timezone_set("America/Montreal"); ?>
 											<div class="form-group col-md-7">
 												<label for="inputEmail3" class="control-label col-form-label">Delivery Type</label>
 												<div class="input-group mb-3">
 													<select class="form-control custom-select" id="deliveryType" name="deliveryType" required style="width: 100%;">
 														<option value="" selected>Select Delivery Type</option>
-														<option <?php if(time() > strtotime("1:00 PM") || date('l') === 'Sunday') { echo "disabled='disabled' class='disabled-cls'"; }?>value="SAMEDAY (BEFORE 9PM)">SAMEDAY (BEFORE 9PM)</option>
+														
+														<option <?php if(time() > strtotime("1:00 PM") || date('l') === 'Sunday' || date("d-m") === "25-12" || date("d-m") === "26-12" || date("d-m") === "31-12" || date("d-m") === "01-01" || date("d-m") === "02-01") { echo "disabled='disabled' class='disabled-cls'"; }?>value="SAMEDAY (BEFORE 9PM)">SAMEDAY (BEFORE 9PM)</option>
+														
+														
 														<?php  if( $userData->business_type == "pharmacy" || $userData->business_type == "pharmacy_2" || $userData->business_type == "pharmacy_3" ) { ?>
-														<option  <?php if(date('l') === 'Saturday') { echo "disabled='disabled' class='disabled-cls'"; }?>  value="NEXT DAY (BEFORE 9PM)">NEXT DAY (BEFORE 9PM)</option>
+														<option  <?php if(date('l') === 'Saturday'  || date("d-m") === "25-12" || date("d-m") === "31-12" || date("d-m") === "01-01" || date("d-m") === "24-12"  || date("d-m") === "30-12") { echo "disabled='disabled' class='disabled-cls'"; }?>   value="NEXT DAY (BEFORE 9PM)">NEXT DAY (BEFORE 9PM)</option>
+														
 														 <?php }else{ ?>
-														<option <?php if(time() > strtotime("12:30 PM") || date('l') === 'Sunday') { echo "disabled='disabled' class='disabled-cls'"; }?>value="SAMEDAY (BEFORE 7PM)">SAMEDAY (BEFORE 7PM)</option>
-														<option <?php if(time() > strtotime("10:30 AM") || date('l') === 'Sunday') { echo "disabled='disabled' class='disabled-cls'"; }?>value="SAME DAY (1PM to 4PM)">SAME DAY (1PM to 4PM)</option>
-														<option <?php if(time() > strtotime("12:00 PM") || date('l') === 'Sunday') { echo "disabled='disabled' class='disabled-cls'"; }?> value="SAME DAY (BEFORE 5PM)">SAME DAY (BEFORE 5PM)</option>
-														<option <?php if(time() > strtotime("11:00 AM") || date('l') === 'Sunday') { echo "disabled='disabled' class='disabled-cls'"; }?> value="RUSH (4 HOURS)">RUSH (4 HOURS)</option>
-														<option <?php if(time() > strtotime("12:30 PM") || date('l') === 'Sunday') { echo "disabled='disabled' class='disabled-cls'"; }?> value="RUSH (3 HOURS)">RUSH (3 HOURS)</option>
-														<option <?php if(time() > strtotime("1:30 PM") || date('l') === 'Sunday') { echo "disabled='disabled' class='disabled-cls'"; }?> value="RUSH (2 HOURS)">RUSH (2 HOURS)</option>
-														<option <?php if(time() > strtotime("2:30 PM") || date('l') === 'Sunday') { echo "disabled='disabled' class='disabled-cls'"; }?> value="URGENT (90 MINUTES)">URGENT (90 MINUTES)</option>
+														
 														 
-														<option  <?php if(date('l') === 'Saturday') { echo "disabled='disabled' class='disabled-cls'"; }?>  value="NEXT DAY (BEFORE 7PM)">NEXT DAY (BEFORE 7PM)</option>
-														<option <?php if(date('l') === 'Saturday') { echo "disabled='disabled' class='disabled-cls'"; }?> value="NEXT DAY (BEFORE 5PM)">NEXT DAY (BEFORE 5PM)</option>
-														<option <?php if(date('l') === 'Saturday') { echo "disabled='disabled' class='disabled-cls'"; }?>  value="NEXT DAY (BEFORE 2PM)">NEXT DAY (BEFORE 2PM)</option>
-														<option value="NEXT DAY (BEFORE 11:30AM)">NEXT DAY (BEFORE 11:30AM)</option>
-														<option value="NEXT DAY (BEFORE 10:30AM)">NEXT DAY (BEFORE 10:30AM)</option>
+														<option <?php if(time() > strtotime("12:30 PM") || date('l') === 'Sunday'  || date("d-m") === "25-12" || date("d-m") === "26-12" || date("d-m") === "31-12" || date("d-m") === "01-01" || date("d-m") === "02-01") { echo "disabled='disabled' class='disabled-cls'"; }?>value="SAMEDAY (BEFORE 7PM)">SAMEDAY (BEFORE 7PM)</option>
+														<option <?php if(time() > strtotime("10:30 AM") || date('l') === 'Sunday'  || date("d-m") === "25-12" || date("d-m") === "26-12" || date("d-m") === "31-12" || date("d-m") === "01-01" || date("d-m") === "02-01") { echo "disabled='disabled' class='disabled-cls'"; }?>value="SAME DAY (1PM to 4PM)">SAME DAY (1PM to 4PM)</option>
+														<option <?php if(time() > strtotime("12:00 PM") || date('l') === 'Sunday' || date("d-m") === "25-12" || date("d-m") === "26-12" || date("d-m") === "31-12" || date("d-m") === "01-01" || date("d-m") === "02-01") { echo "disabled='disabled' class='disabled-cls'"; }?> value="SAME DAY (BEFORE 5PM)">SAME DAY (BEFORE 5PM)</option>
+														<option <?php if(time() > strtotime("11:00 AM") || date('l') === 'Sunday'  || date("d-m") === "25-12" || date("d-m") === "26-12" || date("d-m") === "31-12" || date("d-m") === "01-01" || date("d-m") === "02-01") { echo "disabled='disabled' class='disabled-cls'"; }?> value="RUSH (4 HOURS)">RUSH (4 HOURS)</option>
+														<option <?php if(time() > strtotime("12:30 PM") || date('l') === 'Sunday' || date("d-m") === "25-12" || date("d-m") === "26-12" || date("d-m") === "31-12" || date("d-m") === "01-01" || date("d-m") === "02-01") { echo "disabled='disabled' class='disabled-cls'"; }?> value="RUSH (3 HOURS)">RUSH (3 HOURS)</option>
+														<option <?php if(time() > strtotime("1:30 PM") || date('l') === 'Sunday' || date("d-m") === "25-12" || date("d-m") === "26-12" || date("d-m") === "31-12" || date("d-m") === "01-01" || date("d-m") === "02-01") { echo "disabled='disabled' class='disabled-cls'"; }?> value="RUSH (2 HOURS)">RUSH (2 HOURS)</option>
+														<option <?php if(time() > strtotime("2:30 PM") || date('l') === 'Sunday' || date("d-m") === "25-12" || date("d-m") === "26-12" || date("d-m") === "31-12" || date("d-m") === "01-01" || date("d-m") === "02-01") { echo "disabled='disabled' class='disabled-cls'"; }?> value="URGENT (90 MINUTES)">URGENT (90 MINUTES)</option>
+														<?php if(date("d-m") !== "24-12" && date("d-m") !== "30-12"){ ?>
+														<option  <?php if(date('l') === 'Saturday'  || date("d-m") === "25-12" || date("d-m") === "31-12" || date("d-m") === "01-01") { echo "disabled='disabled' class='disabled-cls'"; }?>  value="NEXT DAY (BEFORE 7PM)">NEXT DAY (BEFORE 7PM)</option>
+														<option <?php if(date('l') === 'Saturday'  || date("d-m") === "25-12" || date("d-m") === "31-12" || date("d-m") === "01-01") { echo "disabled='disabled' class='disabled-cls'"; }?> value="NEXT DAY (BEFORE 5PM)">NEXT DAY (BEFORE 5PM)</option>
+														<option <?php if(date('l') === 'Saturday'  || date("d-m") === "25-12" || date("d-m") === "31-12" || date("d-m") === "01-01") { echo "disabled='disabled' class='disabled-cls'"; }?>  value="NEXT DAY (BEFORE 2PM)">NEXT DAY (BEFORE 2PM)</option>
+														<option <?php if(date("d-m") === "25-12" || date("d-m") === "31-12" || date("d-m") === "01-01") { echo "disabled='disabled' class='disabled-cls'"; }?>  value="NEXT DAY (BEFORE 11:30AM)">NEXT DAY (BEFORE 11:30AM)</option>
+														<option <?php if(date("d-m") === "25-12" || date("d-m") === "31-12" || date("d-m") === "01-01") { echo "disabled='disabled' class='disabled-cls'"; }?>  value="NEXT DAY (BEFORE 10:30AM)">NEXT DAY (BEFORE 10:30AM)</option>
+														
+														
 														 <?php } ?>
+														 
+														 <?php } ?>
+														
+														 
+														  
+														
                                                       
 													</select>
 												</div>
@@ -923,7 +937,48 @@ echo 'Fixed Time ->'.strtotime("2:00 PM");exit;*/
     <!-- ============================================================== -->
     <!-- End Wrapper -->
     <!-- ============================================================== -->
+	<?php  
+	if(isset($_SESSION['show_login_popup']) && $_SESSION['show_login_popup']){ 
+	unset($_SESSION['show_login_popup']); 
+	if( $userData->business_type == "pharmacy" || $userData->business_type == "pharmacy_2" || $userData->business_type == "pharmacy_3" ) { ?>
+	<div class="modal" tabindex="-1" role="dialog" id="myModal_alert">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+     
+      <div class="modal-body">
+			<p><b>Hi all valued Huuneh PHARMACY CLIENTS:</b> </p>
 
+			<p>We had a great 2024 because of awesome people and businesses like you!! ❤️</p>
+
+			<p>just some updates/exciting news for 2025 from Huuneh: </p>
+
+			<p>1. To continue to serve you at the highest level and happyness, we are going to be slightly bumping up price from $4+tax to $5+tax as of February 1st. This is to make sure we can continue to keep the drivers happy that deliver your prescriptions day in and day out as you already know cost of living/gas/inflation is at a all time high and we want to make sure you continue to receive the top tier service from us. </p>
+
+			<p>2. Also moving forward, for all of our pharmacies we will be returning your cash/consent forms/rx slips every Monday/Tuesday the following week instead of you having to wait super long to receive your property back. We will be adding a $5 return charge on your weekly invoice that week to fulfill this return in a timely manner so that way you get your property back asap. </p>
+
+			 <p>3. We will also be shortly introducing a brand new customer service phone line for you and your team to call moving forward for any questions/concerns you may have. This will be launched on February 1st.  So once that customer service line is live, you won’t be calling our cell phones directly, instead you and your team will be calling our customer service line directly only. All communication between us will only take place on that recorded customer service line.</p>
+
+			 <p>We are super excited about these changes as this is gonna make the delivery journey for you much easier and smoother with us. </p>
+
+			 <p>Should you have any questions, feel free to call us directly! </p>
+
+			 <p>We look forward to an exciting 2025 working with you!! </p>
+
+			 <p>Thanks!</p>
+      </div>
+      <div class="modal-footer">
+     
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+$(document).ready(function(){
+	   $("#myModal_alert").modal('show');
+ });
+ </script>
+	<?php } }?>
     <?php include('helpers/languages/translate_to_js.php'); ?>
 
     <script src="assets/template/assets/libs/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
