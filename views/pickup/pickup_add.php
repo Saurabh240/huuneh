@@ -940,7 +940,7 @@ echo 'Fixed Time ->'.strtotime("2:00 PM");exit;*/
 	<?php  
 	if(isset($_SESSION['show_login_popup']) && $_SESSION['show_login_popup']){ 
 	unset($_SESSION['show_login_popup']); 
-	if($userData->business_type == "pharmacy_2") { ?>
+	if($userData->business_type == "pharmacy_3") { ?>
 	<div class="modal" tabindex="-1" role="dialog" id="myModal_alert">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
