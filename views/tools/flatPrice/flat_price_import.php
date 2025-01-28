@@ -85,16 +85,13 @@ $file = $_FILES['excel_file'];
 													'price_with_tax' => $rowData[0][$l+2]??'',
 													'active' => 1
 												);
-											
 												$insert = cdp_insertFlatPrice($data);
-										
 										}										
 										}
 								}
 						}
 						$response['status']= "success";
 						$response['msg']= $lang['flat-price-11'];
-						
 					}
 					$delete = cdp_deleteAllFlatPrice(0,$_POST['business_type']);
             } else {
@@ -251,6 +248,8 @@ $ship_modes = $db->cdp_registro();
 															<option value="special">Special</option>
 															<option value="flat_1">Flat 1</option>
                                                             <option value="flat_2">Flat 2</option>
+                                                            <option value="karensflowershop_next_day">Karensflowershop Next Day</option>
+                                                            <option value="karensflowershop_same_day">Karensflowershop Same Day</option>
                                                                                                                        
                                                     </select>
                                                 </div>

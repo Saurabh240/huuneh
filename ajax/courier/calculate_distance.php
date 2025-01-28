@@ -18,6 +18,7 @@ $db->cdp_execute();
 $user = $db->cdp_registro();
 
 $business_type = $user->business_type;
+$username = $user->username;
 
 // Replace 'YOUR_GOOGLE_API_KEY' with your actual Google Maps API key
 $apiKey = 'AIzaSyCAP41rsfjKCKORsVRuSM_4ff6f7YGV7kQ';
@@ -74,8 +75,16 @@ if (isset($_POST["origin"]) && isset($_POST["destination"]) && isset($_POST["del
 		$flag = array_search ($deliveryType, $check_deliveryType);
 		
 		if(in_array($business_type,$flat_price_approverd_for)  && $originCity!='' && $destinationCity!='' && $flag!='' && $flag>=0){
-			  
-			   $db->cdp_query("SELECT * FROM cdb_flat_price_lists WHERE business_type= '".$business_type."' && sender_city= '".$originCity."' && recipient_city= '".$destinationCity."'"); 	
+			 
+			 if($username=="karensflowershop"){
+				 if($deliveryType=='NEXT DAY (BEFORE 7PM)'){
+					$db->cdp_query("SELECT * FROM cdb_flat_price_lists WHERE business_type= 'karensflowershop_next_day' && sender_city= '".$originCity."' && recipient_city= '".$destinationCity."'"); 	
+				 }else{
+					 $db->cdp_query("SELECT * FROM cdb_flat_price_lists WHERE business_type= 'karensflowershop_same_day' && sender_city= '".$originCity."' && recipient_city= '".$destinationCity."'");
+				 }
+			 }else{
+				 $db->cdp_query("SELECT * FROM cdb_flat_price_lists WHERE business_type= '".$business_type."' && sender_city= '".$originCity."' && recipient_city= '".$destinationCity."'"); 
+			 }
 				$db->cdp_execute();
 				$flat_price_data = $db->cdp_registro();
 				 if ($flat_price_data && isset($flat_price_data->price)) {
@@ -273,13 +282,14 @@ function getRatesByDeliveryTypeAndBusinessType($deliveryType, $businessType) {
             'NEXT DAY (BEFORE 11:30AM)' => ['baseRate' => 15.00, 'additionalRatePerKm' => 0.80, 'baseKm' => 10],
             'NEXT DAY (BEFORE 10:30AM)' => ['baseRate' => 20.00, 'additionalRatePerKm' => 0.90, 'baseKm' => 10]
         ],
+		
     ];
 
     if ($businessType == 'flower_shop' || $businessType == 'flower_shop_2' || $businessType == 'pharmacy' || $businessType == 'pharmacy_2' || $businessType == 'pharmacy_3' || $businessType == 'warehouses') {
         return $rates[$businessType][$deliveryType] ?? null;
     } else if ($businessType == 'special') {
         return $rates['special'][$deliveryType] ?? null;
-    } else {
+    }  else {
         return $rates['default'][$deliveryType] ?? null;
     }
 }

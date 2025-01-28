@@ -138,6 +138,8 @@ $userData = $user->cdp_getUserData();
 															<option value="special">Special</option>
 															<option value="flat_1">Flat 1</option>
                                                             <option value="flat_2">Flat 2</option>
+															 <option value="karensflowershop_next_day">Karensflowershop Next Day</option>
+                                                            <option value="karensflowershop_same_day">Karensflowershop Same Day</option>
                                             </select>
                                         </div>
                                     </div>
