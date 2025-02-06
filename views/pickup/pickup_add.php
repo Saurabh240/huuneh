@@ -939,6 +939,7 @@ echo 'Fixed Time ->'.strtotime("2:00 PM");exit;*/
     <!-- ============================================================== -->
 	<?php  
 	if(isset($_SESSION['show_login_popup']) && $_SESSION['show_login_popup']){ 
+
 	unset($_SESSION['show_login_popup']); 
 	?>
 <div class="modal" tabindex="-1" role="dialog" id="all_user_alert">
@@ -966,11 +967,14 @@ $(document).ready(function(){
  });
  </script>
  <?php if($userData->business_type == "pharmacy_3") { ?>
+
+
 	<div class="modal" tabindex="-1" role="dialog" id="myModal_alert">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
      
       <div class="modal-body">
+
 			<p><b>Hi all valued Huuneh PHARMACY CLIENTS:</b> </p>
 
 			<p>We had a great 2024 because of awesome people and businesses like you!! ❤️</p>
@@ -990,6 +994,7 @@ $(document).ready(function(){
 			 <p>We look forward to an exciting 2025 working with you!! </p>
 
 			 <p>Thanks!</p>
+
       </div>
       <div class="modal-footer">
      
@@ -1003,8 +1008,10 @@ $(document).ready(function(){
 	   $("#myModal_alert").modal('show');
  });
  </script>
+
 	<?php } ?>
 <?php } ?>
+
     <?php include('helpers/languages/translate_to_js.php'); ?>
 
     <script src="assets/template/assets/libs/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
