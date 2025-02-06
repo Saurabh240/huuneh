@@ -939,29 +939,37 @@ echo 'Fixed Time ->'.strtotime("2:00 PM");exit;*/
     <!-- ============================================================== -->
 	<?php  
 	if(isset($_SESSION['show_login_popup']) && $_SESSION['show_login_popup']){ 
+
 	unset($_SESSION['show_login_popup']); ?>
+
+	if($userData->business_type == "pharmacy_3") { ?>
+
 	<div class="modal" tabindex="-1" role="dialog" id="myModal_alert">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
      
       <div class="modal-body">
-			<p><b>Dear Valued Huuneh Client,</b> </p>
 
-			<p>This is an update to let you know about our Christmas and New Year Hours and Operations:</p>
+			<p><b>Hi all valued Huuneh PHARMACY CLIENTS:</b> </p>
 
-			<p>December 25: Closed (no orders will be accepted)</p> 
+			<p>We had a great 2024 because of awesome people and businesses like you!! ❤️</p>
 
-			<p>December 26: Closed (no orders will be accepted) </p>
+			<p>just some updates/exciting news for 2025 from Huuneh: </p>
 
-			<p>December 31: Closed (no orders will be accepted) </p>
+			<p>1. To continue to serve you at the highest level and happyness, we are going to be slightly bumping up price from $4+tax to $5+tax as of February 1st. This is to make sure we can continue to keep the drivers happy that deliver your prescriptions day in and day out as you already know cost of living/gas/inflation is at a all time high and we want to make sure you continue to receive the top tier service from us. </p>
 
-			<p>January 1, 2025: Closed (no orders will be accepted) </p>
+			<p>2. Also moving forward, for all of our pharmacies we will be returning your cash/consent forms/rx slips every Monday/Tuesday the following week instead of you having to wait super long to receive your property back. We will be adding a $5 return charge on your weekly invoice that week to fulfill this return in a timely manner so that way you get your property back asap. </p>
 
-			<p>January 2, 2025: Closed (no orders will be accepted) </p>
+			 <p>3. We will also be shortly introducing a brand new customer service phone line for you and your team to call moving forward for any questions/concerns you may have. This will be launched on February 1st.  So once that customer service line is live, you won’t be calling our cell phones directly, instead you and your team will be calling our customer service line directly only. All communication between us will only take place on that recorded customer service line.</p>
 
-			<p>From the Huuneh team, we wish you and your family a merry christmas and a happy new year! </p>
+			 <p>We are super excited about these changes as this is gonna make the delivery journey for you much easier and smoother with us. </p>
 
-			<p>- Huuneh Management</p>
+			 <p>Should you have any questions, feel free to call us directly! </p>
+
+			 <p>We look forward to an exciting 2025 working with you!! </p>
+
+			 <p>Thanks!</p>
+
       </div>
       <div class="modal-footer">
      
@@ -975,7 +983,9 @@ $(document).ready(function(){
 	   $("#myModal_alert").modal('show');
  });
  </script>
-<?php } ?>
+
+	<?php } }?>
+
     <?php include('helpers/languages/translate_to_js.php'); ?>
 
     <script src="assets/template/assets/libs/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>

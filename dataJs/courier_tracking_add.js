@@ -196,7 +196,7 @@ $("#invoice_form").on("submit", function (event) {
   var deleted_file_ids = $("#deleted_file_ids").val();
   var shipment_id = $("#shipment_id").val();
   var t_date = $("#t_date").val();
-  var msg = $("#message-text").html();
+  var msg = $("#message-text").val();
  var notify_whatsapp_sender = $(
     "input:checkbox[name=notify_whatsapp_sender]:checked"
   ).val();
