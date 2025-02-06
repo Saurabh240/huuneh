@@ -940,7 +940,32 @@ echo 'Fixed Time ->'.strtotime("2:00 PM");exit;*/
 	<?php  
 	if(isset($_SESSION['show_login_popup']) && $_SESSION['show_login_popup']){ 
 	unset($_SESSION['show_login_popup']); 
-	if($userData->business_type == "pharmacy_3") { ?>
+	?>
+<div class="modal" tabindex="-1" role="dialog" id="all_user_alert">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+     
+      <div class="modal-body">
+			<p><b>Dear valued Huuneh client,</b> </p>
+
+			<p>Please note that Huuneh will be closed and will not be open on family day which is on Monday, February 17, 2025.</p>
+
+			<p>Wishing you all an awesome family day on the 17th and enjoy the day with your loved ones!! </p>
+
+			 <p>Huuneh Management</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+$(document).ready(function(){
+	   $("#all_user_alert").modal('show');
+ });
+ </script>
+ <?php if($userData->business_type == "pharmacy_3") { ?>
 	<div class="modal" tabindex="-1" role="dialog" id="myModal_alert">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -978,7 +1003,8 @@ $(document).ready(function(){
 	   $("#myModal_alert").modal('show');
  });
  </script>
-	<?php } }?>
+	<?php } ?>
+<?php } ?>
     <?php include('helpers/languages/translate_to_js.php'); ?>
 
     <script src="assets/template/assets/libs/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
