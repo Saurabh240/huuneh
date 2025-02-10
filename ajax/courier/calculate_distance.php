@@ -18,6 +18,7 @@ $db->cdp_execute();
 $user = $db->cdp_registro();
 
 $business_type = $user->business_type;
+$username = $user->username;
 
 // Replace 'YOUR_GOOGLE_API_KEY' with your actual Google Maps API key
 $apiKey = 'AIzaSyCAP41rsfjKCKORsVRuSM_4ff6f7YGV7kQ';
@@ -27,6 +28,7 @@ if (isset($_POST["origin"]) && isset($_POST["destination"]) && isset($_POST["del
 	$destination = urlencode($_POST["destination"]);
     $deliveryType = $_POST["deliveryType"];
 	$check_deliveryType=array('SAMEDAY (BEFORE 7PM)','NEXT DAY (BEFORE 7PM)','SAMEDAY (BEFORE 9PM)');
+	 $check_deliveryType_karensflowershop=array('SAMEDAY (BEFORE 7PM)','NEXT DAY (BEFORE 7PM)','SAMEDAY (BEFORE 9PM)','NEXT DAY (BEFORE 10:30AM)','NEXT DAY (BEFORE 11:30AM)','NEXT DAY (BEFORE 2PM)','NEXT DAY (BEFORE 5PM)','SAME DAY (1PM to 4PM)','SAME DAY (BEFORE 5PM)');
 	$origin_full_address=$origin;
 	if(isset($_POST["origin_id"])){
 		$db->cdp_query('SELECT name FROM cdb_senders_addresses,cdb_cities WHERE cdb_cities.id=cdb_senders_addresses.city && id_addresses='.$_POST["origin_id"]);
@@ -72,10 +74,33 @@ if (isset($_POST["origin"]) && isset($_POST["destination"]) && isset($_POST["del
     $distance_bw = $courier['distance']= calculateDistance($origin_full_address, $destination_full_address, $apiKey);
     if ($courier['distance'] !== false) {
 		$flag = array_search ($deliveryType, $check_deliveryType);
+		$flag_2= array_search ($deliveryType, $check_deliveryType_karensflowershop);
 		
-		if(in_array($business_type,$flat_price_approverd_for)  && $originCity!='' && $destinationCity!='' && $flag!='' && $flag>=0){
-			  
-			   $db->cdp_query("SELECT * FROM cdb_flat_price_lists WHERE business_type= '".$business_type."' && sender_city= '".$originCity."' && recipient_city= '".$destinationCity."'"); 	
+		if($username=="karensflowershop" && in_array($business_type,$flat_price_approverd_for) && $originCity!='' && $destinationCity!='' && $flag_2!='' && $flag_2>=0){
+			    // only for karensflowershop account type
+				 if($deliveryType=='NEXT DAY (BEFORE 7PM)'){
+					$db->cdp_query("SELECT * FROM cdb_flat_price_lists WHERE business_type= 'karensflowershop_next_day' && sender_city= '".$originCity."' && recipient_city= '".$destinationCity."'"); 	
+				 }elseif($deliveryType=='SAMEDAY (BEFORE 7PM)' || $deliveryType=='SAMEDAY (BEFORE 9PM)'){
+					 $db->cdp_query("SELECT * FROM cdb_flat_price_lists WHERE business_type= 'karensflowershop_same_day' && sender_city= '".$originCity."' && recipient_city= '".$destinationCity."'");
+				 }elseif($deliveryType=='NEXT DAY (BEFORE 10:30AM)' || $deliveryType=='NEXT DAY (BEFORE 11:30AM)' || $deliveryType=='NEXT DAY (BEFORE 2PM)' || $deliveryType=='NEXT DAY (BEFORE 5PM)'){
+					 $db->cdp_query("SELECT * FROM cdb_flat_price_lists WHERE business_type= 'karensflowershop_next_day_10AM_5PM' && sender_city= '".$originCity."' && recipient_city= '".$destinationCity."'");
+				 }elseif($deliveryType=='SAME DAY (1PM to 4PM)' || $deliveryType=='SAME DAY (BEFORE 5PM)'){
+					 $db->cdp_query("SELECT * FROM cdb_flat_price_lists WHERE business_type= 'karensflowershop_same_day_1PM_5PM' && sender_city= '".$originCity."' && recipient_city= '".$destinationCity."'");
+				 }
+				 $db->cdp_execute();
+				$flat_price_data = $db->cdp_registro();
+				 if ($flat_price_data && isset($flat_price_data->price)) {
+				$courier['baseRate'] = $flat_price_data->price??'';
+				$courier['shipmentfee'] = $flat_price_data->price??'';
+				$courier['taxfee'] = $flat_price_data->price_with_tax??'';
+				 }
+				$courier['distance']=$distance_bw;
+				if(isset($courier['baseRate'])){ echo json_encode($courier); }else{ $courier['msg']= "The city you selected to deliver this order to is not covered in our flat pricing program. Therefore, the price for this particular order will be reverted back to our regular KM pricing. Feel free to call our dispatch team at 647-217-9918 should you have any questions. We look forward to completing this order for you. Thank you!"; }
+			 
+		}elseif($username!="karensflowershop" && in_array($business_type,$flat_price_approverd_for)  && $originCity!='' && $destinationCity!='' && $flag!='' && $flag>=0){
+			
+			
+				 $db->cdp_query("SELECT * FROM cdb_flat_price_lists WHERE business_type= '".$business_type."' && sender_city= '".$originCity."' && recipient_city= '".$destinationCity."'"); 
 				$db->cdp_execute();
 				$flat_price_data = $db->cdp_registro();
 				 if ($flat_price_data && isset($flat_price_data->price)) {
@@ -273,13 +298,14 @@ function getRatesByDeliveryTypeAndBusinessType($deliveryType, $businessType) {
             'NEXT DAY (BEFORE 11:30AM)' => ['baseRate' => 15.00, 'additionalRatePerKm' => 0.80, 'baseKm' => 10],
             'NEXT DAY (BEFORE 10:30AM)' => ['baseRate' => 20.00, 'additionalRatePerKm' => 0.90, 'baseKm' => 10]
         ],
+		
     ];
 
     if ($businessType == 'flower_shop' || $businessType == 'flower_shop_2' || $businessType == 'pharmacy' || $businessType == 'pharmacy_2' || $businessType == 'pharmacy_3' || $businessType == 'warehouses') {
         return $rates[$businessType][$deliveryType] ?? null;
     } else if ($businessType == 'special') {
         return $rates['special'][$deliveryType] ?? null;
-    } else {
+    }  else {
         return $rates['default'][$deliveryType] ?? null;
     }
 }
