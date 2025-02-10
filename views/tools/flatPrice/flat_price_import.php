@@ -71,7 +71,7 @@ $file = $_FILES['excel_file'];
 							  
 							   $highestColumn = $sheet->getHighestColumn();
 					
-						for ($row = 9; $row <= 40; $row++) {
+						for ($row = 9; $row <= 43; $row++) {
 							$rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row, NULL, TRUE, FALSE);
 									if (isset($rowData[0])){
 										for($l=0;$l<=count($rowData[0]);$l=$l+4){
@@ -85,16 +85,13 @@ $file = $_FILES['excel_file'];
 													'price_with_tax' => $rowData[0][$l+2]??'',
 													'active' => 1
 												);
-											
 												$insert = cdp_insertFlatPrice($data);
-										
 										}										
 										}
 								}
 						}
 						$response['status']= "success";
 						$response['msg']= $lang['flat-price-11'];
-						
 					}
 					$delete = cdp_deleteAllFlatPrice(0,$_POST['business_type']);
             } else {
@@ -251,6 +248,10 @@ $ship_modes = $db->cdp_registro();
 															<option value="special">Special</option>
 															<option value="flat_1">Flat 1</option>
                                                             <option value="flat_2">Flat 2</option>
+                                                            <option value="karensflowershop_next_day">Karensflowershop Next Day</option>
+                                                            <option value="karensflowershop_same_day">Karensflowershop Same Day</option>
+                                                            <option value="karensflowershop_next_day_10AM_5PM">karensflowershop Next Day 10AM 5PM</option>
+                                                            <option value="karensflowershop_same_day_1PM_5PM">Karensflowershop Same Day 1PM 5PM</option>
                                                                                                                        
                                                     </select>
                                                 </div>
