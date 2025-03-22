@@ -118,11 +118,12 @@ $total_pages = ceil($numrows / $per_page);
 
 if ($numrows > 0) { ?>
 	<div class="table-responsive">
+		<form id="order_form" name="order_form">
 
-
-		<table id="zero_config" class=" table table-condensed table-hover table-striped">
+		<table id="zero_config" class="table table-condensed table-hover table-striped">
 			<thead>
 				<tr>
+					<th></th>
 					<th><b><?php echo $lang['ltracking'] ?></b></th>
 					<th class="text-center"><b><?php echo $lang['ddate'] ?></b></th>
 					<th class="text-center"><b>Delivery Type</b></th>
@@ -192,6 +193,7 @@ if ($numrows > 0) { ?>
 
 					?>
 						<tr class="card-hovera">
+						    <td><?php if ($row->status_courier == 10) { ?><input type="checkbox" name="accepted_order_check[]" value="<?php echo $row->order_id; ?>"><?php } ?></td>
 							<td><b><a href="courier_view.php?id=<?php echo $row->order_id; ?>"><?php echo $row->order_prefix . $row->order_no; ?></a></b></td>
 							<td class="text-center">
 								<?php echo $row->order_date; ?>
@@ -329,7 +331,7 @@ if ($numrows > 0) { ?>
 
 		</table>
 
-
+		</form>
 		<div class="pull-right">
 			<?php echo cdp_paginate($page, $total_pages, $adjacents, $lang);	?>
 		</div>

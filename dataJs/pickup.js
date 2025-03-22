@@ -57,6 +57,7 @@ $(function () {
 });
 
 
+
 //Cargar datos AJAX
 function cdp_load(page) {
     var search = $("#search").val();
@@ -470,4 +471,131 @@ function cdp_delete_charge(id) {
         }
 
     });
+}
+
+var autocomplete;
+var address_field;
+var country_field;
+var country_field_label;
+var autocompleteInstances = [];
+var full_address;
+var address_fields = []; // Declare in outer scope
+function initAutocomplete() {
+
+  address_fields = [document.querySelector("#starting_address")];
+  	
+	 address_fields.forEach((address, index) => {
+    let autocomplete = new google.maps.places.Autocomplete(address, {
+      fields: ["address_components", "geometry","formatted_address"],
+      types: ["address"],
+      strictBounds: false,
+	  componentRestrictions: { country: "CA" } // Restrict to Canada
+    });
+    address.focus();
+   
+    autocompleteInstances[index] = autocomplete;
+
+    autocomplete.addListener("place_changed", function () {
+      fillInAddress(index);
+    });
+  });
+  
+}
+
+function fillInAddress(index) {
+  // Get the place details from the autocomplete object.
+  const autocomplete = autocompleteInstances[index];
+  const place = autocomplete.getPlace();
+  full_address = place.formatted_address;
+
+  let address1 = "";
+  let postcode = "";
+
+  /*for (const component of place.address_components) {
+    const componentType = component.types[0];
+	switch (componentType) {
+      case "street_number":
+        address1 = `${component.long_name} ${address1}`;
+        break;
+
+      case "route":
+        address1 += component.long_name+", "; // Use long_name for full street name
+        break;
+
+      case "locality": // City
+        address1 += component.long_name+", ";
+        break;
+
+      case "administrative_area_level_1": // State
+        address1 += component.short_name+", ";
+        break;
+
+      case "country":
+        address1 += component.long_name+", ";
+        break;
+
+      case "postal_code":
+        address1 += component.long_name;
+        break;
+    }
+  }*/
+  
+ 
+  const address_field = address_fields[index];
+	  if (address_field) {
+		//address_field.value = address1; // Set the formatted address value
+		address_field.value = full_address; // Set the formatted address value
+		const event = new Event('change', { bubbles: true, cancelable: true });
+		address_field.dispatchEvent(event);
+	  }
+}
+
+
+// get route
+function get_route() {
+	  let selected = $('input[name="accepted_order_check[]"]:checked'); // Get checked checkboxes
+
+      if (selected.length > 0) {
+        let values = selected.map(function () {
+          return $(this).val();
+        }).get(); // Convert jQuery object to an array
+
+       // alert("Selected hobbies: " + values.join(", "));
+		$('#get_route_modal').modal("show");
+		initAutocomplete();
+      } else {
+        alert("Please select approved orders first.");
+      }
+}
+
+function find_route(){
+	var parametros = $("#order_form").serialize();
+	var starting_address = $("#starting_address").val();
+	if(starting_address!=''){
+	parametros += "&starting_address=" + encodeURIComponent(starting_address);
+		$.ajax({
+			type: "POST",
+			url: "ajax/pickup/fastest_route.php",
+			data: parametros,
+			beforeSend: function (objeto) {
+				$(".resultados_ajax_charges_add_results").html("<img src='assets/images/loader.gif'/><br/>Wait a moment please...");
+			},
+			success: function (datos) {
+			
+				
+					if(Number(datos)==0){
+						alert("Please enter starting point.");
+					}else if(Number(datos)>0){
+						$('#get_route_modal').modal('hide');
+						window.location.href="get_route.php?route_id="+datos;
+					}else{
+						alert("Error: Please try again.");
+				}
+			}
+		});
+		
+	}else{
+		alert("Please enter starting point.");
+	}
+	
 }
