@@ -20,7 +20,8 @@ if(empty($accepted_orders)){
 	return false;
 }
 $end_address=array();
-$order_address=array();
+$zip_address=array();
+$full_address=array();
 $half_address=array();
 foreach($accepted_orders as $k => $v){
 	$db->cdp_query('SELECT cdb_cities.name as city,cdb_countries.name as country,cdb_states.name as state,zip_code,address FROM cdb_add_order,cdb_recipients_addresses, cdb_cities,cdb_countries,cdb_states WHERE order_id=:id and id_addresses=receiver_address_id and cdb_cities.id = city and cdb_states.id = state and cdb_countries.id = country');
@@ -29,8 +30,9 @@ foreach($accepted_orders as $k => $v){
 	$order = $db->cdp_registro();
 	$address = $order->address.', '.$order->city.', '.$order->state.', '.$order->country.', '.$order->zip_code;
 	$end_address[] = $address;
-	$order_address[$v] = $order->zip_code;
+	$zip_address[$v] = $order->zip_code;
 	$half_address[$v] = $order->address;
+	$full_address[$v] = $address;
 	
 }
 
@@ -55,7 +57,7 @@ function getZipCodeFromLatLng($latLng, $apiKey) {
 }
 
 
-function getOptimizedRoute($origin,$addresses, $apiKey,$order_address,$half_address) {
+function getOptimizedRoute($origin,$addresses, $apiKey,$zip_address,$half_address,$full_address) {
     $origin = urlencode($origin); // First address as the starting point
     $destination = urlencode($origin); // First address as the starting point
     $waypoints = implode('|', array_map('urlencode', $addresses)); // All as waypoints
@@ -90,7 +92,7 @@ function getOptimizedRoute($origin,$addresses, $apiKey,$order_address,$half_addr
 			echo $farthestWaypoint;
 			print_r($addresses);
 			echo $destination;
-			die;*/
+			*/
 	} 
 	
     
@@ -108,7 +110,7 @@ function getOptimizedRoute($origin,$addresses, $apiKey,$order_address,$half_addr
     $optimizedOrder = [];
     $totalDistance = 0;
     $totalDuration = 0;
-	$cnt=1;
+	$cnt=0;
 	
     foreach ($data['routes'][0]['legs'] as $leg) {
 	
@@ -116,7 +118,7 @@ function getOptimizedRoute($origin,$addresses, $apiKey,$order_address,$half_addr
         $endLatLng = $leg['end_location']['lat'] . "," . $leg['end_location']['lng'];
 
         //$startZip = getZipCodeFromLatLng($startLatLng, $apiKey);
-        $endZip = getZipCodeFromLatLng($endLatLng, $apiKey);
+       $endZip = getZipCodeFromLatLng($endLatLng, $apiKey);
         $route[] = [
             'start_address' => $leg['start_address'],
             'end_address' => $leg['end_address'],
@@ -125,25 +127,23 @@ function getOptimizedRoute($origin,$addresses, $apiKey,$order_address,$half_addr
         ];
         $totalDistance += $leg['distance']['value']; // meters
         $totalDuration += $leg['duration']['value']; // seconds
-	
-		$keys = array_keys($order_address,$endZip);
+		
+		$keys = array_keys($zip_address,$endZip);
 		if(!empty($keys)){
 			foreach($keys as $v){
 				if(!in_array($v,$optimizedOrder)){
 					
-					$optimizedOrder[] = $v;
+					$optimizedOrder[$cnt] = $v;
 				}
 			}
 		}else{
 			$abc=explode(',',$leg['end_address']);
-		
 			if(isset($abc[0])) {
-			
 				foreach($half_address as $kk=>$vv)
 				{
 				 if(str_contains($vv, $abc[0])){
 					 if(!in_array($kk,$optimizedOrder)){
-								$optimizedOrder[] = $kk;
+								$optimizedOrder[$cnt] = $kk;
 								break;
 					 }
 				 }
@@ -151,8 +151,30 @@ function getOptimizedRoute($origin,$addresses, $apiKey,$order_address,$half_addr
 				
 			} 
 		}
-	
+		if(!isset($optimizedOrder[$cnt])){
+			$optimizedOrder[$cnt]=$leg['end_address'];
+		}
+		$cnt++;
     }
+	foreach($optimizedOrder as $k=>$v){
+		if(is_string($v)){
+			$abc=explode(',',$v);
+			foreach($abc as $l => $m){
+				foreach($full_address as $kk=>$vv)
+				{
+				 if(str_contains($vv, $m)){
+					 if(!in_array($kk,$optimizedOrder)){
+						// echo "hello=====";
+						$optimizedOrder[$k] = $kk;
+						break;
+					 }
+				 }
+				}
+				
+			}
+		}
+	}
+	   
 
     return [
         'optimized_route' => $route,
@@ -162,12 +184,12 @@ function getOptimizedRoute($origin,$addresses, $apiKey,$order_address,$half_addr
     ];
 }
 
-$result = getOptimizedRoute($starting_address, $end_address, $apiKey,$order_address,$half_address);
-/*
-echo "<pre>";
-print_r($end_address);
+$result = getOptimizedRoute($starting_address, $end_address, $apiKey,$zip_address,$half_address,$full_address);
+
+/*echo "<pre>";
+print_r($full_address);
 print_r($half_address);
-print_r($order_address);
+print_r($zip_address);
 print_r($result['optimized_order']);
 print_r($result['optimized_route']);*/
 

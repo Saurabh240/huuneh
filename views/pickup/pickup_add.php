@@ -443,16 +443,7 @@ echo 'Fixed Time ->'.strtotime("2:00 PM");exit;*/
 														<option <?php if(date('l') === 'Saturday'  || date("d-m") === "16-02") { echo "disabled='disabled' class='disabled-cls'"; }?>  value="NEXT DAY (BEFORE 2PM)">NEXT DAY (BEFORE 2PM)</option>
 														<option <?php if(date("d-m") === "16-02") { echo "disabled='disabled' class='disabled-cls'"; }?>  value="NEXT DAY (BEFORE 11:30AM)">NEXT DAY (BEFORE 11:30AM)</option>
 														<option <?php if(date("d-m") === "16-02") { echo "disabled='disabled' class='disabled-cls'"; }?>  value="NEXT DAY (BEFORE 10:30AM)">NEXT DAY (BEFORE 10:30AM)</option>
-														
-														
-														
-														 
 														 <?php } ?>
-														
-														 
-														  
-														
-                                                      
 													</select>
 												</div>
 											</div>
@@ -939,20 +930,25 @@ echo 'Fixed Time ->'.strtotime("2:00 PM");exit;*/
     <!-- ============================================================== -->
 	<?php  
 	if(isset($_SESSION['show_login_popup']) && $_SESSION['show_login_popup']){ 
-	unset($_SESSION['show_login_popup']); 
+	   unset($_SESSION['show_login_popup']); 
 	?>
 <div class="modal" tabindex="-1" role="dialog" id="all_user_alert">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
      
       <div class="modal-body">
-			<p><b>Dear valued Huuneh client,</b> </p>
+			<p><b>Hello all Huuneh clients!</b> </p>
+			<p>Please note our following schedule for Easter long weekend below and plan your deliveries accordingly.</p>
+			<p>We will be closed on the following two days: </p>
+			<ul>
+			  <li>Friday, April 18</li>
+			  <li>Monday, April 21</li>
+			</ul> 
+			<p>We won’t be doing any pick up/drop offs on these days and our office will be closed. All normal hours and operations will return back to normal on Tuesday, April 22.</p>
+			<p>We wish you and your family a happy Easter long weekend!</p>
+			<p>Thanks,</p>
+			<p>Huuneh</p>
 
-			<p>Please note that Huuneh will be closed and will not be open on family day which is on Monday, February 17, 2025.</p>
-
-			<p>Wishing you all an awesome family day on the 17th and enjoy the day with your loved ones!! </p>
-
-			 <p>Huuneh Management</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

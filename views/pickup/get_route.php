@@ -94,33 +94,25 @@ $statusrow = $core->cdp_getStatus();
     </div>
 </div>
 
-
 <div class="container-fluid">
-
     <div class="row">
         <!-- Column -->
         <div class="col-lg-12 col-xl-12 col-md-12">
             <div class="card">
                 <div class="card-body">
-                  
                     <div class="table-responsive-sm">
 						<input type="hidden" value="<?php echo $_GET['route_id']; ?>" name="route_id" id="route_id">
-                       
 						    <div class="text-center">
 							<div class="row justify-content-center">
-								<div class="col-md-6">
+								<div class="col-md-12">
 								 <div class="outer_div"></div>
 								</div>
-								 <div class="col-md-6">
-								  <h2 class="mb-4 text-primary">Map</h2>
+								 <div class="col-md-12">
 								   <div id="map"></div>
 								 </div>
 						</div>
 						</div>
-
                     </div>
-
-
                 </div>
             </div>
         </div>
