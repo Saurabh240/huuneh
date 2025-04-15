@@ -423,7 +423,7 @@ echo 'Fixed Time ->'.strtotime("2:00 PM");exit;*/
 														
 														<option <?php
 
-														if(time() > strtotime("1:00 PM") || date('l') === 'Sunday' || date("d-m") === "18-04" || date("d-m") === "19-04" || date("d-m") === "20-04" || date("d-m") === "21-04") { echo "disabled='disabled' class='disabled-cls'"; }?>value="SAMEDAY (BEFORE 9PM)">SAMEDAY (BEFORE 9PM)</option>
+														if(time() > strtotime("1:00 PM") || date('l') === 'Sunday' || date("d-m") === "18-04" || date("d-m") === "20-04" || date("d-m") === "21-04") { echo "disabled='disabled' class='disabled-cls'"; }?>value="SAMEDAY (BEFORE 9PM)">SAMEDAY (BEFORE 9PM)</option>
 														
 														
 														<?php  if($userData->business_type == "pharmacy" || $userData->business_type == "pharmacy_2" || $userData->business_type == "pharmacy_3") { ?>
