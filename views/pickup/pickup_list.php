@@ -41,7 +41,10 @@ $statusrow = $core->cdp_getStatus();
     <?php include 'views/inc/head_scripts.php'; ?>
 	 <link rel="stylesheet" href="assets/template/assets/libs/daterangepicker/daterangepicker.css">
     <link rel="stylesheet" type="text/css" href="assets/template/assets/libs/select2/dist/css/select2.min.css">
-
+<style>
+.pac-container {
+z-index: 1051 !important; }
+</style>
 </head>
 
 <body>
@@ -123,7 +126,7 @@ $statusrow = $core->cdp_getStatus();
 
                         </div> -->
 
-                        <div class="col-sm-6">
+                        <div class="col-sm-5">
 
                             <div class="input-group">
                                 <input type="text" name="search" id="search" class="form-control input-sm float-right" placeholder="Search by Invoice/client/recipient address" onkeyup="cdp_load(1);">
@@ -156,6 +159,9 @@ $statusrow = $core->cdp_getStatus();
                                                 <?php endforeach; ?>
                                             </select>
                                         </div>
+                                    </div>
+									<div class=" col-sm-12 col-md-2 mb-2">
+									<button type="button" name="get_route" id="get_route" class="btn btn-success" onclick="get_route()">Get Route</button>
                                     </div>
                     </div>
 
@@ -224,6 +230,7 @@ $statusrow = $core->cdp_getStatus();
     <?php include('views/modals/modal_charges_list.php'); ?>
     <?php include('views/modals/modal_charges_add.php'); ?>
     <?php include('views/modals/modal_charges_edit.php'); ?>
+    <?php include('views/modals/modal_get_route.php'); ?>
     <!-- ============================================================== -->
     <!-- All Jquery -->
     <!-- ============================================================== -->
@@ -235,7 +242,10 @@ $statusrow = $core->cdp_getStatus();
     <script src="assets/template/assets/libs/select2/dist/js/select2.min.js"></script>
 
     <script src="dataJs/pickup.js"></script>
-
+	<script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCAP41rsfjKCKORsVRuSM_4ff6f7YGV7kQ&callback=initAutocomplete&libraries=places&v=weekly"
+      defer
+    ></script>
     <script>
         // document.addEventListener("DOMContentLoaded", function() {
         //     cdp_search_client_load(1);
